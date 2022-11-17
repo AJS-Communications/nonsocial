@@ -3,21 +3,10 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
-  let data = null
+  let data = []
 
   async function main() {
-    return await prisma.blogPost.findFirst({
-      where: {
-        id: parseInt(event.context.params.id),
-        author: {
-          username: event.context.params.username
-        }
-      },
-      include: {
-        type: true,
-        author: true
-      }
-    })
+    return await prisma.user.findMany()
   }
 
   try {

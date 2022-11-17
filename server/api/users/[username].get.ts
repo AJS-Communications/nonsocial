@@ -6,17 +6,10 @@ export default defineEventHandler(async (event) => {
   let data = null
 
   async function main() {
-    return await prisma.blogPost.findFirst({
+    return await prisma.user.findUnique({
       where: {
-        id: parseInt(event.context.params.id),
-        author: {
-          username: event.context.params.username
-        }
+        username: event.context.params.username
       },
-      include: {
-        type: true,
-        author: true
-      }
     })
   }
 

@@ -1,16 +1,22 @@
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
+
 export default defineEventHandler(async (event) => {
-  return [
-    {
-      id: 1,
-      name: 'statusUpdate',
-      route: '/status-updates',
-      title: 'Status Update'
-    },
-    {
-      id: 2,
-      name: 'blogPost',
-      route: '/blog-posts',
-      title: 'Blog Post'
-    }
-  ]
+  let data = []
+
+  async function main() {
+    return await prisma.type.findMany()
+  }
+
+  try {
+    data = await main()
+    await prisma.$disconnect()
+  } catch (e) {
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  }
+
+  return data
 })
