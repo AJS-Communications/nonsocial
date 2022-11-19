@@ -13,7 +13,8 @@ export default defineEventHandler(async (event) => {
         text: body.text,
         published: true,
         authorId: parseInt(event.context.params.authorId),
-        parentId: body.parentId || null
+        parentId: body.parentId || null,
+        visibility: body.visibility || 'PUBLIC'
       }
     })
   }

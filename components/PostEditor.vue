@@ -79,10 +79,10 @@ const textarea = ref()
 const fauxTextareaContent = ref('')
 const maxLength = ref(280)
 
-const visibility = ref('everyone')
+const visibility = ref('PUBLIC')
 const visibilityOptions = computed(() => [
-  { value: 'everyone', text: 'Everyone' },
-  { value: 'private', text: 'Only me' }
+  { value: 'PUBLIC', text: 'Everyone' },
+  { value: 'PRIVATE', text: 'Only me' }
 ])
 
 const setEditorHeight = () => {
@@ -140,7 +140,8 @@ const submit = async () => {
   await useFetch('/api/posts/1', {
     method: 'post',
     body: {
-      text: text.value
+      text: text.value,
+      visibility: visibility.value
     }
   })
   resetEditor()

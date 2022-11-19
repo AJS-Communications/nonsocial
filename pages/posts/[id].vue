@@ -111,7 +111,7 @@ const createdDate = computed(() => {
 const shareUrl = ref('')
 
 onMounted(() => {
-  shareUrl.value = window.location.href
+  shareUrl.value = `${window.location.host}/posts/${data.value.id}`
 })
 
 const isBookmark = computed(() => {

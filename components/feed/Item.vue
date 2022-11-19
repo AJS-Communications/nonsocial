@@ -25,8 +25,9 @@
           >
             <span>{{ item.author.name }}</span>
           </NuxtLink>
-          <div class="mt-0.5 text-sm text-neutral-500 whitespace-nowrap">
-            {{ createdDate }}
+          <div class="mt-0.5 text-sm text-neutral-500 whitespace-nowrap space-x-2">
+            <span>&middot;</span>
+            <span>{{ createdDate }}</span>
           </div>
         </div>
         <blockquote class="mt-0.5 max-w-prose">
@@ -78,13 +79,21 @@ const props = defineProps({
 const emit = defineEmits(['update'])
 
 const createdDate = computed(() => {
-  return new Intl.DateTimeFormat('en-US').format(new Date(props.item.createdDate))
+  const date = new Date(props.item.createdDate)
+  const seconds = Math.floor((new Date().valueOf() - date.valueOf()) / 1000)
+  if(Math.round(seconds/(60*60*24*365.25)) >= 2) return new Intl.DateTimeFormat('en-US').format(date)
+  else if(Math.round(seconds/(60*60*24*30.4)) >= 2) return new Intl.DateTimeFormat('en-US').format(date)
+  else if(Math.round(seconds/(60*60*24*7)) >= 2) return new Intl.DateTimeFormat('en-US').format(date)
+  else if(Math.round(seconds/(60*60*24)) >= 2) return Math.round(seconds/(60*60*24)) + "d"
+  else if(Math.round(seconds/(60*60)) >= 2) return Math.round(seconds/(60*60)) + "h"
+  else if(Math.round(seconds/60) >= 2) return Math.round(seconds/60) + "m"
+  else return 'Just now'
 })
 
 const shareUrl = ref('')
 
 onMounted(() => {
-  shareUrl.value = window.location.href
+  shareUrl.value = `${window.location.host}/posts/${props.item.id}`
 })
 
 const isBookmark = computed(() => {
