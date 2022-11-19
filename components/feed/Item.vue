@@ -1,6 +1,6 @@
 <template>
-  <figure class="relative flex flex-col-reverse p-4">
-    <figcaption class="flex items-center space-x-4">
+  <article class="relative flex flex-col-reverse p-4">
+    <div class="flex items-center space-x-4">
       <img
         :src="item.author.photoUrl"
         :alt="item.author.name"
@@ -64,8 +64,8 @@
           </div>
         </div>
       </div>
-    </figcaption>
-  </figure>
+    </div>
+  </article>
 </template>
 
 <script setup lang="ts">

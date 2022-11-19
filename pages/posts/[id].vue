@@ -12,60 +12,62 @@
         <h1 class="text-xl font-bold my-auto">{{ title }}</h1>
       </div>
     </div>
-    <figure class="relative flex flex-col-reverse px-4 pb-2 mt-4">
-      <figcaption class="flex items-center space-x-4">
-        <img
-          :src="item?.author.photoUrl"
-          :alt="item?.author.name || ''"
-          class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover"
-          loading="lazy"
-          decoding="async"
-        >
-        <div class="flex-auto">
-          <div class="text-base font-semibold flex gap-1">
-            <NuxtLink
-              :to="`/${item?.author.username}`"
-              class="hover:underline my-auto"
-              tabindex="0"
-            >
-              {{ item?.author.name }}
-            </NuxtLink>
+    <article>
+      <div class="relative flex flex-col-reverse px-4 pb-2 mt-4">
+        <div class="flex items-center space-x-4">
+          <img
+            :src="item?.author.photoUrl"
+            :alt="item?.author.name || ''"
+            class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover"
+            loading="lazy"
+            decoding="async"
+          >
+          <div class="flex-auto">
+            <div class="text-base font-semibold flex gap-1">
+              <NuxtLink
+                :to="`/${item?.author.username}`"
+                class="hover:underline my-auto"
+                tabindex="0"
+              >
+                {{ item?.author.name }}
+              </NuxtLink>
+            </div>
+            <p class="text-neutral-600 dark:text-neutral-400 font-medium">{{ createdDate }}</p>
           </div>
-          <p class="text-neutral-600 dark:text-neutral-400 font-medium">{{ createdDate }}</p>
         </div>
-      </figcaption>
-    </figure>
-    <div class="p-4 space-y-4">
-      <blockquote class="max-w-prose text-2xl pb-4">
-        <pre class="font-sans whitespace-pre">{{ item?.text }}</pre>
-      </blockquote>
-      <hr class="border-neutral-100 dark:border-neutral-900" />
-      <div class="flex justify-around gap-2">
-        <button
-          class="p-2 rounded-full flex hover:bg-rose-100/40 dark:hover:bg-rose-100/10 hover:text-rose-600 dark:hover:text-rose-400 saturate-200 transition-colors duration-200"
-          :class="{ 'text-rose-600 dark:text-rose-400': isFavorite }"
-          @click="favorite"
-        >
-          <IconHeart :active="isFavorite" />
-          <span class="sr-only">Love</span>
-        </button>
-        <button
-          class="p-2 rounded-full flex hover:bg-green-100/40 dark:hover:bg-green-100/10 hover:text-green-600 dark:hover:text-green-400 saturate-200 transition-colors duration-200"
-          :class="{ 'text-green-600 dark:text-green-400': isBookmark }"
-          @click="bookmark"
-        >
-          <IconBookmark :active="isBookmark" />
-          <span class="sr-only">Bookmark</span>
-        </button>
-        <NuxtLink
-          :to="`mailto:?subject=Check this out!&body=${shareUrl}`"
-          class="p-2 rounded-full flex hover:bg-sky-100/40 dark:hover:bg-sky-100/10 hover:text-sky-800 dark:hover:text-sky-400 saturate-200 transition-colors duration-200"
-        >
-          <IconShare class="mr-1" />
-          <span class="sr-only">Share</span>
-        </NuxtLink>
       </div>
-    </div>
+      <div class="p-4 space-y-4">
+        <blockquote class="max-w-prose text-2xl pb-4">
+          <pre class="font-sans whitespace-pre">{{ item?.text }}</pre>
+        </blockquote>
+        <hr class="border-neutral-100 dark:border-neutral-900" />
+        <div class="flex justify-around gap-2">
+          <button
+            class="p-2 rounded-full flex hover:bg-rose-100/40 dark:hover:bg-rose-100/10 hover:text-rose-600 dark:hover:text-rose-400 saturate-200 transition-colors duration-200"
+            :class="{ 'text-rose-600 dark:text-rose-400': isFavorite }"
+            @click="favorite"
+          >
+            <IconHeart :active="isFavorite" />
+            <span class="sr-only">Love</span>
+          </button>
+          <button
+            class="p-2 rounded-full flex hover:bg-green-100/40 dark:hover:bg-green-100/10 hover:text-green-600 dark:hover:text-green-400 saturate-200 transition-colors duration-200"
+            :class="{ 'text-green-600 dark:text-green-400': isBookmark }"
+            @click="bookmark"
+          >
+            <IconBookmark :active="isBookmark" />
+            <span class="sr-only">Bookmark</span>
+          </button>
+          <NuxtLink
+            :to="`mailto:?subject=Check this out!&body=${shareUrl}`"
+            class="p-2 rounded-full flex hover:bg-sky-100/40 dark:hover:bg-sky-100/10 hover:text-sky-800 dark:hover:text-sky-400 saturate-200 transition-colors duration-200"
+          >
+            <IconShare class="mr-1" />
+            <span class="sr-only">Share</span>
+          </NuxtLink>
+        </div>
+      </div>
+    </article>
     <hr class="border-neutral-100 dark:border-neutral-900" />
     <div class="border-b border-neutral-100 dark:border-neutral-900">
       <p class="ml-20 mt-4 text-neutral-600 dark:text-neutral-400 font-medium">
