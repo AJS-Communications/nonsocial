@@ -34,7 +34,7 @@
             @input="onCompose"
           />
           <div
-            class="text-xl inset-0 absolute break-words whitespace-pre-wrap font-base pointer-events-none [&_[data-error]]:bg-red-500/30 dark:[&_[data-error]]:bg-red-400/30 [&_[data-link]]:text-sky-600 dark:[&_[data-link]]:text-sky-400"
+            class="text-xl inset-0 absolute break-words whitespace-pre-wrap font-base pointer-events-none [&_[data-error]]:bg-rose-500/30 dark:[&_[data-error]]:bg-rose-400/30 [&_[data-link]]:text-sky-600 dark:[&_[data-link]]:text-sky-400"
             aria-hidden="true"
             v-html="placeholder"
           />
@@ -43,7 +43,7 @@
     </figcaption>
     <div class="ml-auto flex gap-2">
       <div v-if="text.length > 0" class="my-auto flex gap-1 text-xs font-bold text-gray-500 dark:text-gray-400">
-        <span :class="{ 'text-red-500 dark:text-red-400': remainingLength < 0 }">{{ remainingLength }}</span>
+        <span :class="{ 'text-rose-500 dark:text-rose-400': remainingLength < 0 }">{{ remainingLength }}</span>
         <span>/</span>
         <span>{{ maxLength }}</span>
       </div>

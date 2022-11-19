@@ -39,6 +39,7 @@ model Post {
   author      User       @relation(fields: [authorId], references: [id])
   authorId    Int
   visibility  Visibility @default(PUBLIC)
+  parentId    Int?
   Bookmark    Bookmark[]
   Favorite    Favorite[]
 }

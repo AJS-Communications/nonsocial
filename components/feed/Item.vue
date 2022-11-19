@@ -35,8 +35,8 @@
         <div class="grid grid-cols-3 gap-2 my-2">
           <div>
             <button
-              class="flex z-10 p-2 rounded-full hover:bg-red-100/40 dark:hover:bg-red-100/10 hover:text-red-600 dark:hover:text-red-400 saturate-200 transition-colors duration-200"
-              :class="{ 'text-red-600 dark:text-red-400': isFavorite }"
+              class="flex z-10 p-2 rounded-full hover:bg-rose-100/40 dark:hover:bg-rose-100/10 hover:text-rose-600 dark:hover:text-rose-400 saturate-200 transition-colors duration-200"
+              :class="{ 'text-rose-600 dark:text-rose-400': isFavorite }"
               @click="favorite"
             >
               <IconHeart :active="isFavorite" size="sm" />

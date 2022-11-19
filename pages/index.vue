@@ -17,7 +17,7 @@
 const user = useUser()
 
 if (!user.value) {
-  throw createError({ statusCode: 501, message: 'Access Denied!' })
+  throw createError({ statusCode: 501, message: 'Access Denied' })
 }
 
 const title = useTitle()
