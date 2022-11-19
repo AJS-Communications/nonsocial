@@ -22,8 +22,8 @@
           <textarea
             v-model="text"
             ref="textarea"
-            class="w-full border-0 p-0 m-0 focus:ring-0 bg-transparent focus:outline-none text-xl resize-none placeholder:text-neutral-500"
-            placeholder="What's happening?"
+            class="w-full border-0 p-0 m-0 focus:ring-0 bg-transparent focus:outline-none text-xl resize-none placeholder:text-neutral-500 placeholder:font-medium"
+            :placeholder="placeholder"
             rows="1"
             @focus="activated = true"
             @select="onCompose"
@@ -36,7 +36,7 @@
           <div
             class="text-xl inset-0 absolute break-words whitespace-pre-wrap font-base pointer-events-none [&_[data-error]]:bg-rose-500/30 dark:[&_[data-error]]:bg-rose-400/30 [&_[data-link]]:text-sky-600 dark:[&_[data-link]]:text-sky-400"
             aria-hidden="true"
-            v-html="placeholder"
+            v-html="fauxTextareaContent"
           />
         </div>
       </div>
@@ -58,7 +58,9 @@
 
 <script setup lang="ts">
 const props = defineProps({
-  modelValue: { type: String, default: '' }
+  modelValue: { type: String, default: '' },
+  placeholder: { type: String, default: `What's happening?` },
+  parentId: { type: Number, default: null }
 })
 
 const emit = defineEmits(['update:model-value', 'submit'])
@@ -75,7 +77,7 @@ const text = computed({
 const activated = ref(false)
 
 const textarea = ref()
-const placeholder = ref('')
+const fauxTextareaContent = ref('')
 const maxLength = ref(280)
 
 const visibility = ref('everyone')
@@ -99,7 +101,7 @@ const onCompose = () => {
   if (0 > remainingLength.value) {
     const allowedValuePart = text.value.slice(0, maxLength.value)
     const refusedValuePart = text.value.slice(maxLength.value)
-    placeholder.value = 
+    fauxTextareaContent.value = 
       encodeHTMLEntities(allowedValuePart)
         .replaceAll(/<br>/g, '\n')
         .replaceAll(/((https:\/\/)(?!https:\/\/)\S+)/gm, '<span data-link="true">$1</span>')
@@ -111,7 +113,7 @@ const onCompose = () => {
         .replaceAll(/((#|@)(?!#|@)\w+)/gm, '<span data-link="true">$1</span>') +
         '</span>'
   } else {
-    placeholder.value = encodeHTMLEntities(text.value)
+    fauxTextareaContent.value = encodeHTMLEntities(text.value)
       .replaceAll(/<br>/g, '\n')
       .replaceAll(/((https:\/\/)(?!https:\/\/)\S+)/gm, '<span data-link="true">$1</span>')
       .replaceAll(/((#|@)(?!#|@)\w+)/gm, '<span data-link="true">$1</span>')
@@ -130,7 +132,7 @@ onMounted(() => {
 
 const resetEditor = () => {
   text.value = ''
-  placeholder.value = ''
+  fauxTextareaContent.value = ''
   activated.value = false
   setEditorHeight()
 }
@@ -139,7 +141,8 @@ const submit = async () => {
   await useFetch('/api/posts/1', {
     method: 'post',
     body: {
-      text: text.value
+      text: text.value,
+      parentId: props.parentId
     }
   })
   resetEditor()

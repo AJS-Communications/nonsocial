@@ -10,7 +10,8 @@ export default defineEventHandler(async (event) => {
       where: {
         author: {
           id: parseInt(event.context.params.authorId)
-        }
+        },
+        parentId: null
       },
       include: {
         author: true
