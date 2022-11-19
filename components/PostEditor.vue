@@ -60,7 +60,6 @@
 const props = defineProps({
   modelValue: { type: String, default: '' },
   placeholder: { type: String, default: `What's happening?` },
-  parentId: { type: Number, default: null }
 })
 
 const emit = defineEmits(['update:model-value', 'submit'])
@@ -141,8 +140,7 @@ const submit = async () => {
   await useFetch('/api/posts/1', {
     method: 'post',
     body: {
-      text: text.value,
-      parentId: props.parentId
+      text: text.value
     }
   })
   resetEditor()

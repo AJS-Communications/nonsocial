@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   async function main() {
     return await prisma.post.findMany({
       where: {
-        parentId: parseInt(event.context.params.postId)
+        parentId: parseInt(event.context.params.postId),
       },
       include: {
         author: true

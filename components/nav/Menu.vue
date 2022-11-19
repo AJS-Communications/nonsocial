@@ -17,7 +17,7 @@
           <IconBookmark :active="isActive" />
         </template>
       </NavMenuItem>
-      <NavMenuItem to="/profile" text="Profile">
+      <NavMenuItem :to="`/${user?.username}`" text="Profile">
         <template #icon="{ isActive }">
           <IconPerson :active="isActive" />
         </template>
@@ -25,3 +25,7 @@
     </nav>
   </header>
 </template>
+
+<script setup lang="ts">
+const user = useUser()
+</script>

@@ -7,7 +7,7 @@
       <h1 class="p-4 text-xl font-bold">{{ title }}</h1>
     </div>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
-      <TextEditor v-model="text" @submit="update" />
+      <PostEditor v-model="text" @submit="update" />
       <FeedItem v-for="item in data" :item="item" @update="update" />
     </div>
   </div>

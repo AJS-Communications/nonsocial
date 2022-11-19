@@ -24,7 +24,7 @@
         <div class="flex-auto">
           <div class="text-base font-semibold flex gap-1">
             <NuxtLink
-              to="/profile"
+              :to="`/${item?.author.username}`"
               class="hover:underline my-auto"
               tabindex="0"
             >
@@ -67,8 +67,16 @@
       </div>
     </div>
     <hr class="border-neutral-100 dark:border-neutral-900" />
+    <div class="border-b border-neutral-100 dark:border-neutral-900">
+      <p class="ml-20 mt-4 text-neutral-600 dark:text-neutral-400 font-medium">
+        Replying to
+        <NuxtLink :to="`/${item?.author.username}`" class="text-sky-600 dark:text-sky-400 group">
+          @<span class="group-hover:underline">{{ item?.author.username }}</span>
+        </NuxtLink>
+      </p>
+      <CommentEditor v-model="text" :parent-id="data.id" @submit="update" />
+    </div>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
-      <TextEditor v-model="text" :parent-id="data.id" placeholder="Post your reply" @submit="update" />
       <FeedItem v-for="item in comments" :item="item" @update="update" />
     </div>
   </div>

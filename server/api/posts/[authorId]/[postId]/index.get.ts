@@ -11,7 +11,9 @@ export default defineEventHandler(async (event) => {
         id: parseInt(event.context.params.postId),
         author: {
           id: parseInt(event.context.params.authorId)
-        }
+        },
+        published: true,
+        visibility: 'PUBLIC'
       },
       include: {
         author: true

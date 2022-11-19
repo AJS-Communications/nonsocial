@@ -19,7 +19,7 @@
         </NuxtLink>
         <div class="text-base font-semibold flex gap-2">
           <NuxtLink
-            :to="`profile`"
+            :to="`/${item.author.username}`"
             class="my-auto hover:underline z-10"
             tabindex="0"
           >
