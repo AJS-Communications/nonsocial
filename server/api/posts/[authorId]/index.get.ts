@@ -6,7 +6,19 @@ export default defineEventHandler(async (event) => {
   let data = []
 
   async function main() {
-    return await prisma.type.findMany()
+    return await prisma.post.findMany({
+      where: {
+        author: {
+          id: parseInt(event.context.params.authorId)
+        }
+      },
+      include: {
+        author: true
+      },
+      orderBy: {
+        createdDate: 'desc'
+      }
+    })
   }
 
   try {
@@ -15,7 +27,6 @@ export default defineEventHandler(async (event) => {
   } catch (e) {
     console.error(e)
     await prisma.$disconnect()
-    process.exit(1)
   }
 
   return data

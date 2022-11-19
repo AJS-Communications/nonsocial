@@ -11,14 +11,21 @@
         loading="lazy"
         decoding="async"
       >
-      <div class="mt-2 grow">
+      <div class="grow space-y-4" :class="{ 'mt-2': !activated }">
+        <label v-if="activated" @click.stop>
+          <span class="sr-only">Who can see this?</span>
+          <select v-model="visibility" class="cursor-pointer text-sm focus:ring-sky-500 focus:border-sky-500 w-28 rounded-full px-3 py-0.5 border border-neutral-300 dark:border-neutral-700 font-bold text-sky-600 dark:bg-black dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/40">
+            <option v-for="option in visibilityOptions" :value="option.value">{{ option.text }}</option>
+          </select>
+        </label>
         <div class="relative">
           <textarea
             v-model="text"
             ref="textarea"
-            class="w-full bg-transparent focus:outline-none text-xl resize-none placeholder:text-neutral-500"
+            class="w-full border-0 p-0 m-0 focus:ring-0 bg-transparent focus:outline-none text-xl resize-none placeholder:text-neutral-500"
             placeholder="What's happening?"
             rows="1"
+            @focus="activated = true"
             @select="onCompose"
             @copy="onCompose"
             @paste="onCompose"
@@ -35,7 +42,7 @@
       </div>
     </figcaption>
     <div class="ml-auto flex gap-2">
-      <div class="my-auto flex gap-1 text-xs font-bold text-gray-500 dark:text-gray-400">
+      <div v-if="text.length > 0" class="my-auto flex gap-1 text-xs font-bold text-gray-500 dark:text-gray-400">
         <span :class="{ 'text-red-500 dark:text-red-400': remainingLength < 0 }">{{ remainingLength }}</span>
         <span>/</span>
         <span>{{ maxLength }}</span>
@@ -43,6 +50,7 @@
       <button
         :disabled="text.trim().length < 1 || remainingLength < 0"
         class="text-white bg-sky-500 rounded-full px-4 py-1 font-bold hover:bg-sky-600 disabled:opacity-50 disabled:pointer-events-none"
+        @click="submit"
       >Post</button>
     </div>
   </figure>
@@ -53,7 +61,7 @@ const props = defineProps({
   modelValue: { type: String, default: '' }
 })
 
-const emit = defineEmits(['update:model-value'])
+const emit = defineEmits(['update:model-value', 'submit'])
 
 const text = computed({
   get () {
@@ -64,13 +72,23 @@ const text = computed({
   }
 })
 
+const activated = ref(false)
+
 const textarea = ref()
 const placeholder = ref('')
 const maxLength = ref(280)
 
+const visibility = ref('everyone')
+const visibilityOptions = computed(() => [
+  { value: 'everyone', text: 'Everyone' },
+  { value: 'private', text: 'Only me' }
+])
+
 const setEditorHeight = () => {
-  textarea.value.style.height = 0
-  textarea.value.style.height = textarea.value.scrollHeight + 'px'
+  nextTick(() => {
+    textarea.value.style.height = 0
+    textarea.value.style.height = textarea.value.scrollHeight + 'px'
+  })
 }
 
 const remainingLength = computed(() => maxLength.value - text.value.length)
@@ -82,12 +100,21 @@ const onCompose = () => {
     const allowedValuePart = text.value.slice(0, maxLength.value)
     const refusedValuePart = text.value.slice(maxLength.value)
     placeholder.value = 
-      encodeHTMLEntities(allowedValuePart).replaceAll(/(((https:\/\/|#|@)(?!https:\/\/|#|@)\S+(?=\.(\s|$)))|(https:\/\/|#|@)(?!https:\/\/|#|@)\S+)/g, '<span data-link="true">$1</span>') +
-      '<span data-error="true">' +
-      encodeHTMLEntities(refusedValuePart).replaceAll(/(((https:\/\/|#|@)(?!https:\/\/|#|@)\S+(?=\.(\s|$)))|(https:\/\/|#|@)(?!https:\/\/|#|@)\S+)/g, '<span data-link="true">$1</span>') +
-      '</span>'
+      encodeHTMLEntities(allowedValuePart)
+        .replaceAll(/<br>/g, '\n')
+        .replaceAll(/((https:\/\/)(?!https:\/\/)\S+)/gm, '<span data-link="true">$1</span>')
+        .replaceAll(/((#|@)(?!#|@)\w+)/gm, '<span data-link="true">$1</span>') +
+        '<span data-error="true">' +
+      encodeHTMLEntities(refusedValuePart)
+        .replaceAll(/<br>/g, '\n')
+        .replaceAll(/((https:\/\/)(?!https:\/\/)\S+)/gm, '<span data-link="true">$1</span>')
+        .replaceAll(/((#|@)(?!#|@)\w+)/gm, '<span data-link="true">$1</span>') +
+        '</span>'
   } else {
-    placeholder.value = encodeHTMLEntities(text.value).replaceAll(/(((https:\/\/|#|@)(?!https:\/\/|#|@)\S+(?=\.(\s|$)))|(https:\/\/|#|@)(?!https:\/\/|#|@)\S+)/g, '<span data-link="true">$1</span>')
+    placeholder.value = encodeHTMLEntities(text.value)
+      .replaceAll(/<br>/g, '\n')
+      .replaceAll(/((https:\/\/)(?!https:\/\/)\S+)/gm, '<span data-link="true">$1</span>')
+      .replaceAll(/((#|@)(?!#|@)\w+)/gm, '<span data-link="true">$1</span>')
   }
 }
 
@@ -100,4 +127,22 @@ const encodeHTMLEntities = (value: string) => {
 onMounted(() => {
   setEditorHeight()
 })
+
+const resetEditor = () => {
+  text.value = ''
+  placeholder.value = ''
+  activated.value = false
+  setEditorHeight()
+}
+
+const submit = async () => {
+  await useFetch('/api/posts/1', {
+    method: 'post',
+    body: {
+      text: text.value
+    }
+  })
+  resetEditor()
+  emit('submit')
+}
 </script>

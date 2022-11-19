@@ -3,13 +3,26 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
-  let data = null
+  let data = []
 
   async function main() {
-    return await prisma.user.findUnique({
+    return await prisma.bookmark.findMany({
       where: {
-        username: event.context.params.username
+        author: {
+          id: parseInt(event.context.params.authorId)
+        }
       },
+      include: {
+        // author: true,
+        post: {
+          include: {
+            author: true
+          }
+        }
+      },
+      orderBy: {
+        createdDate: 'desc'
+      }
     })
   }
 
@@ -19,7 +32,6 @@ export default defineEventHandler(async (event) => {
   } catch (e) {
     console.error(e)
     await prisma.$disconnect()
-    process.exit(1)
   }
 
   return data

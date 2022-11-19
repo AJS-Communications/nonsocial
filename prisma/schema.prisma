@@ -11,52 +11,61 @@ datasource db {
 }
 
 model User {
-  id            Int            @id @default(autoincrement())
-  email         String         @unique
-  username      String         @unique
-  photoUrl      String
-  name          String?
-  role     UserRole @default(UNVERIFIED)
-  blogPosts     BlogPost[]
-  statusUpdates StatusUpdate[]
+  id       Int        @id @default(autoincrement())
+  email    String     @unique
+  username String     @unique
+  photoUrl String
+  name     String?    @db.VarChar(100)
+  bio      String?    @db.Text
+  role     UserRole   @default(UNVERIFIED)
+  posts    Post[]
+  Bookmark Bookmark[]
+  Favorite Favorite[]
 }
 
 enum UserRole {
   UNVERIFIED
   GUEST
+  USER
   EDITOR
   ADMIN
 }
 
-model Type {
-  id           Int            @id @default(autoincrement())
-  name         String         @unique
-  route        String         @unique
-  title        String
-  BlogPost     BlogPost[]
-  StatusUpdate StatusUpdate[]
+model Post {
+  id          Int        @id @default(autoincrement())
+  text        String     @db.Text
+  published   Boolean    @default(false)
+  createdDate DateTime   @default(now())
+  author      User       @relation(fields: [authorId], references: [id])
+  authorId    Int
+  visibility  Visibility @default(PUBLIC)
+  Bookmark    Bookmark[]
+  Favorite    Favorite[]
 }
 
-model BlogPost {
+enum Visibility {
+  PRIVATE
+  PUBLIC
+}
+
+model Bookmark {
   id          Int      @id @default(autoincrement())
-  title       String
-  description String
   published   Boolean  @default(false)
   createdDate DateTime @default(now())
   author      User     @relation(fields: [authorId], references: [id])
   authorId    Int
-  type        Type     @relation(fields: [typeId], references: [id])
-  typeId      Int
+  post        Post     @relation(fields: [postId], references: [id])
+  postId      Int
+  @@unique([authorId, postId])
 }
 
-model StatusUpdate {
+model Favorite {
   id          Int      @id @default(autoincrement())
-  title       String?
-  description String
   published   Boolean  @default(false)
   createdDate DateTime @default(now())
   author      User     @relation(fields: [authorId], references: [id])
   authorId    Int
-  type        Type     @relation(fields: [typeId], references: [id])
-  typeId      Int
+  post        Post     @relation(fields: [postId], references: [id])
+  postId      Int
+  @@unique([authorId, postId])
 }

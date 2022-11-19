@@ -3,10 +3,16 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
-  let data = []
+  const body = await readBody(event)
+
+  let data = null
 
   async function main() {
-    return await prisma.user.findMany()
+    return await prisma.bookmark.delete({
+      where: {
+        id: body.id
+      }
+    })
   }
 
   try {

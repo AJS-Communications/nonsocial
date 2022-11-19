@@ -6,15 +6,14 @@ export default defineEventHandler(async (event) => {
   let data = null
 
   async function main() {
-    return await prisma.statusUpdate.findFirst({
+    return await prisma.post.findFirst({
       where: {
-        id: parseInt(event.context.params.id),
+        id: parseInt(event.context.params.postId),
         author: {
-          username: event.context.params.username
+          id: parseInt(event.context.params.authorId)
         }
       },
       include: {
-        type: true,
         author: true
       }
     })
@@ -26,7 +25,6 @@ export default defineEventHandler(async (event) => {
   } catch (e) {
     console.error(e)
     await prisma.$disconnect()
-    process.exit(1)
   }
 
   return data

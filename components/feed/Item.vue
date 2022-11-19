@@ -1,5 +1,5 @@
 <template>
-  <figure v-if="item" class="relative flex flex-col-reverse p-4">
+  <figure class="relative flex flex-col-reverse p-4">
     <figcaption class="flex items-center space-x-4">
       <img
         :src="item.author.photoUrl"
@@ -10,7 +10,7 @@
       >
       <div class="flex-auto">
         <NuxtLink
-          :to="`${item.type.route}/${item.id}`"
+          :to="`/posts/${item.id}`"
           class="my-auto group"
           tabindex="0"
         >
@@ -18,52 +18,38 @@
           <span class="sr-only">Go to post</span>
         </NuxtLink>
         <div class="text-base font-semibold flex gap-2">
-          <template v-if="item.type.name === 'statusUpdate'">
-            <IconChatBubble size="sm" class="mt-1" />
-          </template>
-          <template v-if="item.type.name === 'blogPost'">
-            <IconNewspaper size="sm" class="mt-1" />
-          </template>
-          <template v-if="item.type.name === 'event'">
-            <IconCalendar size="sm" class="mt-1" />
-          </template>
-          <template v-if="item.type.name === 'photo'">
-            <IconPhoto size="sm" class="mt-1" />
-          </template>
-          <template v-if="item.type.name === 'video'">
-            <IconVideo size="sm" class="mt-1" />
-          </template>
           <NuxtLink
             :to="`profile`"
             class="my-auto hover:underline z-10"
             tabindex="0"
           >
-            <span>{{ item.title || item.author.name }}</span>
+            <span>{{ item.author.name }}</span>
           </NuxtLink>
           <div class="mt-0.5 text-sm text-neutral-500 whitespace-nowrap">
             {{ createdDate }}
           </div>
         </div>
-        <div v-if="item.title" class="text-neutral-500 dark:text-neutral-400 text-sm font-bold">
-          By {{ item.author.name }}
-        </div>
         <blockquote class="mt-0.5 max-w-prose">
-          <p>{{ item.description }}</p>
+          <pre class="font-sans whitespace-pre">{{ item.text }}</pre>
         </blockquote>
         <div class="grid grid-cols-3 gap-2 my-2">
           <div>
             <button
-            class="flex z-10 p-2 rounded-full hover:bg-pink-100/40 dark:hover:bg-pink-100/10 hover:text-pink-800 dark:hover:text-pink-400 saturate-200 transition-colors duration-200"
+              class="flex z-10 p-2 rounded-full hover:bg-red-100/40 dark:hover:bg-red-100/10 hover:text-red-600 dark:hover:text-red-400 saturate-200 transition-colors duration-200"
+              :class="{ 'text-red-600 dark:text-red-400': isFavorite }"
+              @click="favorite"
             >
-              <IconHeart size="sm" />
+              <IconHeart :active="isFavorite" size="sm" />
               <span class="sr-only">Love</span>
             </button>
           </div>
           <div>
             <button
-            class="flex z-10 p-2 rounded-full hover:bg-green-100/40 dark:hover:bg-green-100/10 hover:text-green-800 dark:hover:text-green-400 saturate-200 transition-colors duration-200"
+              class="flex z-10 p-2 rounded-full hover:bg-green-100/40 dark:hover:bg-green-100/10 hover:text-green-600 dark:hover:text-green-400 saturate-200 transition-colors duration-200"
+              :class="{ 'text-green-600 dark:text-green-400': isBookmark }"
+              @click="bookmark"
             >
-              <IconBookmark size="sm" />
+              <IconBookmark :active="isBookmark" size="sm" />
               <span class="sr-only">Bookmark</span>
             </button>
           </div>
@@ -83,12 +69,16 @@
 </template>
 
 <script setup lang="ts">
+const user = useUser()
+
 const props = defineProps({
-  item: { type: Object }
+  item: { type: Object, required: true }
 })
 
+const emit = defineEmits(['update'])
+
 const createdDate = computed(() => {
-  return props.item && new Intl.DateTimeFormat('en-US').format(new Date(props.item.createdDate))
+  return new Intl.DateTimeFormat('en-US').format(new Date(props.item.createdDate))
 })
 
 const shareUrl = ref('')
@@ -96,4 +86,58 @@ const shareUrl = ref('')
 onMounted(() => {
   shareUrl.value = window.location.href
 })
+
+const isBookmark = computed(() => {
+  if (!user.value) return false
+  return user.value.Bookmark.filter(i => i.postId === props.item.id).length > 0
+})
+
+const isFavorite = computed(() => {
+  if (!user.value) return false
+  return user.value.Favorite.filter(i => i.postId === props.item.id).length > 0
+})
+
+const bookmark = async () => {
+  if (!user.value) return
+
+  if (isBookmark.value) {
+    const bookmark = user.value.Bookmark.find(i => i.postId === props.item.id)
+    await useFetch(`/api/bookmarks/${user.value.id}`, {
+      method: 'delete',
+      body: {
+        id: bookmark && bookmark.id
+      }
+    })
+  } else {
+    await useFetch(`/api/bookmarks/${user.value.id}`, {
+      method: 'post',
+      body: {
+        postId: props.item.id
+      }
+    })
+  }
+  emit('update')
+}
+
+const favorite = async () => {
+  if (!user.value) return
+
+  if (isFavorite.value) {
+    const favorite = user.value.Favorite.find(i => i.postId === props.item.id)
+    await useFetch(`/api/favorites/${user.value.id}`, {
+      method: 'delete',
+      body: {
+        id: favorite && favorite.id
+      }
+    })
+  } else {
+    await useFetch(`/api/favorites/${user.value.id}`, {
+      method: 'post',
+      body: {
+        postId: props.item.id
+      }
+    })
+  }
+  emit('update')
+}
 </script>

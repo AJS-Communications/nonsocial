@@ -22,21 +22,6 @@
           >
           <div class="flex-auto">
             <div class="text-base font-semibold flex gap-1">
-              <template v-if="item?.type.name === 'statusUpdate'">
-                <IconChatBubble size="sm" class="mt-1" />
-              </template>
-              <template v-if="item?.type.name === 'blogPost'">
-                <IconNewspaper size="sm" class="mt-1" />
-              </template>
-              <template v-if="item?.type.name === 'event'">
-                <IconCalendar size="sm" class="mt-1" />
-              </template>
-              <template v-if="item?.type.name === 'photo'">
-                <IconPhoto size="sm" class="mt-1" />
-              </template>
-              <template v-if="item?.type.name === 'video'">
-                <IconVideo size="sm" class="mt-1" />
-              </template>
               <NuxtLink
                 to="/profile"
                 class="hover:underline my-auto"
@@ -50,14 +35,13 @@
         </figcaption>
       </figure>
       <div class="p-4 space-y-4">
-        <h2 v-if="item?.title" class="text-3xl font-bold">{{ item?.title }}</h2>
         <blockquote class="max-w-prose text-2xl pb-4">
-          <p>{{ item?.description }}</p>
+          <pre class="font-sans whitespace-pre">{{ item?.text }}</pre>
         </blockquote>
         <hr class="border-neutral-100 dark:border-neutral-900" />
         <div class="flex justify-around gap-2">
           <button
-            class="p-2 rounded-full flex hover:bg-pink-100/40 dark:hover:bg-pink-100/10 hover:text-pink-800 dark:hover:text-pink-400 saturate-200 transition-colors duration-200"
+            class="p-2 rounded-full flex hover:bg-red-100/40 dark:hover:bg-red-100/10 hover:text-red-800 dark:hover:text-red-400 saturate-200 transition-colors duration-200"
           >
             <IconHeart />
             <span class="sr-only">Love</span>
@@ -82,10 +66,16 @@
 </template>
 
 <script setup lang="ts">
+const user = useUser()
+
+if (!user.value) {
+  throw createError({ statusCode: 501, message: 'Access Denied!' })
+}
+
 const route = useRoute()
-const { data } = await useFetch(`/api/${route.params.type}/jshimkoski/${route.params.id}`)
+const { data } = await useFetch(`/api/posts/${user.value.id}/${route.params.id}`)
 const title = useTitle()
-title.value = data.value?.type.title || ''
+title.value = 'Post'
 
 const item = computed(() => data.value)
 const createdDate = computed(() => {

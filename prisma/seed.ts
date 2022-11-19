@@ -12,24 +12,6 @@ async function main() {
     },
   })
   console.log(user)
-
-  const typeStatusUpdate = await prisma.type.create({
-    data: {
-      name: 'statusUpdate',
-      route: '/status-updates',
-      title: 'Status Update'
-    },
-  })
-  console.log(typeStatusUpdate)
-
-  const typeBlogPost = await prisma.type.create({
-    data: {
-      name: 'blogPost',
-      route: '/blog-posts',
-      title: 'Blog Post'
-    },
-  })
-  console.log(typeBlogPost)
 }
 
 main()

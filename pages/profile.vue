@@ -11,5 +11,5 @@
 
 <script setup lang="ts">
 const title = useTitle()
-title.value = 'About Me'
+title.value = 'Profile'
 </script>

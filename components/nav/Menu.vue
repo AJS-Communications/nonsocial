@@ -12,17 +12,12 @@
           <IconHome :active="isActive" />
         </template>
       </NavMenuItem>
-      <NavMenuItem to="/blog-posts" text="Blog Posts">
+      <NavMenuItem to="/bookmarks" text="Bookmarks" exact>
         <template #icon="{ isActive }">
-          <IconNewspaper :active="isActive" />
+          <IconBookmark :active="isActive" />
         </template>
       </NavMenuItem>
-      <NavMenuItem to="/status-updates" text="Status Updates">
-        <template #icon="{ isActive }">
-          <IconChatBubble :active="isActive" />
-        </template>
-      </NavMenuItem>
-      <NavMenuItem to="/profile" text="About Me">
+      <NavMenuItem to="/profile" text="Profile">
         <template #icon="{ isActive }">
           <IconPerson :active="isActive" />
         </template>

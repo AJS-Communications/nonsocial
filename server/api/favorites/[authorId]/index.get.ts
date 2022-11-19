@@ -6,7 +6,20 @@ export default defineEventHandler(async (event) => {
   let data = []
 
   async function main() {
-    return await prisma.user.findMany()
+    return await prisma.favorite.findMany({
+      where: {
+        author: {
+          id: parseInt(event.context.params.authorId)
+        }
+      },
+      include: {
+        author: true,
+        post: true
+      },
+      orderBy: {
+        createdDate: 'desc'
+      }
+    })
   }
 
   try {

@@ -3,19 +3,16 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
+  const body = await readBody(event)
+
   let data = null
 
   async function main() {
-    return await prisma.blogPost.findFirst({
-      where: {
-        id: parseInt(event.context.params.id),
-        author: {
-          username: event.context.params.username
-        }
-      },
-      include: {
-        type: true,
-        author: true
+    return await prisma.favorite.create({
+      data: {
+        published: true,
+        authorId: parseInt(event.context.params.authorId),
+        postId: body.postId
       }
     })
   }
@@ -26,7 +23,6 @@ export default defineEventHandler(async (event) => {
   } catch (e) {
     console.error(e)
     await prisma.$disconnect()
-    process.exit(1)
   }
 
   return data
