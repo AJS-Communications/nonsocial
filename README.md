@@ -1,6 +1,6 @@
 # Nonsocial
 
-An open source social media application.
+An open source (MIT LICENSE) social media application.
 
 ## Why
 
