@@ -1,9 +1,9 @@
 <template>
-  <figure
+  <div
     class="relative flex flex-col gap-2 p-4"
     @click="textarea.focus()"
   >
-    <figcaption class="flex space-x-4 w-full">
+    <div class="flex space-x-4 w-full">
       <img
         src="https://pbs.twimg.com/profile_images/1333160856188833792/tMNnHY9F_x96.jpg"
         alt="Jason Shimkoski"
@@ -40,7 +40,7 @@
           />
         </div>
       </div>
-    </figcaption>
+    </div>
     <div class="ml-auto flex gap-2">
       <div v-if="text.length > 0" class="my-auto flex gap-1 text-xs font-bold text-gray-500 dark:text-gray-400">
         <span :class="{ 'text-rose-500 dark:text-rose-400': remainingLength < 0 }">{{ remainingLength }}</span>
@@ -53,7 +53,7 @@
         @click="submit"
       >Post</button>
     </div>
-  </figure>
+  </div>
 </template>
 
 <script setup lang="ts">
