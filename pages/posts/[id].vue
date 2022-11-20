@@ -38,7 +38,7 @@
       </div>
       <div class="p-4 space-y-4">
         <blockquote class="max-w-prose text-2xl pb-4">
-          <pre class="font-sans whitespace-pre">{{ item?.text }}</pre>
+          <div class="font-sans whitespace-pre-line">{{ item?.text }}</div>
         </blockquote>
         <hr class="border-neutral-100 dark:border-neutral-900" />
         <div v-if="data" class="flex gap-12">

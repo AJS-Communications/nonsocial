@@ -31,7 +31,7 @@
           </div>
         </div>
         <blockquote class="mt-0.5 max-w-prose">
-          <pre class="font-sans whitespace-pre">{{ item.text }}</pre>
+          <div class="font-sans whitespace-pre-line">{{ item.text }}</div>
         </blockquote>
         <div class="grid grid-cols-3 gap-2 my-2">
           <div>
