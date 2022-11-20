@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-10">
+    <div class="bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-20">
       <div class="p-2.5 flex gap-2">
         <button
           type="button"
