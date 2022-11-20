@@ -8,7 +8,7 @@
       <p v-if="user" class="px-4 pb-4 text-neutral-600 dark:text-neutral-400">@{{ user.username }}</p>
     </div>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
-      <FeedItem v-for="item in items" :item="item" @update="update" />
+      <FeedItem v-for="item in items" :key="item.id" :item="item" @update="update" />
     </div>
   </div>
 </template>

@@ -8,7 +8,7 @@
     </div>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
       <PostEditor v-model="text" @submit="update" />
-      <FeedItem v-for="item in data" :item="item" @update="update" />
+      <FeedItem v-for="item in data" :key="item.id" :item="item" @update="update" />
     </div>
   </div>
 </template>

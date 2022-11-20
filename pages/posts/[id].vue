@@ -107,7 +107,7 @@
       />
     </div>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
-      <FeedItem v-for="item in data?.comments" :item="item" @update="update" />
+      <FeedItem v-for="item in data?.comments" :key="item.id" :item="item" @update="update" />
     </div>
   </div>
 </template>
