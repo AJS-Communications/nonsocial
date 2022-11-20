@@ -17,6 +17,8 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [ ] Hashtag parsing
 - [ ] @user parsing
 - [ ] URL parsing
+- [ ] Image/asset handling
+- [ ] User Profiles
 - [x] Posting
 - [x] Commenting
 - [x] Liking
