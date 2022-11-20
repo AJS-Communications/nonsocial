@@ -12,6 +12,7 @@ This isn't a complete list of items but its a good start for focus. There is a t
 
 - [ ] User authentication
 - [ ] User Groups
+- [ ] User Roles
 - [ ] Recommendation engine
 - [ ] Hashtag parsing
 - [ ] @user parsing
@@ -29,6 +30,7 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [ ] Code cleanup and keeping things DRY
 - [ ] Unit testing
 - [ ] E2E testing
+- [ ] Much more
 
 ## Setup
 
@@ -60,8 +62,6 @@ DATABASE_URL="mysql://<USERNAME>:<PASSWORD>@localhost:3306/nonsocial"
 ```
 
 ## Database
-
-To perform `prisma migrate`, you can run:
 
 ### Migration
 
