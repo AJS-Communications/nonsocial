@@ -24,6 +24,8 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [ ] Infinite scrolling
 - [ ] Searching
 - [ ] Exploring hashtags
+- [ ] Administration Portal
+- [ ] Moderation Portal
 - [ ] Code cleanup and keeping things DRY
 - [ ] Unit testing
 - [ ] E2E testing
