@@ -4,7 +4,7 @@ An open source (MIT LICENSE) social media application.
 
 ## Why
 
-I believe in a town square for everyone. I believe social media should be a public asset and not for profit. This project is a step towards that reality.
+I believe in a town square for everyone. I believe social media should be a public utility and not for profit. This project is a step towards that reality.
 
 ## Todo List
 
