@@ -31,6 +31,6 @@ useHead({
   htmlAttrs: {
     class: 'h-screen'
   },
-  titleTemplate: (title) => title ? `${title} | Jason Shimmy` : 'Jason Shimmy'
+  titleTemplate: (title) => title ? `${title} | Nonsocial` : 'Nonsocial'
 })
 </script>
