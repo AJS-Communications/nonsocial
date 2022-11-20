@@ -1,9 +1,9 @@
 <template>
   <header>
     <div class="ml-3 mb-4">
-      <NuxtLink to="/" class="text-xl font-semibold group">
-        <span class="hidden xl:inline-block group-hover:underline decoration-sky-500 dark:decoration-sky-300">Nonsocial</span>
-        <span class="xl:hidden group-hover:underline decoration-sky-500 dark:decoration-sky-300" title="Nonsocial">NS</span>
+      <NuxtLink to="/" class="text-xl font-semibold">
+        <span class="hidden xl:inline-block">Nonsocial</span>
+        <span class="xl:hidden" title="Nonsocial">NS</span>
       </NuxtLink>
     </div>
     <nav class="grid gap-2">
