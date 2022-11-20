@@ -33,30 +33,53 @@
         <blockquote class="mt-0.5 max-w-prose">
           <div class="font-sans whitespace-pre-line">{{ item.text }}</div>
         </blockquote>
-        <div class="grid grid-cols-3 gap-2 my-2">
+        <div class="grid grid-cols-4 gap-2 my-2">
+          <div>
+            <NuxtLink
+              :to="`/posts/${item.id}`"
+              class="w-min flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-blue-600 dark:hover:text-blue-400 saturate-200"
+            >
+              <IconChatBubble
+                size="sm"
+                class="rounded-full p-2 group-hover:bg-blue-100/40 dark:group-hover:bg-blue-100/10"
+              />
+              <span class="sr-only">Comment</span>
+              <span v-if="counts && counts?.commentCount > 0" class="my-auto text-sm">{{ counts?.commentCount }}</span>
+            </NuxtLink>
+          </div>
           <div>
             <button
-              class="flex z-10 p-2 rounded-full hover:bg-rose-100/40 dark:hover:bg-rose-100/10 hover:text-rose-600 dark:hover:text-rose-400 saturate-200 transition-colors duration-200"
+              class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-rose-600 dark:hover:text-rose-400 saturate-200"
               :class="{ 'text-rose-600 dark:text-rose-400': isFavorite }"
               @click="favorite"
             >
-              <IconHeart :active="isFavorite" size="sm" />
+              <IconHeart
+                :active="isFavorite"
+                size="sm"
+                class="rounded-full p-2 group-hover:bg-rose-100/40 dark:group-hover:bg-rose-100/10"
+              />
               <span class="sr-only">Love</span>
+              <span v-if="counts && counts?.favoriteCount > 0" class="my-auto text-sm">{{ counts?.favoriteCount }}</span>
             </button>
           </div>
           <div>
             <button
-              class="flex z-10 p-2 rounded-full hover:bg-green-100/40 dark:hover:bg-green-100/10 hover:text-green-600 dark:hover:text-green-400 saturate-200 transition-colors duration-200"
-              :class="{ 'text-green-600 dark:text-green-400': isBookmark }"
+              class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-emerald-600 dark:hover:text-emerald-400 saturate-200"
+              :class="{ 'text-emerald-600 dark:text-emerald-400': isBookmark }"
               @click="bookmark"
             >
-              <IconBookmark :active="isBookmark" size="sm" />
+              <IconBookmark
+                :active="isBookmark"
+                size="sm"
+                class="rounded-full p-2 group-hover:bg-emerald-100/40 dark:group-hover:bg-emerald-100/10"
+              />
               <span class="sr-only">Bookmark</span>
+              <span v-if="counts && counts?.bookmarkCount > 0" class="my-auto text-sm">{{ counts?.bookmarkCount }}</span>
             </button>
           </div>
           <div>
             <button
-              class="flex w-min z-10 p-2 rounded-full hover:bg-sky-100/40 dark:hover:bg-sky-100/10 hover:text-sky-800 dark:hover:text-sky-400 saturate-200 transition-colors duration-200"
+              class="flex w-min z-10 p-2 rounded-full hover:bg-indigo-100/40 dark:hover:bg-indigo-100/10 hover:text-indigo-800 dark:hover:text-indigo-400 saturate-200 transition-colors duration-200"
               @click="share"
             >
               <IconShare size="sm" class="mr-1" />
@@ -75,6 +98,8 @@ const user = useUser()
 const props = defineProps({
   item: { type: Object, required: true }
 })
+
+const { data: counts, refresh } = await useFetch(`/api/posts/${props.item.author.id}/${props.item.id}/counts`)
 
 const emit = defineEmits(['update'])
 
@@ -117,6 +142,11 @@ const isFavorite = computed(() => {
   return user.value.Favorite.filter(i => i.postId === props.item.id).length > 0
 })
 
+const update = () => {
+  refresh()
+  emit('update')
+}
+
 const bookmark = async () => {
   if (!user.value) return
 
@@ -136,7 +166,7 @@ const bookmark = async () => {
       }
     })
   }
-  emit('update')
+  update()
 }
 
 const favorite = async () => {
@@ -158,6 +188,6 @@ const favorite = async () => {
       }
     })
   }
-  emit('update')
+  update()
 }
 </script>

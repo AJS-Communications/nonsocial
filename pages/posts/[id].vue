@@ -41,22 +41,29 @@
           <div class="font-sans whitespace-pre-line">{{ item?.text }}</div>
         </blockquote>
         <hr class="border-neutral-100 dark:border-neutral-900" />
-        <div v-if="data" class="flex gap-12">
-          <div class="flex gap-2">
+        <div v-if="data" class="flex gap-4 sm:gap-12 text-sm">
+          <div class="flex gap-1">
+            <span class="font-bold">{{ data.commentCount }}</span>
+            <span class="text-neutral-600 dark:text-neutral-400">{{ data.commentCount === 1 ? 'Comment' : 'Comments' }}</span>
+          </div>
+          <div class="flex gap-1">
             <span class="font-bold">{{ data.favoriteCount }}</span>
             <span class="text-neutral-600 dark:text-neutral-400">{{ data.favoriteCount === 1 ? 'Like' : 'Likes' }}</span>
           </div>
-          <div class="flex gap-2">
+          <div class="flex gap-1">
             <span class="font-bold">{{ data.bookmarkCount }}</span>
             <span class="text-neutral-600 dark:text-neutral-400">{{ data.bookmarkCount === 1 ? 'Bookmark' : 'Bookmarks' }}</span>
-          </div>
-          <div class="flex gap-2">
-            <span class="font-bold">{{ data.commentCount }}</span>
-            <span class="text-neutral-600 dark:text-neutral-400">{{ data.commentCount === 1 ? 'Comment' : 'Comments' }}</span>
           </div>
         </div>
         <hr class="border-neutral-100 dark:border-neutral-900" />
         <div class="flex justify-around gap-2">
+          <button
+            class="p-2 rounded-full flex hover:bg-blue-100/40 dark:hover:bg-blue-100/10 hover:text-blue-600 dark:hover:text-blue-400 saturate-200 transition-colors duration-200"
+            @click="commentEditor.$el.querySelector('textarea').focus()"
+          >
+            <IconChatBubble />
+            <span class="sr-only">Comment</span>
+          </button>
           <button
             class="p-2 rounded-full flex hover:bg-rose-100/40 dark:hover:bg-rose-100/10 hover:text-rose-600 dark:hover:text-rose-400 saturate-200 transition-colors duration-200"
             :class="{ 'text-rose-600 dark:text-rose-400': isFavorite }"
@@ -66,15 +73,15 @@
             <span class="sr-only">Love</span>
           </button>
           <button
-            class="p-2 flex gap-4 rounded-full flex hover:bg-green-100/40 dark:hover:bg-green-100/10 hover:text-green-600 dark:hover:text-green-400 saturate-200 transition-colors duration-200"
-            :class="{ 'text-green-600 dark:text-green-400': isBookmark }"
+            class="p-2 flex gap-4 rounded-full flex hover:bg-emerald-100/40 dark:hover:bg-emerald-100/10 hover:text-emerald-600 dark:hover:text-emerald-400 saturate-200 transition-colors duration-200"
+            :class="{ 'text-emerald-600 dark:text-emerald-400': isBookmark }"
             @click="bookmark"
           >
             <IconBookmark :active="isBookmark" />
             <span class="sr-only">Bookmark</span>
           </button>
           <button
-            class="p-2 rounded-full flex hover:bg-sky-100/40 dark:hover:bg-sky-100/10 hover:text-sky-800 dark:hover:text-sky-400 saturate-200 transition-colors duration-200"
+            class="p-2 rounded-full flex hover:bg-indigo-100/40 dark:hover:bg-indigo-100/10 hover:text-indigo-800 dark:hover:text-indigo-400 saturate-200 transition-colors duration-200"
             @click="share"
           >
             <IconShare class="mr-1" />
@@ -91,7 +98,13 @@
           @<span class="group-hover:underline">{{ item?.author.username }}</span>
         </NuxtLink>
       </p>
-      <CommentEditor v-if="data && data.post" v-model="text" :parent-id="data.post.id" @submit="update" />
+      <CommentEditor
+        v-if="data && data.post"
+        v-model="text"
+        ref="commentEditor"
+        :parent-id="data.post.id"
+        @submit="update"
+      />
     </div>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
       <FeedItem v-for="item in data?.comments" :item="item" @update="update" />
@@ -116,6 +129,7 @@ if (!data.value) {
 const title = useTitle()
 title.value = 'Post'
 
+const commentEditor = ref()
 const text = ref('')
 const item = computed(() => data.value?.post)
 const createdDate = computed(() => {
