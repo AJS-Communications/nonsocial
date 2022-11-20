@@ -13,7 +13,8 @@
         <footer class="hidden lg:block w-80 shrink-0 min-h-screen border-l border-neutral-100 dark:border-neutral-900">
           <div class="sticky top-0 p-4">
             <small class="text-neutral-500">
-              Copyright &copy; 2020-present,<br />Jason Shimkoski
+              Available via MIT License<br/>
+              Copyright &copy; 2022-present,<br />AJS Communications
             </small>
           </div>
         </footer>
