@@ -15,7 +15,7 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [ ] User Roles
 - [ ] Recommendation engine
 - [ ] Hashtag parsing
-- [ ] @user parsing
+- [ ] @username parsing
 - [ ] URL parsing
 - [ ] Image/asset handling
 - [ ] User Profiles
