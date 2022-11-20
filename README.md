@@ -21,9 +21,9 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [ ] User Profiles
 - [x] Posting
 - [x] Commenting
-- [x] Liking
-- [x] Favoriting
-- [x] Sharing - partially done
+- [x] Likes
+- [x] Bookmarks
+- [x] Sharing
 - [ ] Infinite scrolling
 - [ ] Searching
 - [ ] Exploring hashtags
