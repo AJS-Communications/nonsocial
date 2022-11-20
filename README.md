@@ -30,9 +30,9 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [ ] Unit testing
 - [ ] E2E testing
 
-Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
-
 ## Setup
+
+Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
 
 Make sure to install the dependencies:
 
