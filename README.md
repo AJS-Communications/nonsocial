@@ -10,23 +10,23 @@ I believe in a town square for everyone. I believe social media should be a publ
 
 This isn't a complete list of items but its a good start for focus. There is a ton of work ahead and what's already been done is up for refactor to improve code quality. Feel free to come up with ideas.
 
-- [] User authentication
-- [] User Groups
-- [] Recommendation engine
-- [] Hashtag parsing
-- [] @user parsing
-- [] URL parsing
+- [ ] User authentication
+- [ ] User Groups
+- [ ] Recommendation engine
+- [ ] Hashtag parsing
+- [ ] @user parsing
+- [ ] URL parsing
 - [x] Posting
 - [x] Commenting
 - [x] Liking
 - [x] Favoriting
 - [x] Sharing - partially done
-- [] Infinite scrolling
-- [] Searching
-- [] Exploring hashtags
-- [] Code cleanup and keeping things DRY
-- [] Unit testing
-- [] E2E testing
+- [ ] Infinite scrolling
+- [ ] Searching
+- [ ] Exploring hashtags
+- [ ] Code cleanup and keeping things DRY
+- [ ] Unit testing
+- [ ] E2E testing
 
 Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
 
