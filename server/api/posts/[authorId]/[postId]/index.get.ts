@@ -6,19 +6,67 @@ export default defineEventHandler(async (event) => {
   let data = null
 
   async function main() {
-    return await prisma.post.findFirst({
-      where: {
-        id: parseInt(event.context.params.postId),
-        author: {
-          id: parseInt(event.context.params.authorId)
+    const [bookmarkCount, favoriteCount, commentCount, comments, post] = await prisma.$transaction([
+      prisma.bookmark.count({
+        where: {
+          postId: parseInt(event.context.params.postId)
+        }
+      }),
+      prisma.favorite.count({
+        where: {
+          postId: parseInt(event.context.params.postId)
+        }
+      }),
+      prisma.post.count({
+        where: {
+          parentId: parseInt(event.context.params.postId)
+        }
+      }),
+      prisma.post.findMany({
+        where: {
+          parentId: parseInt(event.context.params.postId),
         },
-        published: true,
-        visibility: 'PUBLIC'
-      },
-      include: {
-        author: true
-      }
-    })
+        include: {
+          author: true
+        },
+        orderBy: {
+          createdDate: 'desc'
+        }
+      }),
+      prisma.post.findFirst({
+        where: {
+          id: parseInt(event.context.params.postId),
+          author: {
+            id: parseInt(event.context.params.authorId)
+          },
+          published: true,
+          visibility: 'PUBLIC'
+        },
+        include: {
+          author: true
+        }
+      })
+    ])
+    return {
+      bookmarkCount,
+      favoriteCount,
+      commentCount,
+      comments,
+      post
+    }
+    // return await prisma.post.findFirst({
+    //   where: {
+    //     id: parseInt(event.context.params.postId),
+    //     author: {
+    //       id: parseInt(event.context.params.authorId)
+    //     },
+    //     published: true,
+    //     visibility: 'PUBLIC'
+    //   },
+    //   include: {
+    //     author: true
+    //   }
+    // })
   }
 
   try {

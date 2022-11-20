@@ -41,6 +41,21 @@
           <pre class="font-sans whitespace-pre">{{ item?.text }}</pre>
         </blockquote>
         <hr class="border-neutral-100 dark:border-neutral-900" />
+        <div v-if="data" class="flex gap-12">
+          <div class="flex gap-2">
+            <span class="font-bold">{{ data.favoriteCount }}</span>
+            <span class="text-neutral-600 dark:text-neutral-400">{{ data.favoriteCount === 1 ? 'Like' : 'Likes' }}</span>
+          </div>
+          <div class="flex gap-2">
+            <span class="font-bold">{{ data.bookmarkCount }}</span>
+            <span class="text-neutral-600 dark:text-neutral-400">{{ data.bookmarkCount === 1 ? 'Bookmark' : 'Bookmarks' }}</span>
+          </div>
+          <div class="flex gap-2">
+            <span class="font-bold">{{ data.commentCount }}</span>
+            <span class="text-neutral-600 dark:text-neutral-400">{{ data.commentCount === 1 ? 'Comment' : 'Comments' }}</span>
+          </div>
+        </div>
+        <hr class="border-neutral-100 dark:border-neutral-900" />
         <div class="flex justify-around gap-2">
           <button
             class="p-2 rounded-full flex hover:bg-rose-100/40 dark:hover:bg-rose-100/10 hover:text-rose-600 dark:hover:text-rose-400 saturate-200 transition-colors duration-200"
@@ -51,20 +66,20 @@
             <span class="sr-only">Love</span>
           </button>
           <button
-            class="p-2 rounded-full flex hover:bg-green-100/40 dark:hover:bg-green-100/10 hover:text-green-600 dark:hover:text-green-400 saturate-200 transition-colors duration-200"
+            class="p-2 flex gap-4 rounded-full flex hover:bg-green-100/40 dark:hover:bg-green-100/10 hover:text-green-600 dark:hover:text-green-400 saturate-200 transition-colors duration-200"
             :class="{ 'text-green-600 dark:text-green-400': isBookmark }"
             @click="bookmark"
           >
             <IconBookmark :active="isBookmark" />
             <span class="sr-only">Bookmark</span>
           </button>
-          <NuxtLink
-            :to="`mailto:?subject=Check this out!&body=${shareUrl}`"
+          <button
             class="p-2 rounded-full flex hover:bg-sky-100/40 dark:hover:bg-sky-100/10 hover:text-sky-800 dark:hover:text-sky-400 saturate-200 transition-colors duration-200"
+            @click="share"
           >
             <IconShare class="mr-1" />
             <span class="sr-only">Share</span>
-          </NuxtLink>
+        </button>
         </div>
       </div>
     </article>
@@ -76,10 +91,10 @@
           @<span class="group-hover:underline">{{ item?.author.username }}</span>
         </NuxtLink>
       </p>
-      <CommentEditor v-model="text" :parent-id="data.id" @submit="update" />
+      <CommentEditor v-if="data && data.post" v-model="text" :parent-id="data.post.id" @submit="update" />
     </div>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
-      <FeedItem v-for="item in comments" :item="item" @update="update" />
+      <FeedItem v-for="item in data?.comments" :item="item" @update="update" />
     </div>
   </div>
 </template>
@@ -93,7 +108,6 @@ if (!user.value) {
 
 const route = useRoute()
 const { data, refresh } = await useFetch(`/api/posts/${user.value.id}/${route.params.id}`)
-const { data: comments, refresh: refreshComments } = await useFetch(`/api/posts/${user.value.id}/${route.params.id}/comments`)
 
 if (!data.value) {
   throw createError({ statusCode: 404, message: 'Page Not Found' })
@@ -103,39 +117,49 @@ const title = useTitle()
 title.value = 'Post'
 
 const text = ref('')
-const item = computed(() => data.value)
+const item = computed(() => data.value?.post)
 const createdDate = computed(() => {
   return item.value && new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(item.value.createdDate))
 })
 
-const shareUrl = ref('')
-
-onMounted(() => {
-  shareUrl.value = `${window.location.host}/posts/${data.value.id}`
-})
-
 const isBookmark = computed(() => {
   if (!user.value) return false
-  return user.value.Bookmark.filter(i => i.postId === data.value.id).length > 0
+  return user.value.Bookmark.filter(i => i.postId === data.value?.post?.id).length > 0
 })
 
 const isFavorite = computed(() => {
   if (!user.value) return false
-  return user.value.Favorite.filter(i => i.postId === data.value.id).length > 0
+  return user.value.Favorite.filter(i => i.postId === data.value?.post?.id).length > 0
 })
 
 const update = async () => {
   if (!user.value) return
   await refresh()
-  await refreshComments()
   user.value = await $fetch<User>(`/api/users/${user.value.id}`)
+}
+
+const share = async () => {
+  const url = `${window.location.protocol}//${window.location.host}/posts/${data.value?.post?.id}`
+  if (!navigator.canShare()) {
+    try {
+      await navigator.share({
+        title: 'Check this out!',
+        text: 'Take a look at this post that I found.',
+        url
+      })
+    } catch (e) {
+      window.location.href = `mailto:?subject=Check this out!&body=Take a look at this post that I found: ${url}`
+    }
+  } else {
+    window.location.href = `mailto:?subject=Check this out!&body=Take a look at this post that I found: ${url}`
+  }
 }
 
 const bookmark = async () => {
   if (!user.value) return
 
   if (isBookmark.value) {
-    const bookmark = user.value.Bookmark.find(i => i.postId ===  data.value.id)
+    const bookmark = user.value.Bookmark.find(i => i.postId ===  data.value?.post?.id)
     await useFetch(`/api/bookmarks/${user.value.id}`, {
       method: 'delete',
       body: {
@@ -146,7 +170,7 @@ const bookmark = async () => {
     await useFetch(`/api/bookmarks/${user.value.id}`, {
       method: 'post',
       body: {
-        postId: data.value.id
+        postId: data.value?.post?.id
       }
     })
   }
@@ -157,7 +181,7 @@ const favorite = async () => {
   if (!user.value) return
 
   if (isFavorite.value) {
-    const favorite = user.value.Favorite.find(i => i.postId ===  data.value.id)
+    const favorite = user.value.Favorite.find(i => i.postId ===  data.value?.post?.id)
     await useFetch(`/api/favorites/${user.value.id}`, {
       method: 'delete',
       body: {
@@ -168,7 +192,7 @@ const favorite = async () => {
     await useFetch(`/api/favorites/${user.value.id}`, {
       method: 'post',
       body: {
-        postId:  data.value.id
+        postId:  data.value?.post?.id
       }
     })
   }

@@ -55,13 +55,13 @@
             </button>
           </div>
           <div>
-            <NuxtLink
-              :to="`mailto:?subject=Check this out!&body=${shareUrl}`"
+            <button
               class="flex w-min z-10 p-2 rounded-full hover:bg-sky-100/40 dark:hover:bg-sky-100/10 hover:text-sky-800 dark:hover:text-sky-400 saturate-200 transition-colors duration-200"
+              @click="share"
             >
               <IconShare size="sm" class="mr-1" />
               <span class="sr-only">Share</span>
-            </NuxtLink>
+          </button>
           </div>
         </div>
       </div>
@@ -90,11 +90,22 @@ const createdDate = computed(() => {
   else return 'Just now'
 })
 
-const shareUrl = ref('')
-
-onMounted(() => {
-  shareUrl.value = `${window.location.host}/posts/${props.item.id}`
-})
+const share = async () => {
+  const url = `${window.location.protocol}//${window.location.host}/posts/${props.item.id}`
+  if (!navigator.canShare()) {
+    try {
+      await navigator.share({
+        title: 'Check this out!',
+        text: 'Take a look at this post that I found.',
+        url
+      })
+    } catch (e) {
+      window.location.href = `mailto:?subject=Check this out!&body=Take a look at this post that I found: ${url}`
+    }
+  } else {
+    window.location.href = `mailto:?subject=Check this out!&body=Take a look at this post that I found: ${url}`
+  }
+}
 
 const isBookmark = computed(() => {
   if (!user.value) return false
