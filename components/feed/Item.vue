@@ -124,9 +124,7 @@ const share = async () => {
         text: 'Take a look at this post that I found.',
         url
       })
-    } catch (e) {
-      window.location.href = `mailto:?subject=Check this out!&body=Take a look at this post that I found: ${url}`
-    }
+    } catch (e) {}
   } else {
     window.location.href = `mailto:?subject=Check this out!&body=Take a look at this post that I found: ${url}`
   }

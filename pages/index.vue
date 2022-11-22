@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="el" class="h-screen overflow-auto">
     <div
       class="bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-20 cursor-pointer"
       @click="goToTop"
@@ -8,7 +8,7 @@
     </div>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
       <PostEditor v-model="text" @submit="update" />
-      <FeedItem v-for="item in data" :key="item.id" :item="item" @update="update" />
+      <FeedItem v-for="item in items" :key="item.id" :item="item" @update="updateUser" />
     </div>
   </div>
 </template>
@@ -22,18 +22,44 @@ if (!user.value) {
 
 const title = useTitle()
 title.value = 'Home'
-
-const { data, refresh } = await useFetch(`/api/posts/${user.value.id}`)
+const cursor = ref()
+const { data } = await useFetch<[Post]>(`/api/posts/${user.value.id}`)
 const text = ref('')
+const el = ref()
+
+const items = ref(data.value)
+
+useInfiniteScroll(el, async () => {
+  if (items.value) {
+    const lastId = items.value[items.value.length - 1].id
+    if (lastId === cursor.value) return
+
+    cursor.value = lastId
+    const { data } = await useFetch<[Post]>(`/api/posts/${user.value?.id}`, {
+      params: {
+        cursor: cursor.value
+      }
+    })
+    if (data.value) {
+      items.value.push(...data.value)
+    }
+  }
+})
 
 const update = async () => {
   if (!user.value) return
-  await refresh()
+  const { data } = await useFetch<[Post]>(`/api/posts/${user.value.id}`)
+  items.value = data.value
+  updateUser()
+}
+
+const updateUser = async () => {
+  if (!user.value) return
   user.value = await $fetch<User>(`/api/users/${user.value.id}`)
 }
 
 const goToTop = () => {
-  window.scrollTo({
+  el.value.scrollTo({
     top: 0,
     behavior: 'smooth'
   })

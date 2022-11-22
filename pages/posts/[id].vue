@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="el" class="h-screen overflow-auto">
     <div class="bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-20">
       <div class="p-2.5 flex gap-2">
         <button
@@ -107,7 +107,7 @@
       />
     </div>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
-      <FeedItem v-for="item in data?.comments" :key="item.id" :item="item" @update="update" />
+      <FeedItem v-for="item in comments" :key="item.id" :item="item" @update="updateUser" />
     </div>
   </div>
 </template>
@@ -126,14 +126,34 @@ if (!data.value) {
   throw createError({ statusCode: 404, message: 'Page Not Found' })
 }
 
+const comments = ref(data.value?.comments)
+
 const title = useTitle()
 title.value = 'Post'
-
+const cursor = ref()
+const el = ref()
 const commentEditor = ref()
 const text = ref('')
 const item = computed(() => data.value?.post)
 const createdDate = computed(() => {
   return item.value && new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(item.value.createdDate))
+})
+
+useInfiniteScroll(el, async () => {
+  if (comments.value) {
+    const lastId = comments.value[comments.value.length - 1].id
+    if (lastId === cursor.value) return
+
+    cursor.value = lastId
+    const { data } = await useFetch(`/api/posts/${user.value?.id}/${route.params.id}`, {
+      params: {
+        cursor: cursor.value
+      }
+    })
+    if (data.value) {
+      comments.value.push(...data.value?.comments || [])
+    }
+  }
 })
 
 const isBookmark = computed(() => {
@@ -149,6 +169,11 @@ const isFavorite = computed(() => {
 const update = async () => {
   if (!user.value) return
   await refresh()
+  updateUser()
+}
+
+const updateUser = async () => {
+  if (!user.value) return
   user.value = await $fetch<User>(`/api/users/${user.value.id}`)
 }
 
@@ -161,9 +186,7 @@ const share = async () => {
         text: 'Take a look at this post that I found.',
         url
       })
-    } catch (e) {
-      window.location.href = `mailto:?subject=Check this out!&body=Take a look at this post that I found: ${url}`
-    }
+    } catch (e) {}
   } else {
     window.location.href = `mailto:?subject=Check this out!&body=Take a look at this post that I found: ${url}`
   }
