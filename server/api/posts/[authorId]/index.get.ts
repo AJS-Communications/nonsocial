@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
-  let data = []
+  let data: any = []
 
   async function main() {
     if (typeof query.cursor !== 'undefined') {

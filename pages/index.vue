@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-const user = useUser()
+const { user, updateUser } = useUser()
 
 if (!user.value) {
   throw createError({ statusCode: 501, message: 'Access Denied' })
@@ -51,11 +51,6 @@ const update = async () => {
   const { data } = await useFetch<[Post]>(`/api/posts/${user.value.id}`)
   items.value = data.value
   updateUser()
-}
-
-const updateUser = async () => {
-  if (!user.value) return
-  user.value = await $fetch<User>(`/api/users/${user.value.id}`)
 }
 
 const goToTop = () => {

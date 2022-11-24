@@ -4,7 +4,7 @@
       <img
         :src="item.author.photoUrl"
         :alt="item.author.name"
-        class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover"
+        class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-4 ring-white dark:ring-black"
         loading="lazy"
         decoding="async"
       >
@@ -27,17 +27,23 @@
           </NuxtLink>
           <div class="mt-0.5 text-sm text-neutral-500 whitespace-nowrap space-x-2">
             <span>&middot;</span>
-            <span>{{ createdDate }}</span>
+            <span>{{ createdDate(item.createdDate) }}</span>
           </div>
         </div>
+        <p v-if="parentItem" class="text-neutral-500 font-medium">
+          Replying to
+          <NuxtLink :to="`/${parentItem.author.username}`" class="text-sky-600 dark:text-sky-400 group">
+            @<span class="group-hover:underline">{{ parentItem.author.username }}</span>
+          </NuxtLink>
+        </p>
         <blockquote class="mt-0.5 max-w-prose">
           <div class="font-sans whitespace-pre-line">{{ item.text }}</div>
         </blockquote>
-        <div class="grid grid-cols-4 gap-2 my-2">
+        <div class="grid grid-cols-5 gap-2 my-2">
           <div>
             <NuxtLink
               :to="`/posts/${item.id}`"
-              class="w-min flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-blue-600 dark:hover:text-blue-400 saturate-200"
+              class="w-min flex gap-1 z-10 px-2 transition-colors duration-200 group text-neutral-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 saturate-200"
             >
               <IconChatBubble
                 size="sm"
@@ -49,12 +55,33 @@
           </div>
           <div>
             <button
+              class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-emerald-600 dark:hover:text-emerald-400 saturate-200"
+              :class="{
+                'text-neutral-600 dark:text-neutral-400': !isFavorite(item.id),
+                'text-emerald-600 dark:text-emerald-400': isFavorite(item.id)
+              }"
+              @click="handleFavorite(item.id)"
+            >
+              <IconArrowPath
+                :active="isFavorite(item.id)"
+                size="sm"
+                class="rounded-full p-2 group-hover:bg-emerald-100/40 dark:group-hover:bg-emerald-100/10"
+              />
+              <span class="sr-only">Repost</span>
+              <span v-if="counts && counts?.favoriteCount > 0" class="my-auto text-sm">{{ counts?.favoriteCount }}</span>
+            </button>
+          </div>
+          <div>
+            <button
               class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-rose-600 dark:hover:text-rose-400 saturate-200"
-              :class="{ 'text-rose-600 dark:text-rose-400': isFavorite }"
-              @click="favorite"
+              :class="{
+                'text-neutral-600 dark:text-neutral-400': !isFavorite(item.id),
+                'text-rose-600 dark:text-rose-400': isFavorite(item.id)
+              }"
+              @click="handleFavorite(item.id)"
             >
               <IconHeart
-                :active="isFavorite"
+                :active="isFavorite(item.id)"
                 size="sm"
                 class="rounded-full p-2 group-hover:bg-rose-100/40 dark:group-hover:bg-rose-100/10"
               />
@@ -64,14 +91,17 @@
           </div>
           <div>
             <button
-              class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-emerald-600 dark:hover:text-emerald-400 saturate-200"
-              :class="{ 'text-emerald-600 dark:text-emerald-400': isBookmark }"
-              @click="bookmark"
+              class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-amber-600 dark:hover:text-amber-400 saturate-200"
+              :class="{
+                'text-neutral-600 dark:text-neutral-400': !isBookmark(item.id),
+                'text-amber-600 dark:text-amber-400': isBookmark(item.id)
+              }"
+              @click="handleBookmark(item.id)"
             >
               <IconBookmark
-                :active="isBookmark"
+                :active="isBookmark(item.id)"
                 size="sm"
-                class="rounded-full p-2 group-hover:bg-emerald-100/40 dark:group-hover:bg-emerald-100/10"
+                class="rounded-full p-2 group-hover:bg-amber-100/40 dark:group-hover:bg-amber-100/10"
               />
               <span class="sr-only">Bookmark</span>
               <span v-if="counts && counts?.bookmarkCount > 0" class="my-auto text-sm">{{ counts?.bookmarkCount }}</span>
@@ -79,8 +109,8 @@
           </div>
           <div>
             <button
-              class="flex w-min z-10 p-2 rounded-full hover:bg-indigo-100/40 dark:hover:bg-indigo-100/10 hover:text-indigo-800 dark:hover:text-indigo-400 saturate-200 transition-colors duration-200"
-              @click="share"
+              class="flex w-min z-10 p-2 rounded-full text-neutral-600 dark:text-neutral-400 hover:bg-indigo-100/40 dark:hover:bg-indigo-100/10 hover:text-indigo-800 dark:hover:text-indigo-400 saturate-200 transition-colors duration-200"
+              @click="share(item.id)"
             >
               <IconShare size="sm" class="mr-1" />
               <span class="sr-only">Share</span>
@@ -93,99 +123,41 @@
 </template>
 
 <script setup lang="ts">
-const user = useUser()
+const {
+  isBookmark,
+  isFavorite,
+  createdDate,
+  share,
+  bookmark,
+  favorite
+} = usePost()
 
 const props = defineProps({
   item: { type: Object, required: true }
 })
 
+const parentItem = ref()
+if (props.item.parentId) {
+  const { data } = await useFetch(`/api/post/${props.item.parentId}`)
+  parentItem.value = data.value
+}
+
 const { data: counts, refresh } = await useFetch(`/api/posts/${props.item.author.id}/${props.item.id}/counts`)
 
 const emit = defineEmits(['update'])
 
-const createdDate = computed(() => {
-  const date = new Date(props.item.createdDate)
-  const seconds = Math.floor((new Date().valueOf() - date.valueOf()) / 1000)
-  if(Math.round(seconds/(60*60*24*365.25)) >= 2) return new Intl.DateTimeFormat('en-US').format(date)
-  else if(Math.round(seconds/(60*60*24*30.4)) >= 2) return new Intl.DateTimeFormat('en-US').format(date)
-  else if(Math.round(seconds/(60*60*24*7)) >= 2) return new Intl.DateTimeFormat('en-US').format(date)
-  else if(Math.round(seconds/(60*60*24)) >= 2) return Math.round(seconds/(60*60*24)) + "d"
-  else if(Math.round(seconds/(60*60)) >= 2) return Math.round(seconds/(60*60)) + "h"
-  else if(Math.round(seconds/60) >= 2) return Math.round(seconds/60) + "m"
-  else return 'Just now'
-})
-
-const share = async () => {
-  const url = `${window.location.protocol}//${window.location.host}/posts/${props.item.id}`
-  if (!navigator.canShare()) {
-    try {
-      await navigator.share({
-        title: 'Check this out!',
-        text: 'Take a look at this post that I found.',
-        url
-      })
-    } catch (e) {}
-  } else {
-    window.location.href = `mailto:?subject=Check this out!&body=Take a look at this post that I found: ${url}`
-  }
-}
-
-const isBookmark = computed(() => {
-  if (!user.value) return false
-  return user.value.Bookmark.filter(i => i.postId === props.item.id).length > 0
-})
-
-const isFavorite = computed(() => {
-  if (!user.value) return false
-  return user.value.Favorite.filter(i => i.postId === props.item.id).length > 0
-})
-
-const update = () => {
-  refresh()
+const update = async () => {
+  await refresh()
   emit('update')
 }
 
-const bookmark = async () => {
-  if (!user.value) return
-
-  if (isBookmark.value) {
-    const bookmark = user.value.Bookmark.find(i => i.postId === props.item.id)
-    await useFetch(`/api/bookmarks/${user.value.id}`, {
-      method: 'delete',
-      body: {
-        id: bookmark && bookmark.id
-      }
-    })
-  } else {
-    await useFetch(`/api/bookmarks/${user.value.id}`, {
-      method: 'post',
-      body: {
-        postId: props.item.id
-      }
-    })
-  }
-  update()
+const handleBookmark = async (itemId: number) => {
+  await bookmark(itemId)
+  await update()
 }
 
-const favorite = async () => {
-  if (!user.value) return
-
-  if (isFavorite.value) {
-    const favorite = user.value.Favorite.find(i => i.postId === props.item.id)
-    await useFetch(`/api/favorites/${user.value.id}`, {
-      method: 'delete',
-      body: {
-        id: favorite && favorite.id
-      }
-    })
-  } else {
-    await useFetch(`/api/favorites/${user.value.id}`, {
-      method: 'post',
-      body: {
-        postId: props.item.id
-      }
-    })
-  }
-  update()
+const handleFavorite = async (itemId: number) => {
+  await favorite(itemId)
+  await update()
 }
 </script>

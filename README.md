@@ -24,7 +24,7 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [x] Likes
 - [x] Bookmarks
 - [x] Sharing
-- [ ] Infinite scrolling
+- [x] Infinite scrolling
 - [ ] Searching
 - [ ] Exploring hashtags
 - [ ] Administration Portal

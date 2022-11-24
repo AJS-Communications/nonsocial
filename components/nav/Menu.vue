@@ -27,5 +27,5 @@
 </template>
 
 <script setup lang="ts">
-const user = useUser()
+const { user } = useUser()
 </script>

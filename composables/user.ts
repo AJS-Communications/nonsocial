@@ -1,3 +1,11 @@
 export const useUser = () => {
-  return useState<User | null>('user', () => null)
+  const user = useState<User | null>('user', () => null)
+
+  return {
+    user,
+    updateUser: async () => {
+      if (!user.value) return
+      user.value = await $fetch<User>(`/api/users/${user.value.id}`)
+    }
+  }
 }
