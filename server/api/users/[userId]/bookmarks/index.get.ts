@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
       take: 10,
       where: {
         author: {
-          id: parseInt(event.context.params.authorId)
+          id: parseInt(event.context.params.userId)
         }
       },
       include: {
