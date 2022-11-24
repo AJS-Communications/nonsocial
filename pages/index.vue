@@ -31,7 +31,8 @@ const items = ref(data.value)
 
 useInfiniteScroll(el, async () => {
   if (items.value) {
-    const lastId = items.value[items.value.length - 1].id
+    const lastItem = items.value[items.value.length - 1]
+    const lastId = lastItem && lastItem.id || null
     if (lastId === cursor.value) return
 
     cursor.value = lastId

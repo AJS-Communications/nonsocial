@@ -31,7 +31,8 @@ const posts = ref(bookmarks.value?.flatMap(i => i.post) || [])
 
 useInfiniteScroll(el, async () => {
   if (bookmarks.value) {
-    const lastId = bookmarks.value[bookmarks.value.length - 1].id
+    const lastItem = bookmarks.value[bookmarks.value.length - 1]
+    const lastId = lastItem && lastItem.id || null
     if (lastId === cursor.value) return
 
     cursor.value = lastId

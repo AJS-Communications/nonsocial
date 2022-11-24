@@ -194,7 +194,8 @@ const text = ref('')
 
 useInfiniteScroll(el, async () => {
   if (comments.value && user.value) {
-    const lastId = comments.value[comments.value.length - 1].id
+    const lastItem = comments.value[comments.value.length - 1]
+    const lastId = lastItem && lastItem.id || null
     if (lastId === cursor.value) return
 
     cursor.value = lastId
