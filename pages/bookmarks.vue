@@ -8,7 +8,7 @@
       <p v-if="user" class="px-4 pb-4 text-neutral-500">@{{ user.username }}</p>
     </div>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
-      <FeedItem v-for="item in posts" :key="item.id" :item="item" @update="updateUser" />
+      <FeedItem v-for="item in posts" :key="item.id" :item="item" @update="update" />
     </div>
   </div>
 </template>
@@ -45,6 +45,14 @@ useInfiniteScroll(el, async () => {
     }
   }
 })
+
+const update = async () => {
+  if (!user.value) return
+  const { data } = await useFetch<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
+  bookmarks.value = data.value
+  posts.value = bookmarks.value?.flatMap(i => i.post) || []
+  await updateUser()
+}
 
 const goToTop = () => {
   el.value.scrollTo({
