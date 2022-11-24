@@ -52,6 +52,8 @@
 </template>
 
 <script setup lang="ts">
+const { user } = useUser()
+
 const props = defineProps({
   modelValue: { type: String, default: '' },
   placeholder: { type: String, default: 'Post your reply' },
@@ -133,7 +135,8 @@ const resetEditor = () => {
 }
 
 const submit = async () => {
-  await useFetch('/api/posts/1', {
+  if (!user.value) return
+  await useFetch(`/api/users/${user.value.id}/posts`, {
     method: 'post',
     body: {
       text: text.value,

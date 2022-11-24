@@ -25,9 +25,6 @@ export default defineEventHandler(async (event) => {
       prisma.post.findFirst({
         where: {
           id: parseInt(event.context.params.postId),
-          author: {
-            id: parseInt(event.context.params.authorId)
-          },
           published: true,
           visibility: 'PUBLIC'
         },

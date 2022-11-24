@@ -4,11 +4,11 @@ const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
-  let data = []
+  let data: any = []
 
   async function main() {
     if (typeof query.cursor !== 'undefined') {
-      return await prisma.bookmark.findMany({
+      return await prisma.post.findMany({
         take: 10,
         skip: 1,
         cursor: {
@@ -16,15 +16,14 @@ export default defineEventHandler(async (event) => {
         },
         where: {
           author: {
-            id: parseInt(event.context.params.authorId)
-          }
+            id: parseInt(event.context.params.userId)
+          },
+          parentId: null,
+          published: true,
+          visibility: 'PUBLIC'
         },
         include: {
-          post: {
-            include: {
-              author: true
-            }
-          }
+          author: true
         },
         orderBy: {
           createdDate: 'desc'
@@ -32,19 +31,18 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    return await prisma.bookmark.findMany({
+    return await prisma.post.findMany({
       take: 10,
       where: {
         author: {
-          id: parseInt(event.context.params.authorId)
-        }
+          id: parseInt(event.context.params.userId)
+        },
+        parentId: null,
+        published: true,
+        visibility: 'PUBLIC'
       },
       include: {
-        post: {
-          include: {
-            author: true
-          }
-        }
+        author: true
       },
       orderBy: {
         createdDate: 'desc'

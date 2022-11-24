@@ -171,11 +171,11 @@ if (!user.value) {
 }
 
 const route = useRoute()
-const { data: item, refresh } = await useFetch(`/api/posts/${user.value.id}/${route.params.id}`)
+const { data: item, refresh } = await useFetch(`/api/posts/${route.params.id}`)
 
 const parentItem = ref()
 if (item.value?.parentId) {
-  const { data } = await useFetch(`/api/posts/${user.value.id}/${item.value.parentId}`)
+  const { data } = await useFetch(`/api/posts/${item.value.parentId}`)
   parentItem.value = data.value
 }
 
@@ -183,7 +183,7 @@ if (!item.value) {
   throw createError({ statusCode: 404, message: 'Page Not Found' })
 }
 
-const { data: comments, refresh: refreshComments } = await useFetch<[Post]>(`/api/posts/${user.value.id}/${route.params.id}/comments`)
+const { data: comments, refresh: refreshComments } = await useFetch<[Post]>(`/api/posts/${route.params.id}/comments`)
 
 const title = useTitle()
 title.value = 'Post'
@@ -198,7 +198,7 @@ useInfiniteScroll(el, async () => {
     if (lastId === cursor.value) return
 
     cursor.value = lastId
-    const { data } = await useFetch<[Post]>(`/api/posts/${user.value.id}/${route.params.id}/comments`, {
+    const { data } = await useFetch<[Post]>(`/api/posts/${route.params.id}/comments`, {
       params: {
         cursor: cursor.value
       }

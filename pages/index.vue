@@ -23,7 +23,7 @@ if (!user.value) {
 const title = useTitle()
 title.value = 'Home'
 const cursor = ref()
-const { data } = await useFetch<[Post]>(`/api/posts/${user.value.id}`)
+const { data } = await useFetch<[Post]>(`/api/posts`)
 const text = ref('')
 const el = ref()
 
@@ -35,7 +35,7 @@ useInfiniteScroll(el, async () => {
     if (lastId === cursor.value) return
 
     cursor.value = lastId
-    const { data } = await useFetch<[Post]>(`/api/posts/${user.value?.id}`, {
+    const { data } = await useFetch<[Post]>('/api/posts', {
       params: {
         cursor: cursor.value
       }
@@ -48,7 +48,7 @@ useInfiniteScroll(el, async () => {
 
 const update = async () => {
   if (!user.value) return
-  const { data } = await useFetch<[Post]>(`/api/posts/${user.value.id}`)
+  const { data } = await useFetch<[Post]>(`/api/posts`)
   items.value = data.value
   updateUser()
 }

@@ -47,14 +47,14 @@ export const usePost = () => {
   
     if (isBookmark(postId)) {
       const bookmark = user.value.Bookmark.find(i => i.postId === postId)
-      await useFetch(`/api/bookmarks/${user.value.id}`, {
+      await useFetch(`/api/users/${user.value.id}/bookmarks`, {
         method: 'delete',
         body: {
           id: bookmark && bookmark.id
         }
       })
     } else {
-      await useFetch(`/api/bookmarks/${user.value.id}`, {
+      await useFetch(`/api/users/${user.value.id}/bookmarks`, {
         method: 'post',
         body: {
           postId: postId
@@ -69,14 +69,14 @@ export const usePost = () => {
   
     if (isFavorite(postId)) {
       const favorite = user.value.Favorite.find(i => i.postId ===  postId)
-      await useFetch(`/api/favorites/${user.value.id}`, {
+      await useFetch(`/api/users/${user.value.id}/favorites`, {
         method: 'delete',
         body: {
           id: favorite && favorite.id
         }
       })
     } else {
-      await useFetch(`/api/favorites/${user.value.id}`, {
+      await useFetch(`/api/users/${user.value.id}/favorites`, {
         method: 'post',
         body: {
           postId: postId

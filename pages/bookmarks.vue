@@ -23,7 +23,7 @@ if (!user.value) {
 const title = useTitle()
 title.value = 'Bookmarks'
 const cursor = ref()
-const { data } = await useFetch<[Bookmark]>(`/api/bookmarks/${user.value.id}`)
+const { data } = await useFetch<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
 const el = ref()
 
 const bookmarks = ref(data.value)
@@ -35,7 +35,7 @@ useInfiniteScroll(el, async () => {
     if (lastId === cursor.value) return
 
     cursor.value = lastId
-    const { data } = await useFetch<[Bookmark]>(`/api/bookmarks/${user.value?.id}`, {
+    const { data } = await useFetch<[Bookmark]>(`/api/users/${user.value?.id}/bookmarks`, {
       params: {
         cursor: cursor.value
       }

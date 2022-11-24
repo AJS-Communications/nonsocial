@@ -138,11 +138,11 @@ const props = defineProps({
 
 const parentItem = ref()
 if (props.item.parentId) {
-  const { data } = await useFetch(`/api/post/${props.item.parentId}`)
+  const { data } = await useFetch(`/api/posts/${props.item.parentId}`)
   parentItem.value = data.value
 }
 
-const { data: counts, refresh } = await useFetch(`/api/posts/${props.item.author.id}/${props.item.id}/counts`)
+const { data: counts, refresh } = await useFetch(`/api/posts/${props.item.id}/counts`)
 
 const emit = defineEmits(['update'])
 

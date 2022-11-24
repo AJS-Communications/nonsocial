@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 
   async function main() {
     if (typeof query.cursor !== 'undefined') {
-      return await prisma.post.findMany({
+      return await prisma.bookmark.findMany({
         take: 10,
         skip: 1,
         cursor: {
@@ -16,14 +16,15 @@ export default defineEventHandler(async (event) => {
         },
         where: {
           author: {
-            id: parseInt(event.context.params.authorId)
-          },
-          parentId: null,
-          published: true,
-          visibility: 'PUBLIC'
+            id: parseInt(event.context.params.userId)
+          }
         },
         include: {
-          author: true
+          post: {
+            include: {
+              author: true
+            }
+          }
         },
         orderBy: {
           createdDate: 'desc'
@@ -31,18 +32,19 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    return await prisma.post.findMany({
+    return await prisma.bookmark.findMany({
       take: 10,
       where: {
         author: {
           id: parseInt(event.context.params.authorId)
-        },
-        parentId: null,
-        published: true,
-        visibility: 'PUBLIC'
+        }
       },
       include: {
-        author: true
+        post: {
+          include: {
+            author: true
+          }
+        }
       },
       orderBy: {
         createdDate: 'desc'

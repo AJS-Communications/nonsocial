@@ -8,11 +8,13 @@ export default defineEventHandler(async (event) => {
   let data = null
 
   async function main() {
-    return await prisma.bookmark.create({
+    return await prisma.post.create({
       data: {
+        text: body.text,
         published: true,
-        authorId: parseInt(event.context.params.authorId),
-        postId: body.postId
+        authorId: parseInt(event.context.params.userId),
+        parentId: body.parentId || null,
+        visibility: body.visibility || 'PUBLIC'
       }
     })
   }
