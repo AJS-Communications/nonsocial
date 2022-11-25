@@ -14,19 +14,29 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [ ] User Groups
 - [ ] User Roles
 - [ ] Recommendation engine
+  - [ ] Get posts similar to what you've tagged
+  - [ ] Get posts similar to what you've liked
+  - [ ] Get posts similar to what you've reposted
+  - [ ] Get posts similar to what the users you follow have tagged
+  - [ ] Get posts similar to what the users you follow have liked
+  - [ ] Get posts similar to what the users you follow have reposted
 - [ ] Hashtag parsing
 - [ ] @username parsing
 - [ ] URL parsing
 - [ ] Image/asset handling
 - [ ] User Profiles
 - [x] Posting
+- [x] Reposting
 - [x] Commenting
 - [x] Likes
 - [x] Bookmarks
 - [x] Sharing
 - [x] Infinite scrolling
 - [ ] Searching
-- [ ] Exploring hashtags
+- [ ] Exploring
+  - [ ] Get posts with most used tags that day
+  - [ ] Get posts that have been liked the most that day
+  - [ ] Get posts that have been reposted the most that day
 - [ ] Administration Portal
 - [ ] Moderation Portal
 - [ ] Code cleanup and keeping things DRY
