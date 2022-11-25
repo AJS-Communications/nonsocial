@@ -3,6 +3,7 @@ interface User {
   username: string
   Bookmark: [Bookmark]
   Favorite: [Favorite]
+  Repost: [Repost]
 }
 
 interface Post {
@@ -20,6 +21,14 @@ interface Bookmark {
 }
 
 interface Favorite {
+  id: number
+  postId: Post.id
+  post: Post
+  author: User
+  authorId: User.id
+}
+
+interface Repost {
   id: number
   postId: Post.id
   post: Post

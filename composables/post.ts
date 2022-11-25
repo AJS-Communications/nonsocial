@@ -11,6 +11,11 @@ export const usePost = () => {
     return user.value.Favorite.filter(i => i.postId === postId).length > 0
   }
 
+  const isRepost = (postId: number) => {
+    if (!user.value) return false
+    return user.value.Repost.filter(i => i.postId === postId).length > 0
+  }
+
   const createdDate = (dateString: Date, type: 'short' | 'long' = 'short') => {
     const date = new Date(dateString)
     if (type === 'long') {
@@ -86,12 +91,36 @@ export const usePost = () => {
     await updateUser()
   }
 
+  const repost = async (postId: number) => {
+    if (!user.value) return
+  
+    if (isRepost(postId)) {
+      const repost = user.value.Repost.find(i => i.postId ===  postId)
+      await useFetch(`/api/users/${user.value.id}/reposts`, {
+        method: 'delete',
+        body: {
+          id: repost && repost.id
+        }
+      })
+    } else {
+      await useFetch(`/api/users/${user.value.id}/reposts`, {
+        method: 'post',
+        body: {
+          postId: postId
+        }
+      })
+    }
+    await updateUser()
+  }
+
   return {
     isBookmark,
     isFavorite,
+    isRepost,
     createdDate,
     share,
     bookmark,
-    favorite
+    favorite,
+    repost
   }
 }

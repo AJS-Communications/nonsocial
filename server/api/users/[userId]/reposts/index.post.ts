@@ -3,17 +3,16 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
+  const body = await readBody(event)
+
   let data = null
 
   async function main() {
-    return await prisma.user.findUnique({
-      where: {
-        id: parseInt(event.context.params.userId)
-      },
-      include: {
-        Bookmark: true,
-        Favorite: true,
-        Repost: true
+    return await prisma.repost.create({
+      data: {
+        published: true,
+        authorId: parseInt(event.context.params.userId),
+        postId: body.postId
       }
     })
   }

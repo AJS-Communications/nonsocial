@@ -59,8 +59,8 @@
               <span class="text-neutral-500">{{ item.counts.commentCount === 1 ? 'Comment' : 'Comments' }}</span>
             </div>
             <div class="flex gap-2">
-              <span class="font-bold">{{ item.counts.commentCount }}</span>
-              <span class="text-neutral-500">{{ item.counts.commentCount === 1 ? 'Repost' : 'Reposts' }}</span>
+              <span class="font-bold">{{ item.counts.repostCount }}</span>
+              <span class="text-neutral-500">{{ item.counts.repostCount === 1 ? 'Repost' : 'Reposts' }}</span>
             </div>
             <div class="flex gap-2">
               <span class="font-bold">{{ item.counts.favoriteCount }}</span>
@@ -83,12 +83,12 @@
             <button
               class="p-2 rounded-full flex hover:bg-emerald-100/40 dark:hover:bg-emerald-100/10 hover:text-emerald-600 dark:hover:text-emerald-400 saturate-200 transition-colors duration-200"
               :class="{
-                'text-neutral-600 dark:text-neutral-400': !isFavorite(item.id),
-                'text-emerald-600 dark:text-emerald-400': isFavorite(item.id)
+                'text-neutral-600 dark:text-neutral-400': !isRepost(item.id),
+                'text-emerald-600 dark:text-emerald-400': isRepost(item.id)
               }"
-              @click="handleFavorite"
+              @click="handleRepost"
             >
-              <IconArrowPath :active="isFavorite(item.id)" />
+              <IconArrowPath :active="isRepost(item.id)" />
               <span class="sr-only">Repost</span>
             </button>
             <button
@@ -102,24 +102,37 @@
               <IconHeart :active="isFavorite(item.id)" />
               <span class="sr-only">Love</span>
             </button>
-            <button
-              class="p-2 flex gap-4 rounded-full flex hover:bg-amber-100/40 dark:hover:bg-amber-100/10 hover:text-amber-600 dark:hover:text-amber-400 saturate-200 transition-colors duration-200"
-              :class="{
-                'text-neutral-600 dark:text-neutral-400': !isBookmark(item.id),
-                'text-amber-600 dark:text-amber-400': isBookmark(item.id)
-              }"
-              @click="handleBookmark"
-            >
-              <IconBookmark :active="isBookmark(item.id)" />
-              <span class="sr-only">Bookmark</span>
-            </button>
-            <button
-              class="p-2 rounded-full flex text-neutral-600 dark:text-neutral-400 hover:bg-indigo-100/40 dark:hover:bg-indigo-100/10 hover:text-indigo-800 dark:hover:text-indigo-400 saturate-200 transition-colors duration-200"
-              @click="item && share(item.id)"
-            >
-              <IconShare class="mr-1" />
-              <span class="sr-only">Share</span>
-          </button>
+            <div ref="shareBtn" class="relative w-min">
+              <button
+                class="p-2 rounded-full flex text-neutral-600 dark:text-neutral-400 hover:bg-indigo-100/40 dark:hover:bg-indigo-100/10 hover:text-indigo-800 dark:hover:text-indigo-400 saturate-200 transition-colors duration-200"
+                @click.stop="showShareDropdown = !showShareDropdown"
+              >
+                <IconShare />
+                <span class="sr-only">Share</span>
+              </button>
+              <nav v-if="showShareDropdown" class="absolute left-auto right-0 z-20 w-56 my-2 border shadow bg-neutral-100 border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 py-3 rounded-xl">
+                <button
+                  class="w-full text-left flex gap-2 text-neutral-600 hover:text-black hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 px-4 py-2"
+                  @click="handleShare"
+                >
+                  <IconShare class="text-indigo-600 dark:text-indigo-400" size="sm" />
+                  <span>Share post via...</span>
+                </button>
+                <button
+                class="w-full text-left flex gap-2 text-neutral-600 hover:text-black hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 px-4 py-2"
+                  @click="handleBookmark"
+                >
+                  <IconBookmark
+                    :active="isBookmark(item.id)"
+                    size="sm"
+                    :class="{
+                      'text-amber-600 dark:text-amber-400': isBookmark(item.id)
+                    }"
+                  />
+                  <span>Bookmark</span>
+                </button>
+              </nav>
+            </div>
           </div>
         </div>
       </article>
@@ -160,10 +173,12 @@ const {
 const {
   isBookmark,
   isFavorite,
+  isRepost,
   createdDate,
   share,
   bookmark,
-  favorite
+  favorite,
+  repost
 } = usePost()
 
 if (!user.value) {
@@ -191,6 +206,11 @@ const cursor = ref()
 const el = ref()
 const commentEditor = ref()
 const text = ref('')
+
+const shareBtn = ref()
+const showShareDropdown = ref(false)
+onClickOutside(shareBtn, () => showShareDropdown.value = false)
+onKeyStroke('Escape', () => showShareDropdown.value = false)
 
 useInfiniteScroll(el, async () => {
   if (comments.value && user.value) {
@@ -227,5 +247,18 @@ const handleBookmark = async () => {
   if (!item.value) return
   await bookmark(item.value.id)
   await update()
+  showShareDropdown.value = false
+}
+
+const handleRepost = async () => {
+  if (!item.value) return
+  await repost(item.value.id)
+  await update()
+}
+
+const handleShare = async () => {
+  if (!item.value) return
+  share(item.value.id)
+  showShareDropdown.value = false
 }
 </script>

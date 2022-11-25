@@ -3,17 +3,14 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
+  const body = await readBody(event)
+
   let data = null
 
   async function main() {
-    return await prisma.user.findUnique({
+    return await prisma.repost.delete({
       where: {
-        id: parseInt(event.context.params.userId)
-      },
-      include: {
-        Bookmark: true,
-        Favorite: true,
-        Repost: true
+        id: body.id
       }
     })
   }

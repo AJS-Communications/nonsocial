@@ -21,6 +21,7 @@ model User {
   posts    Post[]
   Bookmark Bookmark[]
   Favorite Favorite[]
+  Repost   Repost[]
 }
 
 enum UserRole {
@@ -42,6 +43,7 @@ model Post {
   parentId    Int?
   Bookmark    Bookmark[]
   Favorite    Favorite[]
+  Repost      Repost[]
 }
 
 enum Visibility {
@@ -57,6 +59,7 @@ model Bookmark {
   authorId    Int
   post        Post     @relation(fields: [postId], references: [id])
   postId      Int
+
   @@unique([authorId, postId])
 }
 
@@ -68,5 +71,18 @@ model Favorite {
   authorId    Int
   post        Post     @relation(fields: [postId], references: [id])
   postId      Int
+
+  @@unique([authorId, postId])
+}
+
+model Repost {
+  id          Int      @id @default(autoincrement())
+  published   Boolean  @default(false)
+  createdDate DateTime @default(now())
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    Int
+  post        Post     @relation(fields: [postId], references: [id])
+  postId      Int
+
   @@unique([authorId, postId])
 }
