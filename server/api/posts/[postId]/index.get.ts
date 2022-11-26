@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   let data = null
 
   async function main() {
-    const [bookmarkCount, favoriteCount, repostCount, commentCount, post] = await prisma.$transaction([
+    const [bookmarkCount, favoriteCount, repostCount, commentCount, commenters, post] = await prisma.$transaction([
       prisma.bookmark.count({
         where: {
           postId: parseInt(event.context.params.postId)
@@ -25,6 +25,15 @@ export default defineEventHandler(async (event) => {
       prisma.post.count({
         where: {
           parentId: parseInt(event.context.params.postId)
+        }
+      }),
+      prisma.post.findMany({
+        where: {
+          parentId: parseInt(event.context.params.postId)
+        },
+        select: {
+          id: true,
+          author: true
         }
       }),
       prisma.post.findFirst({
@@ -54,7 +63,8 @@ export default defineEventHandler(async (event) => {
         favoriteCount,
         repostCount,
         commentCount,
-      }
+      },
+      commenters
     })
   }
 

@@ -42,7 +42,7 @@
             </div>
           </div>
         </div>
-        <div class="p-4 space-y-4">
+        <div class="px-4 py-2 space-y-2">
           <p v-if="item.parentId" class="text-neutral-500 font-medium">
             Replying to
             <NuxtLink :to="`/${parentItem.author.username}`" class="text-sky-600 dark:text-sky-400 group">
@@ -159,6 +159,7 @@
         v-for="comment in comments"
         :key="comment.id"
         :item-id="comment.id"
+        show-comments
         @update="updateUser"
       />
     </div>

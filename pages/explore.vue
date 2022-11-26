@@ -8,7 +8,13 @@
       <p v-if="user" class="px-4 pb-4 text-neutral-500">@{{ user.username }}</p>
     </div>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
-      <LazyFeedItem v-for="item in items" :key="item.id" :item-id="item.id" @update="updateUser" />
+      <LazyFeedItem
+        v-for="item in items"
+        :key="item.id"
+        :item-id="item.id"
+        show-comments
+        @update="updateUser"
+      />
     </div>
   </div>
 </template>
