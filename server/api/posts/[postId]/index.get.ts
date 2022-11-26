@@ -34,7 +34,17 @@ export default defineEventHandler(async (event) => {
           visibility: 'PUBLIC'
         },
         include: {
-          author: true
+          author: true,
+          favorites: {
+            include: {
+              author: true
+            }
+          },
+          reposts: {
+            include: {
+              author: true
+            }
+          }
         }
       })
     ])

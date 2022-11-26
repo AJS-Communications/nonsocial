@@ -19,6 +19,7 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [ ] Recommendation engine
   - [x] Get your own posts
   - [x] Get posts of the users you follow
+  - [ ] Get posts that the users you follow, follow
   - [x] Get posts that the users you follow have reposted
   - [x] Get posts that the users you follow have liked
   - [ ] Get posts that the users you follow have commented on

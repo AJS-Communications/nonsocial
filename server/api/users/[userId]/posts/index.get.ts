@@ -69,8 +69,8 @@ export default defineEventHandler(async (event) => {
           published: true,
           visibility: 'PUBLIC'
         },
-        include: {
-          author: true
+        select: {
+          id: true
         },
         orderBy: {
           createdDate: 'desc'
@@ -105,8 +105,8 @@ export default defineEventHandler(async (event) => {
         published: true,
         visibility: 'PUBLIC'
       },
-      include: {
-        author: true
+      select: {
+        id: true
       },
       orderBy: {
         createdDate: 'desc'

@@ -17,7 +17,7 @@
         v-if="parentItem"
         class="bg-neutral-200 dark:bg-neutral-800 w-1 absolute top-10 left-[2.35rem] bottom-10 -z-10"
       />
-      <FeedItem v-if="parentItem" :item="parentItem" @update="updateUser" />
+      <LazyFeedItem v-if="parentItem" :item-id="parentItem.id" @update="updateUser" />
       <article class="bg-white dark:bg-black">
         <div class="relative flex flex-col-reverse px-4 pb-2 mt-4">
           <div class="flex items-center space-x-4">
@@ -155,10 +155,10 @@
       />
     </div>
     <div v-if="comments" class="divide-y divide-neutral-100 dark:divide-neutral-900">
-      <FeedItem
+      <LazyFeedItem
         v-for="comment in comments"
         :key="comment.id"
-        :item="comment"
+        :item-id="comment.id"
         @update="updateUser"
       />
     </div>

@@ -1,21 +1,33 @@
 <template>
-  <article class="relative flex flex-col gap-1 p-4">
-    <!-- <p class="flex gap-2 text-neutral-500 text-sm ml-10 font-medium">
+  <article v-if="item" class="relative flex flex-col gap-1 p-4">
+    <div v-if="repostList.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-semibold">
       <IconArrowPath active size="sm" />
-      <span>USERNAME reposted</span>
-    </p> -->
-    <!-- <p class="flex gap-2 text-neutral-500 text-sm ml-10 font-medium">
+      <div class="flex gap-1">
+        <span
+          v-for="(repost, index) in repostList"
+          :key="repost.id"
+        >{{ repost.author.name }} {{ index < repostList.length - 1 ? 'and ' : '' }}</span>
+        <span>reposted</span>
+      </div>
+    </div>
+    <div v-if="repostList.length < 1 && favoriteList.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-semibold">
       <IconHeart active size="sm" />
-      <span>USERNAME liked</span>
-    </p> -->
-    <!-- <p class="flex gap-2 text-neutral-500 text-sm ml-10 font-medium">
+      <div class="flex gap-1">
+        <span
+          v-for="(like, index) in favoriteList"
+          :key="like.id"
+        >{{ like.author.name }}  {{ index < favoriteList.length - 1 ? 'and ' : '' }}</span>
+        <span>liked</span>
+      </div>
+    </div>
+    <!-- <div class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
       <IconChatBubble active size="sm" />
       <span>USERNAME commented</span>
-    </p> -->
+    </div> -->
     <div class="flex items-center space-x-4">
       <img
         :src="item.author.photoUrl"
-        :alt="item.author.name"
+        :alt="item.author.name || ''"
         class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-4 ring-white dark:ring-black"
         loading="lazy"
         decoding="async"
@@ -63,7 +75,7 @@
                 class="rounded-full p-2 group-hover:bg-blue-100/40 dark:group-hover:bg-blue-100/10"
               />
               <span class="sr-only">Comment</span>
-              <span v-if="counts && counts?.commentCount > 0" class="my-auto text-sm">{{ counts?.commentCount }}</span>
+              <span v-if="item.counts.commentCount > 0" class="my-auto text-sm">{{ item.counts.commentCount }}</span>
             </NuxtLink>
           </div>
           <div>
@@ -73,7 +85,7 @@
                 'text-neutral-600 dark:text-neutral-400': !isRepost(item.id),
                 'text-emerald-600 dark:text-emerald-400': isRepost(item.id)
               }"
-              @click="handleRepost(item.id)"
+              @click="handleRepost"
             >
               <IconArrowPath
                 :active="isRepost(item.id)"
@@ -81,7 +93,7 @@
                 class="rounded-full p-2 group-hover:bg-emerald-100/40 dark:group-hover:bg-emerald-100/10"
               />
               <span class="sr-only">Repost</span>
-              <span v-if="counts && counts?.repostCount > 0" class="my-auto text-sm">{{ counts?.repostCount }}</span>
+              <span v-if="item.counts.repostCount > 0" class="my-auto text-sm">{{ item.counts.repostCount }}</span>
             </button>
           </div>
           <div>
@@ -91,7 +103,7 @@
                 'text-neutral-600 dark:text-neutral-400': !isFavorite(item.id),
                 'text-rose-600 dark:text-rose-400': isFavorite(item.id)
               }"
-              @click="handleFavorite(item.id)"
+              @click="handleFavorite"
             >
               <IconHeart
                 :active="isFavorite(item.id)"
@@ -99,7 +111,7 @@
                 class="rounded-full p-2 group-hover:bg-rose-100/40 dark:group-hover:bg-rose-100/10"
               />
               <span class="sr-only">Love</span>
-              <span v-if="counts && counts?.favoriteCount > 0" class="my-auto text-sm">{{ counts?.favoriteCount }}</span>
+              <span v-if="item.counts.favoriteCount > 0" class="my-auto text-sm">{{ item.counts.favoriteCount }}</span>
             </button>
           </div>
           <div>
@@ -115,14 +127,14 @@
               <nav v-if="showShareDropdown" class="absolute left-auto right-0 z-20 w-56 my-2 border shadow-md shadow-neutral-100 dark:shadow-neutral-900 bg-neutral-100 border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 py-3 rounded-xl">
                 <button
                   class="w-full text-left flex gap-2 text-neutral-600 hover:text-black hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 px-4 py-2"
-                  @click="handleShare(item.id)"
+                  @click="handleShare"
                 >
                   <IconShare class="text-indigo-600 dark:text-indigo-400" size="sm" />
                   <span>Share post via...</span>
                 </button>
                 <button
                 class="w-full text-left flex gap-2 text-neutral-600 hover:text-black hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 px-4 py-2"
-                  @click="handleBookmark(item.id)"
+                  @click="handleBookmark"
                 >
                   <IconBookmark
                     :active="isBookmark(item.id)"
@@ -143,6 +155,8 @@
 </template>
 
 <script setup lang="ts">
+const { user } = useUser()
+
 const {
   isBookmark,
   isFavorite,
@@ -155,18 +169,30 @@ const {
 } = usePost()
 
 const props = defineProps({
-  item: { type: Object, required: true }
+  itemId: { type: Number, required: true }
 })
 
+const { data: item, refresh } = await useFetch(`/api/posts/${props.itemId}`)
+
 const parentItem = ref()
-if (props.item.parentId) {
-  const { data } = await useFetch(`/api/posts/${props.item.parentId}`)
+if (item.value?.parentId) {
+  const { data } = await useFetch(`/api/posts/${item.value.parentId}`)
   parentItem.value = data.value
 }
 
-const { data: counts, refresh } = await useFetch(`/api/posts/${props.item.id}/counts`)
-
 const emit = defineEmits(['update'])
+
+const favoriteList = computed(() => {
+  return item.value?.favorites.filter(i => {
+    return user.value?.followers.find(x => x.followeeId === i.authorId)
+  }).slice(0, 2) || []
+})
+
+const repostList = computed(() => {
+  return item.value?.reposts.filter(i => {
+    return user.value?.followers.find(x => x.followeeId === i.authorId)
+  }).slice(0, 2) || []
+})
 
 const shareBtn = ref()
 const showShareDropdown = ref(false)
@@ -178,24 +204,28 @@ const update = async () => {
   emit('update')
 }
 
-const handleBookmark = async (itemId: number) => {
-  await bookmark(itemId)
+const handleBookmark = async () => {
+  if (!item.value) return
+  await bookmark(item.value.id)
   await update()
   showShareDropdown.value = false
 }
 
-const handleFavorite = async (itemId: number) => {
-  await favorite(itemId)
+const handleFavorite = async () => {
+  if (!item.value) return
+  await favorite(item.value.id)
   await update()
 }
 
-const handleRepost = async (itemId: number) => {
-  await repost(itemId)
+const handleRepost = async () => {
+  if (!item.value) return
+  await repost(item.value.id)
   await update()
 }
 
-const handleShare = async (itemId: number) => {
-  share(itemId)
+const handleShare = async () => {
+  if (!item.value) return
+  share(item.value.id)
   showShareDropdown.value = false
 }
 </script>
