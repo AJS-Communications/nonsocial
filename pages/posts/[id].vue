@@ -105,12 +105,13 @@
             <div ref="shareBtn" class="relative w-min">
               <button
                 class="p-2 rounded-full flex text-neutral-600 dark:text-neutral-400 hover:bg-indigo-100/40 dark:hover:bg-indigo-100/10 hover:text-indigo-800 dark:hover:text-indigo-400 saturate-200 transition-colors duration-200"
+                :class="{ 'bg-indigo-100/40 dark:bg-indigo-100/10 text-indigo-800 dark:text-indigo-400': showShareDropdown }"
                 @click.stop="showShareDropdown = !showShareDropdown"
               >
                 <IconShare />
                 <span class="sr-only">Share</span>
               </button>
-              <nav v-if="showShareDropdown" class="absolute left-auto right-0 z-20 w-56 my-2 border shadow-md shadow-neutral-300 dark:shadow-neutral-800 bg-neutral-100 border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 py-3 rounded-xl">
+              <nav v-if="showShareDropdown" class="absolute left-auto right-0 z-20 w-56 my-2 border shadow-md shadow-neutral-100 dark:shadow-neutral-900 bg-neutral-100 border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 py-3 rounded-xl">
                 <button
                   class="w-full text-left flex gap-2 text-neutral-600 hover:text-black hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 px-4 py-2"
                   @click="handleShare"

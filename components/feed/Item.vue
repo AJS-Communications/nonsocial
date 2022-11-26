@@ -1,5 +1,17 @@
 <template>
-  <article class="relative flex flex-col-reverse p-4">
+  <article class="relative flex flex-col gap-1 p-4">
+    <!-- <p class="flex gap-2 text-neutral-500 text-sm ml-10 font-medium">
+      <IconArrowPath active size="sm" />
+      <span>USERNAME reposted</span>
+    </p> -->
+    <!-- <p class="flex gap-2 text-neutral-500 text-sm ml-10 font-medium">
+      <IconHeart active size="sm" />
+      <span>USERNAME liked</span>
+    </p> -->
+    <!-- <p class="flex gap-2 text-neutral-500 text-sm ml-10 font-medium">
+      <IconChatBubble active size="sm" />
+      <span>USERNAME commented</span>
+    </p> -->
     <div class="flex items-center space-x-4">
       <img
         :src="item.author.photoUrl"
@@ -40,7 +52,7 @@
         <blockquote class="mt-0.5 max-w-prose">
           <div class="font-sans whitespace-pre-line">{{ item.text }}</div>
         </blockquote>
-        <div class="grid grid-cols-4 gap-2 my-2">
+        <div class="grid grid-cols-4 gap-2 mt-2">
           <div>
             <NuxtLink
               :to="`/posts/${item.id}`"
@@ -94,12 +106,13 @@
             <div ref="shareBtn" class="relative w-min">
               <button
                 class="cursor-pointer flex gap-1 w-min z-10 p-2 rounded-full text-neutral-600 dark:text-neutral-400 hover:bg-indigo-100/40 dark:hover:bg-indigo-100/10 hover:text-indigo-800 dark:hover:text-indigo-400 saturate-200 transition-colors duration-200"
+                :class="{ 'bg-indigo-100/40 dark:bg-indigo-100/10 text-indigo-800 dark:text-indigo-400': showShareDropdown }"
                 @click.stop="showShareDropdown = !showShareDropdown"
               >
                 <IconShare size="sm" />
                 <span class="sr-only">Share</span>
               </button>
-              <nav v-if="showShareDropdown" class="absolute left-auto right-0 z-20 w-56 my-2 border shadow-md shadow-neutral-300 dark:shadow-neutral-800 bg-neutral-100 border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 py-3 rounded-xl">
+              <nav v-if="showShareDropdown" class="absolute left-auto right-0 z-20 w-56 my-2 border shadow-md shadow-neutral-100 dark:shadow-neutral-900 bg-neutral-100 border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 py-3 rounded-xl">
                 <button
                   class="w-full text-left flex gap-2 text-neutral-600 hover:text-black hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 px-4 py-2"
                   @click="handleShare(item.id)"
