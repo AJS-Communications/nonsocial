@@ -13,13 +13,15 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [ ] User authentication
 - [ ] User Groups
 - [ ] User Roles
+- [ ] User Following
+- [ ] User Blocking
+- [ ] User Reporting
 - [ ] Recommendation engine
-  - [ ] Get posts similar to what you've tagged
-  - [ ] Get posts similar to what you've liked
-  - [ ] Get posts similar to what you've reposted
-  - [ ] Get posts similar to what the users you follow have tagged
-  - [ ] Get posts similar to what the users you follow have liked
-  - [ ] Get posts similar to what the users you follow have reposted
+  - [x] Get your own posts
+  - [x] Get posts of the users you follow
+  - [x] Get posts that the users you follow have reposted
+  - [x] Get posts that the users you follow have liked
+  - [ ] Get posts that the users you follow have commented on
 - [ ] Hashtag parsing
 - [ ] @username parsing
 - [ ] URL parsing
@@ -34,9 +36,9 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [x] Infinite scrolling
 - [ ] Searching
 - [ ] Exploring
-  - [ ] Get posts with most used tags that day
-  - [ ] Get posts that have been liked the most that day
-  - [ ] Get posts that have been reposted the most that day
+  - [ ] Get all public posts with most used tags that day
+  - [ ] Get all public posts that have been liked the most that day
+  - [ ] Get all public posts that have been reposted the most that day
 - [ ] Administration Portal
 - [ ] Moderation Portal
 - [ ] Code cleanup and keeping things DRY

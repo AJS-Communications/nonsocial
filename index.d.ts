@@ -1,9 +1,11 @@
 interface User {
   id: number
   username: string
-  Bookmark: [Bookmark]
-  Favorite: [Favorite]
-  Repost: [Repost]
+  name: string
+  photoUrl: string
+  bookmarks: [Bookmark]
+  favorites: [Favorite]
+  reposts: [Repost]
 }
 
 interface Post {

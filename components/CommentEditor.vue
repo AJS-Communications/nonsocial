@@ -6,8 +6,8 @@
   >
     <div class="flex space-x-4 w-full">
       <img
-        src="https://pbs.twimg.com/profile_images/1333160856188833792/tMNnHY9F_x96.jpg"
-        alt="Jason Shimkoski"
+        :src="user?.photoUrl"
+        :alt="user?.name"
         class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover"
         loading="lazy"
         decoding="async"

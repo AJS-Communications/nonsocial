@@ -4,10 +4,10 @@
       class="bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-20 cursor-pointer"
       @click="goToTop"
     >
-      <h1 class="p-4 text-xl font-bold">{{ title }}</h1>
+      <h1 class="p-4 pb-0 text-xl font-bold">{{ title }}</h1>
+      <p v-if="user" class="px-4 pb-4 text-neutral-500">@{{ user.username }}</p>
     </div>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
-      <PostEditor v-model="text" @submit="update" />
       <FeedItem v-for="item in items" :key="item.id" :item="item" @update="updateUser" />
     </div>
   </div>
@@ -21,10 +21,9 @@ if (!user.value) {
 }
 
 const title = useTitle()
-title.value = 'Home'
+title.value = 'Explore'
 const cursor = ref()
-const { data } = await useFetch<[Post]>(`/api/users/${user.value.id}/posts`)
-const text = ref('')
+const { data } = await useFetch<[Post]>(`/api/posts`)
 const el = ref()
 
 const items = ref(data.value)
@@ -36,7 +35,7 @@ useInfiniteScroll(el, async () => {
     if (lastId === cursor.value) return
 
     cursor.value = lastId
-    const { data } = await useFetch<[Post]>(`/api/users/${user.value.id}/posts`, {
+    const { data } = await useFetch<[Post]>(`/api/posts`, {
       params: {
         cursor: cursor.value
       }
@@ -49,7 +48,7 @@ useInfiniteScroll(el, async () => {
 
 const update = async () => {
   if (!user.value) return
-  const { data } = await useFetch<[Post]>(`/api/users/${user.value.id}/posts`)
+  const { data } = await useFetch<[Post]>(`/api/posts`)
   items.value = data.value
   updateUser()
 }

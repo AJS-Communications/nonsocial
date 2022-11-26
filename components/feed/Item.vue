@@ -12,7 +12,6 @@
         <NuxtLink
           :to="`/posts/${item.id}`"
           class="my-auto group"
-          tabindex="0"
         >
           <span class="absolute inset-0 group-focus-visible:border border-black dark:border-white" />
           <span class="sr-only">Go to post</span>
@@ -21,7 +20,6 @@
           <NuxtLink
             :to="`/${item.author.username}`"
             class="my-auto hover:underline z-10"
-            tabindex="0"
           >
             <span>{{ item.author.name }}</span>
           </NuxtLink>
@@ -30,12 +28,15 @@
             <span>{{ createdDate(item.createdDate) }}</span>
           </div>
         </div>
-        <p v-if="parentItem" class="text-neutral-500 font-medium">
+        <div v-if="parentItem" class="text-neutral-500 font-medium">
           Replying to
-          <NuxtLink :to="`/${parentItem.author.username}`" class="text-sky-600 dark:text-sky-400 group">
+          <NuxtLink
+            :to="`/${parentItem.author.username}`"
+            class="relative text-sky-600 dark:text-sky-400 z-10 group"
+          >
             @<span class="group-hover:underline">{{ parentItem.author.username }}</span>
           </NuxtLink>
-        </p>
+        </div>
         <blockquote class="mt-0.5 max-w-prose">
           <div class="font-sans whitespace-pre-line">{{ item.text }}</div>
         </blockquote>
@@ -98,7 +99,7 @@
                 <IconShare size="sm" />
                 <span class="sr-only">Share</span>
               </button>
-              <nav v-if="showShareDropdown" class="absolute left-auto right-0 z-20 w-56 my-2 border shadow bg-neutral-100 border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 py-3 rounded-xl">
+              <nav v-if="showShareDropdown" class="absolute left-auto right-0 z-20 w-56 my-2 border shadow-md shadow-neutral-300 dark:shadow-neutral-800 bg-neutral-100 border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 py-3 rounded-xl">
                 <button
                   class="w-full text-left flex gap-2 text-neutral-600 hover:text-black hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 px-4 py-2"
                   @click="handleShare(item.id)"

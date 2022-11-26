@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
           author: true
         },
         orderBy: {
-          createdDate: 'desc'
+          createdDate: 'desc',
         }
       })
     }

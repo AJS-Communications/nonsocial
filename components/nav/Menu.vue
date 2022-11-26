@@ -12,6 +12,11 @@
           <IconHome :active="isActive" />
         </template>
       </NavMenuItem>
+      <NavMenuItem to="/explore" text="Explore" exact>
+        <template #icon="{ isActive }">
+          <IconHashtag :active="isActive" />
+        </template>
+      </NavMenuItem>
       <NavMenuItem to="/bookmarks" text="Bookmarks" exact>
         <template #icon="{ isActive }">
           <IconBookmark :active="isActive" />

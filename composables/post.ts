@@ -3,17 +3,17 @@ export const usePost = () => {
 
   const isBookmark = (postId: number) => {
     if (!user.value) return false
-    return user.value.Bookmark.filter(i => i.postId === postId).length > 0
+    return user.value.bookmarks.filter(i => i.postId === postId).length > 0
   }
 
   const isFavorite = (postId: number) => {
     if (!user.value) return false
-    return user.value.Favorite.filter(i => i.postId === postId).length > 0
+    return user.value.favorites.filter(i => i.postId === postId).length > 0
   }
 
   const isRepost = (postId: number) => {
     if (!user.value) return false
-    return user.value.Repost.filter(i => i.postId === postId).length > 0
+    return user.value.reposts.filter(i => i.postId === postId).length > 0
   }
 
   const createdDate = (dateString: Date, type: 'short' | 'long' = 'short') => {
@@ -51,7 +51,7 @@ export const usePost = () => {
     if (!user.value) return
   
     if (isBookmark(postId)) {
-      const bookmark = user.value.Bookmark.find(i => i.postId === postId)
+      const bookmark = user.value.bookmarks.find(i => i.postId === postId)
       await useFetch(`/api/users/${user.value.id}/bookmarks`, {
         method: 'delete',
         body: {
@@ -73,7 +73,7 @@ export const usePost = () => {
     if (!user.value) return
   
     if (isFavorite(postId)) {
-      const favorite = user.value.Favorite.find(i => i.postId ===  postId)
+      const favorite = user.value.favorites.find(i => i.postId ===  postId)
       await useFetch(`/api/users/${user.value.id}/favorites`, {
         method: 'delete',
         body: {
@@ -95,7 +95,7 @@ export const usePost = () => {
     if (!user.value) return
   
     if (isRepost(postId)) {
-      const repost = user.value.Repost.find(i => i.postId ===  postId)
+      const repost = user.value.reposts.find(i => i.postId ===  postId)
       await useFetch(`/api/users/${user.value.id}/reposts`, {
         method: 'delete',
         body: {
