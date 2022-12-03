@@ -16,6 +16,7 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [ ] User Following
 - [ ] User Blocking
 - [ ] User Reporting
+- [ ] User Muting
 - [ ] Recommendation engine
   - [x] Get your own posts
   - [x] Get posts of the users you follow
@@ -29,6 +30,8 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [ ] Image/asset handlingf
 - [ ] User Profiles
 - [x] Posting
+- [ ] Delete Post
+- [ ] Edit Post
 - [x] Reposting
 - [x] Commenting
 - [x] Likes
