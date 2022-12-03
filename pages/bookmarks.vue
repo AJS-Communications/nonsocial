@@ -61,6 +61,10 @@ const update = async () => {
   await updateUser()
 }
 
+useNuxtApp().hooks.hook('compose' as any, async () => {
+  await update()
+})
+
 const goToTop = () => {
   el.value.scrollTo({
     top: 0,

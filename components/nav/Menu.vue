@@ -6,7 +6,7 @@
         <span class="xl:hidden" title="Nonsocial">NS</span>
       </NuxtLink>
     </div>
-    <nav class="grid gap-2">
+    <nav v-if="user" class="grid gap-2">
       <NavMenuItem to="/" text="Home" exact>
         <template #icon="{ isActive }">
           <IconHome :active="isActive" />
@@ -27,6 +27,14 @@
           <IconPerson :active="isActive" />
         </template>
       </NavMenuItem>
+      <ModalCompose v-slot="{ toggle }">
+        <button
+          class="w-full mt-4 rounded-full p-4 bg-sky-600 hover:bg-sky-600/90 font-bold"
+          @click="toggle"
+        >
+          Compose
+        </button>
+      </ModalCompose>
     </nav>
   </header>
 </template>

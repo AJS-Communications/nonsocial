@@ -57,8 +57,12 @@ const update = async () => {
   if (!user.value) return
   const { data } = await useFetch<[Post]>(`/api/users/${user.value.id}/posts`)
   items.value = data.value
-  updateUser()
+  await updateUser()
 }
+
+useNuxtApp().hooks.hook('compose' as any, async () => {
+  await update()
+})
 
 const goToTop = () => {
   el.value.scrollTo({

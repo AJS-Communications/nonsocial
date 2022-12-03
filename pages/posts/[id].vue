@@ -239,6 +239,10 @@ const update = async () => {
   await updateUser()
 }
 
+useNuxtApp().hooks.hook('compose' as any, async () => {
+  await update()
+})
+
 const handleFavorite = async () => {
   if (!item.value) return
   await favorite(item.value.id)
