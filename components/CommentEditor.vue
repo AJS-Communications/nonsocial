@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative flex gap-2 p-4"
+    class="relative flex gap-2"
     :class="{ 'flex-col': activated }"
     @click="textarea.focus()"
   >
@@ -8,7 +8,7 @@
       <img
         :src="user?.photoUrl"
         :alt="user?.name"
-        class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover"
+        class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-4 ring-white dark:ring-black"
         loading="lazy"
         decoding="async"
       >
@@ -57,7 +57,7 @@ const { user } = useUser()
 const props = defineProps({
   modelValue: { type: String, default: '' },
   placeholder: { type: String, default: 'Post your reply' },
-  parentId: { type: Number, required: true }
+  item: { type: Object, required: true }
 })
 
 const emit = defineEmits(['update:model-value', 'submit'])
@@ -76,12 +76,6 @@ const activated = ref(false)
 const textarea = ref()
 const fauxTextareaContent = ref('')
 const maxLength = ref(280)
-
-const visibility = ref('everyone')
-const visibilityOptions = computed(() => [
-  { value: 'everyone', text: 'Everyone' },
-  { value: 'private', text: 'Only me' }
-])
 
 const setEditorHeight = () => {
   nextTick(() => {
@@ -140,7 +134,7 @@ const submit = async () => {
     method: 'post',
     body: {
       text: text.value,
-      parentId: props.parentId
+      parentId: props.item.id
     }
   })
   resetEditor()

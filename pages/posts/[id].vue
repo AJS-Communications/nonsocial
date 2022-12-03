@@ -73,13 +73,20 @@
           </div>
           <hr class="border-neutral-100 dark:border-neutral-900" />
           <div class="flex justify-around gap-2">
-            <button
-              class="p-2 rounded-full flex text-neutral-600 dark:text-neutral-400 hover:bg-blue-100/40 dark:hover:bg-blue-100/10 hover:text-blue-600 dark:hover:text-blue-400 saturate-200 transition-colors duration-200"
-              @click="commentEditor.$el.querySelector('textarea').focus()"
+            <ModalComment
+              v-slot="{ toggle }"
+              :item="item"
             >
-              <IconChatBubble />
-              <span class="sr-only">Comment</span>
-            </button>
+              <button
+                class="w-min flex gap-1 z-10 px-2 transition-colors duration-200 group text-neutral-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 saturate-200"
+                @click="toggle"
+              >
+                <IconChatBubble
+                  class="rounded-full p-2 group-hover:bg-blue-100/40 dark:group-hover:bg-blue-100/10"
+                />
+                <span class="sr-only">Comment</span>
+              </button>
+            </ModalComment>
             <button
               class="p-2 rounded-full flex hover:bg-emerald-100/40 dark:hover:bg-emerald-100/10 hover:text-emerald-600 dark:hover:text-emerald-400 saturate-200 transition-colors duration-200"
               :class="{
@@ -139,18 +146,12 @@
       </article>
     </div>
     <hr class="border-neutral-100 dark:border-neutral-900" />
-    <div class="border-b border-neutral-100 dark:border-neutral-900">
-      <p class="ml-20 mt-4 text-neutral-500 font-medium">
-        Replying to
-        <NuxtLink :to="`/${item.author.username}`" class="text-sky-600 dark:text-sky-400 group">
-          @<span class="group-hover:underline">{{ item.author.username }}</span>
-        </NuxtLink>
-      </p>
+    <div class="border-b border-neutral-100 dark:border-neutral-900 p-4">
       <CommentEditor
         v-if="item"
         v-model="text"
         ref="commentEditor"
-        :parent-id="item.id"
+        :item="item"
         @submit="update"
       />
     </div>

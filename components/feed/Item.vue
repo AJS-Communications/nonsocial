@@ -77,17 +77,22 @@
           </blockquote>
           <div class="grid grid-cols-4 gap-2 mt-2">
             <div>
-              <NuxtLink
-                :to="`/posts/${item.id}`"
-                class="w-min flex gap-1 z-10 px-2 transition-colors duration-200 group text-neutral-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 saturate-200"
+              <ModalComment
+                v-slot="{ toggle }"
+                :item="item"
               >
-                <IconChatBubble
-                  size="sm"
-                  class="rounded-full p-2 group-hover:bg-blue-100/40 dark:group-hover:bg-blue-100/10"
-                />
-                <span class="sr-only">Comment</span>
-                <span v-if="item.counts.commentCount > 0" class="my-auto text-sm">{{ item.counts.commentCount }}</span>
-              </NuxtLink>
+                <button
+                  class="w-min flex gap-1 z-10 px-2 transition-colors duration-200 group text-neutral-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 saturate-200"
+                  @click="toggle"
+                >
+                  <IconChatBubble
+                    size="sm"
+                    class="rounded-full p-2 group-hover:bg-blue-100/40 dark:group-hover:bg-blue-100/10"
+                  />
+                  <span class="sr-only">Comment</span>
+                  <span v-if="item.counts.commentCount > 0" class="my-auto text-sm">{{ item.counts.commentCount }}</span>
+                </button>
+              </ModalComment>
             </div>
             <div>
               <button
@@ -227,6 +232,10 @@ const update = async () => {
   await refresh()
   emit('update')
 }
+
+useNuxtApp().hooks.hook('compose' as any, async () => {
+  await update()
+})
 
 const handleBookmark = async () => {
   if (!item.value) return
