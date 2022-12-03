@@ -29,7 +29,7 @@
       </NavMenuItem>
       <ModalCompose v-slot="{ toggle }">
         <button
-          class="w-full mt-4 rounded-full p-4 bg-sky-600 hover:bg-sky-600/90 font-bold"
+          class="w-full mt-4 rounded-full p-4 bg-sky-600 hover:bg-sky-600/90 text-white font-bold"
           @click="toggle"
         >
           Compose
