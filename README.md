@@ -26,7 +26,7 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [ ] Hashtag parsing
 - [ ] @username parsing
 - [ ] URL parsing
-- [ ] Image/asset handling
+- [ ] Image/asset handlingf
 - [ ] User Profiles
 - [x] Posting
 - [x] Reposting
@@ -37,6 +37,7 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [x] Infinite scrolling
 - [ ] Searching
 - [ ] Exploring
+  - [x] Get most recent public posts
   - [ ] Get all public posts with most used tags that day
   - [ ] Get all public posts that have been liked the most that day
   - [ ] Get all public posts that have been reposted the most that day
