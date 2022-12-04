@@ -79,8 +79,10 @@ const maxLength = ref(280)
 
 const setEditorHeight = () => {
   nextTick(() => {
-    textarea.value.style.height = 0
-    textarea.value.style.height = textarea.value.scrollHeight + 'px'
+    if (textarea.value) {
+      textarea.value.style.height = 0
+      textarea.value.style.height = textarea.value.scrollHeight + 'px'
+    }
   })
 }
 

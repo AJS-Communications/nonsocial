@@ -8,16 +8,18 @@
           ref="modal"
           @click.self="open = false"
         >
-          <div class="flex flex-col-reverse mx-auto max-w-screen-sm mt-12 p-4 rounded-xl bg-white dark:bg-black shadow-md shadow-neutral-500 dark:shadow-neutral-900">
-            <PostEditor v-model="text" @submit="update" />
-            <div>
-              <button
-                class="hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-full p-2"
-                @click="open = false"
-              >
-                <IconClose />
-                <span class="sr-only">Close modal</span>
-              </button>
+          <div class="m-4 mt-12">
+            <div class="flex flex-col-reverse mx-auto max-w-screen-sm p-4 rounded-xl bg-white dark:bg-black shadow-md shadow-neutral-500 dark:shadow-neutral-900">
+              <PostEditor v-model="text" @submit="update" />
+              <div>
+                <button
+                  class="hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-full p-2"
+                  @click="open = false"
+                >
+                  <IconClose />
+                  <span class="sr-only">Close modal</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

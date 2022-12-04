@@ -10,26 +10,32 @@ I believe in a town square for everyone. I believe social media should be a publ
 
 This isn't a complete list of items but its a good start for focus. There is a ton of work ahead and what's already been done is up for refactor to improve code quality. Feel free to come up with ideas.
 
-- [ ] User authentication
+- [ ] User Authentication
 - [ ] User Groups
+- [ ] User Notifications
+- [ ] User (Direct) Messaging
+- [ ] User Profiles
 - [ ] User Roles
 - [ ] User Following
 - [ ] User Blocking
 - [ ] User Reporting
 - [ ] User Muting
-- [ ] Recommendation engine
+- [x] Recommendation engine
   - [x] Get your own posts
   - [x] Get posts of the users you follow
   - [x] Get posts that the users you follow have reposted
   - [x] Get posts that the users you follow have liked
   - [x] Get posts that the users you follow have commented on
-  - [ ] Bug fixes
-- [ ] Hashtag parsing
-- [ ] @username parsing
-- [ ] URL parsing
-- [ ] Image/asset handlingf
-- [ ] User Profiles
-- [x] Posting
+- [ ] Posting
+  - [x] Text-based posting
+  - [ ] Hashtag parsing
+  - [ ] @username parsing
+  - [ ] URL parsing
+  - [ ] Media (Image/Image Galleries/Videos)
+  - [ ] Memes/Gifs
+  - [ ] Polls
+  - [ ] Scheduling
+  - [ ] Location
 - [ ] Delete Post
 - [ ] Edit Post
 - [x] Reposting
@@ -49,6 +55,7 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [ ] Code cleanup and keeping things DRY
 - [ ] Unit testing
 - [ ] E2E testing
+- [ ] Bug fixing
 - [ ] Much more...
 
 ## Setup
