@@ -1,5 +1,5 @@
 <template>
-  <div ref="el" class="h-screen overflow-auto">
+  <div>
     <div
       class="bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-20 cursor-pointer"
       @click="goToTop"
@@ -16,6 +16,7 @@
         @update="update"
       />
     </div>
+    <div ref="el" />
   </div>
 </template>
 
@@ -35,8 +36,8 @@ const el = ref()
 const bookmarks = ref(data.value)
 const posts = ref(bookmarks.value?.flatMap(i => i.post) || [])
 
-useInfiniteScroll(el, async () => {
-  if (bookmarks.value) {
+useIntersectionObserver(el, async ([{ isIntersecting }]) => {
+  if (bookmarks.value && isIntersecting) {
     const lastItem = bookmarks.value[bookmarks.value.length - 1]
     const lastId = lastItem && lastItem.id || null
     if (lastId === cursor.value) return

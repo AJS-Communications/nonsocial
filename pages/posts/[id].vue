@@ -1,5 +1,5 @@
 <template>
-  <div v-if="item" ref="el" class="h-screen overflow-auto">
+  <div v-if="item">
     <div class="bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-20">
       <div class="p-2.5 flex gap-2">
         <button
@@ -13,6 +13,25 @@
       </div>
     </div>
     <div class="relative">
+      <div ref="moreBtn" class="absolute z-10 top-2 right-2 w-min">
+        <button
+          class="p-2 rounded-full flex text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200/40 dark:hover:bg-neutral-200/10 hover:text-neutral-800 dark:hover:text-neutral-400 saturate-200 transition-colors duration-200"
+          :class="{ 'bg-neutral-200/40 dark:bg-neutral-200/10 text-neutral-800 dark:text-neutral-400': showMoreDropdown }"
+          @click.stop="showMoreDropdown = !showMoreDropdown"
+        >
+          <IconMore />
+          <span class="sr-only">More options</span>
+        </button>
+        <nav v-if="showMoreDropdown" class="absolute left-auto right-0 z-20 w-56 my-2 border shadow-md shadow-neutral-100 dark:shadow-neutral-900 bg-neutral-100 border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 py-3 rounded-xl">
+          <button
+            class="w-full text-left flex gap-2 text-neutral-600 hover:text-black hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 px-4 py-2"
+            @click="handleShare"
+          >
+            <IconShare class="text-indigo-600 dark:text-indigo-400" size="sm" />
+            <span>Share post via...</span>
+          </button>
+        </nav>
+      </div>
       <div
         v-if="parentItem"
         class="bg-neutral-200 dark:bg-neutral-800 w-1 absolute top-10 left-[2.35rem] bottom-10 -z-10"
@@ -66,10 +85,6 @@
               <span class="font-bold">{{ item.counts.likeCount }}</span>
               <span class="text-neutral-500">{{ item.counts.likeCount === 1 ? 'Like' : 'Likes' }}</span>
             </div>
-            <div class="flex gap-2">
-              <span class="font-bold">{{ item.counts.bookmarkCount }}</span>
-              <span class="text-neutral-500">{{ item.counts.bookmarkCount === 1 ? 'Bookmark' : 'Bookmarks' }}</span>
-            </div>
           </div>
           <hr class="border-neutral-100 dark:border-neutral-900" />
           <div class="flex justify-around gap-2">
@@ -109,38 +124,17 @@
               <IconHeart :active="isLike(item.id)" />
               <span class="sr-only">Love</span>
             </button>
-            <div ref="shareBtn" class="relative w-min">
-              <button
-                class="p-2 rounded-full flex text-neutral-600 dark:text-neutral-400 hover:bg-indigo-100/40 dark:hover:bg-indigo-100/10 hover:text-indigo-800 dark:hover:text-indigo-400 saturate-200 transition-colors duration-200"
-                :class="{ 'bg-indigo-100/40 dark:bg-indigo-100/10 text-indigo-800 dark:text-indigo-400': showShareDropdown }"
-                @click.stop="showShareDropdown = !showShareDropdown"
-              >
-                <IconShare />
-                <span class="sr-only">Share</span>
-              </button>
-              <nav v-if="showShareDropdown" class="absolute left-auto right-0 z-20 w-56 my-2 border shadow-md shadow-neutral-100 dark:shadow-neutral-900 bg-neutral-100 border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 py-3 rounded-xl">
-                <button
-                  class="w-full text-left flex gap-2 text-neutral-600 hover:text-black hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 px-4 py-2"
-                  @click="handleShare"
-                >
-                  <IconShare class="text-indigo-600 dark:text-indigo-400" size="sm" />
-                  <span>Share post via...</span>
-                </button>
-                <button
-                class="w-full text-left flex gap-2 text-neutral-600 hover:text-black hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 px-4 py-2"
-                  @click="handleBookmark"
-                >
-                  <IconBookmark
-                    :active="isBookmark(item.id)"
-                    size="sm"
-                    :class="{
-                      'text-amber-600 dark:text-amber-400': isBookmark(item.id)
-                    }"
-                  />
-                  <span>Bookmark</span>
-                </button>
-              </nav>
-            </div>
+            <button
+              class="p-2 rounded-full flex hover:bg-amber-100/40 dark:hover:bg-amber-100/10 hover:text-amber-600 dark:hover:text-amber-400 saturate-200 transition-colors duration-200"
+              :class="{
+                'text-neutral-600 dark:text-neutral-400': !isBookmark(item.id),
+                'text-amber-600 dark:text-amber-400': isBookmark(item.id)
+              }"
+              @click="handleBookmark"
+            >
+              <IconBookmark :active="isBookmark(item.id)" />
+              <span class="sr-only">Bookmark</span>
+            </button>
           </div>
         </div>
       </article>
@@ -164,6 +158,7 @@
         @update="updateUser"
       />
     </div>
+    <div ref="el" />
   </div>
 </template>
 
@@ -210,13 +205,13 @@ const el = ref()
 const commentEditor = ref()
 const text = ref('')
 
-const shareBtn = ref()
-const showShareDropdown = ref(false)
-onClickOutside(shareBtn, () => showShareDropdown.value = false)
-onKeyStroke('Escape', () => showShareDropdown.value = false)
+const moreBtn = ref()
+const showMoreDropdown = ref(false)
+onClickOutside(moreBtn, () => showMoreDropdown.value = false)
+onKeyStroke('Escape', () => showMoreDropdown.value = false)
 
-useInfiniteScroll(el, async () => {
-  if (comments.value && user.value) {
+useIntersectionObserver(el, async ([{ isIntersecting }]) => {
+  if (comments.value && user.value && isIntersecting) {
     const lastItem = comments.value[comments.value.length - 1]
     const lastId = lastItem && lastItem.id || null
     if (lastId === cursor.value) return
@@ -254,7 +249,7 @@ const handleBookmark = async () => {
   if (!item.value) return
   await bookmark(item.value.id)
   await update()
-  showShareDropdown.value = false
+  showMoreDropdown.value = false
 }
 
 const handleBoost = async () => {
@@ -266,6 +261,6 @@ const handleBoost = async () => {
 const handleShare = async () => {
   if (!item.value) return
   share(item.value.id)
-  showShareDropdown.value = false
+  showMoreDropdown.value = false
 }
 </script>

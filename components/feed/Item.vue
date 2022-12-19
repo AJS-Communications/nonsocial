@@ -5,6 +5,27 @@
       class="bg-neutral-200 dark:bg-neutral-800 w-1 absolute top-10 left-[2.35rem] bottom-24 -z-10"
     />
     <article class="relative flex flex-col gap-1 p-4">
+      <div>
+        <div ref="moreBtn" class="absolute z-10 top-2 right-2 w-min">
+          <button
+            class="cursor-pointer flex gap-1 w-min z-10 p-2 rounded-full text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200/40 dark:hover:bg-neutral-200/10 hover:text-neutral-800 dark:hover:text-neutral-400 saturate-200 transition-colors duration-200"
+            :class="{ 'bg-neutral-200/40 dark:bg-neutral-200/10 text-neutral-800 dark:text-neutral-400': showMoreDropdown }"
+            @click.stop="showMoreDropdown = !showMoreDropdown"
+          >
+            <IconMore size="sm" />
+            <span class="sr-only">More options</span>
+          </button>
+          <nav v-if="showMoreDropdown" class="absolute left-auto right-0 z-20 w-56 my-2 border shadow-md shadow-neutral-100 dark:shadow-neutral-900 bg-neutral-100 border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 py-3 rounded-xl">
+            <button
+              class="w-full text-left flex gap-2 text-neutral-600 hover:text-black hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 px-4 py-2"
+              @click="handleShare"
+            >
+              <IconShare class="text-indigo-600 dark:text-indigo-400" size="sm" />
+              <span>Share post via...</span>
+            </button>
+          </nav>
+        </div>
+      </div>
       <div v-if="boostList.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
         <IconArrowPath active size="sm" />
         <div class="flex gap-1">
@@ -131,38 +152,21 @@
               </button>
             </div>
             <div>
-              <div ref="shareBtn" class="relative w-min">
-                <button
-                  class="cursor-pointer flex gap-1 w-min z-10 p-2 rounded-full text-neutral-600 dark:text-neutral-400 hover:bg-indigo-100/40 dark:hover:bg-indigo-100/10 hover:text-indigo-800 dark:hover:text-indigo-400 saturate-200 transition-colors duration-200"
-                  :class="{ 'bg-indigo-100/40 dark:bg-indigo-100/10 text-indigo-800 dark:text-indigo-400': showShareDropdown }"
-                  @click.stop="showShareDropdown = !showShareDropdown"
-                >
-                  <IconShare size="sm" />
-                  <span class="sr-only">Share</span>
-                </button>
-                <nav v-if="showShareDropdown" class="absolute left-auto right-0 z-20 w-56 my-2 border shadow-md shadow-neutral-100 dark:shadow-neutral-900 bg-neutral-100 border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 py-3 rounded-xl">
-                  <button
-                    class="w-full text-left flex gap-2 text-neutral-600 hover:text-black hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 px-4 py-2"
-                    @click="handleShare"
-                  >
-                    <IconShare class="text-indigo-600 dark:text-indigo-400" size="sm" />
-                    <span>Share post via...</span>
-                  </button>
-                  <button
-                  class="w-full text-left flex gap-2 text-neutral-600 hover:text-black hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 px-4 py-2"
-                    @click="handleBookmark"
-                  >
-                    <IconBookmark
-                      :active="isBookmark(item.id)"
-                      size="sm"
-                      :class="{
-                        'text-amber-600 dark:text-amber-400': isBookmark(item.id)
-                      }"
-                    />
-                    <span>Bookmark</span>
-                  </button>
-                </nav>
-              </div>
+              <button
+                class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-amber-600 dark:hover:text-amber-400 saturate-200"
+                :class="{
+                  'text-neutral-600 dark:text-neutral-400': !isBookmark(item.id),
+                  'text-amber-600 dark:text-amber-400': isBookmark(item.id)
+                }"
+                @click="handleBookmark"
+              >
+                <IconBookmark
+                  :active="isBookmark(item.id)"
+                  size="sm"
+                  class="rounded-full p-2 group-hover:bg-amber-100/40 dark:group-hover:bg-amber-100/10"
+                />
+                <span class="sr-only">Bookmark</span>
+              </button>
             </div>
           </div>
         </div>
@@ -226,10 +230,10 @@ const commenterList = computed(() => {
   }).slice(0, 2) || []
 })
 
-const shareBtn = ref()
-const showShareDropdown = ref(false)
-onClickOutside(shareBtn, () => showShareDropdown.value = false)
-onKeyStroke('Escape', () => showShareDropdown.value = false)
+const moreBtn = ref()
+const showMoreDropdown = ref(false)
+onClickOutside(moreBtn, () => showMoreDropdown.value = false)
+onKeyStroke('Escape', () => showMoreDropdown.value = false)
 
 const update = async () => {
   await refresh()
@@ -244,7 +248,7 @@ const handleBookmark = async () => {
   if (!item.value) return
   await bookmark(item.value.id)
   await update()
-  showShareDropdown.value = false
+  showMoreDropdown.value = false
 }
 
 const handleLike = async () => {
@@ -262,6 +266,6 @@ const handleBoost = async () => {
 const handleShare = async () => {
   if (!item.value) return
   share(item.value.id)
-  showShareDropdown.value = false
+  showMoreDropdown.value = false
 }
 </script>

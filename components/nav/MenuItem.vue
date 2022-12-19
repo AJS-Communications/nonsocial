@@ -1,7 +1,7 @@
 <template>
   <NuxtLink
     :to="to"
-    class="text-xl select-none rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-800 p-3 flex gap-3 transition-colors duration-100"
+    class="cursor-pointer text-xl select-none rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-800 p-3 flex gap-3 transition-colors duration-100"
     :class="{ 'font-bold': isHome }"
     :active-class="!exact ? 'font-bold' : undefined"
     :exact-active-class="exact ? 'font-bold' : undefined"

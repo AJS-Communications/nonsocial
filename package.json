@@ -16,7 +16,7 @@
     "seed": "ts-node --compiler-options {\"module\":\"commonjs\"} prisma/seed.ts"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^6.1.3",
+    "@nuxtjs/tailwindcss": "^6.2.0",
     "@prisma/client": "^4.7.1",
     "@tailwindcss/forms": "^0.5.3",
     "@vueuse/core": "^9.5.0",
