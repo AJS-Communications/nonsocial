@@ -6,18 +6,18 @@ export default defineEventHandler(async (event) => {
   let data = null
 
   async function main() {
-    const [bookmarkCount, favoriteCount, repostCount, commentCount, commenters, post] = await prisma.$transaction([
+    const [bookmarkCount, likeCount, boostCount, commentCount, commenters, post] = await prisma.$transaction([
       prisma.bookmark.count({
         where: {
           postId: parseInt(event.context.params.postId)
         }
       }),
-      prisma.favorite.count({
+      prisma.like.count({
         where: {
           postId: parseInt(event.context.params.postId)
         }
       }),
-      prisma.repost.count({
+      prisma.boost.count({
         where: {
           postId: parseInt(event.context.params.postId)
         }
@@ -44,12 +44,12 @@ export default defineEventHandler(async (event) => {
         },
         include: {
           author: true,
-          favorites: {
+          likes: {
             include: {
               author: true
             }
           },
-          reposts: {
+          boosts: {
             include: {
               author: true
             }
@@ -60,8 +60,8 @@ export default defineEventHandler(async (event) => {
     return Object.assign({}, post, {
       counts: {
         bookmarkCount,
-        favoriteCount,
-        repostCount,
+        likeCount,
+        boostCount,
         commentCount,
       },
       commenters

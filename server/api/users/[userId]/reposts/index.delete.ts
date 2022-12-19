@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   let data = null
 
   async function main() {
-    return await prisma.repost.delete({
+    return await prisma.boost.delete({
       where: {
         id: body.id
       }

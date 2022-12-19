@@ -5,17 +5,17 @@
       class="bg-neutral-200 dark:bg-neutral-800 w-1 absolute top-10 left-[2.35rem] bottom-24 -z-10"
     />
     <article class="relative flex flex-col gap-1 p-4">
-      <div v-if="repostList.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
+      <div v-if="boostList.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
         <IconArrowPath active size="sm" />
         <div class="flex gap-1">
           <span
-            v-for="(repost, index) in repostList"
-            :key="repost.id"
-          >{{ repost.author.name }} {{ index < repostList.length - 1 ? 'and ' : '' }}</span>
-          <span>reposted</span>
+            v-for="(boost, index) in boostList"
+            :key="boost.id"
+          >{{ boost.author.name }} {{ index < boostList.length - 1 ? 'and ' : '' }}</span>
+          <span>boosted</span>
         </div>
       </div>
-      <div v-if="showComments && repostList.length < 1 && commenterList.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
+      <div v-if="showComments && boostList.length < 1 && commenterList.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
         <IconChatBubble active size="sm" />
         <div class="flex gap-1">
           <span
@@ -25,13 +25,13 @@
           <span>commented</span>
         </div>
       </div>
-      <div v-if="repostList.length < 1 && commenterList.length < 1 && favoriteList.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
+      <div v-if="boostList.length < 1 && commenterList.length < 1 && likeList.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
         <IconHeart active size="sm" />
         <div class="flex gap-1">
           <span
-            v-for="(like, index) in favoriteList"
+            v-for="(like, index) in likeList"
             :key="like.id"
-          >{{ like.author.name }}  {{ index < favoriteList.length - 1 ? 'and ' : '' }}</span>
+          >{{ like.author.name }}  {{ index < likeList.length - 1 ? 'and ' : '' }}</span>
           <span>liked</span>
         </div>
       </div>
@@ -98,36 +98,36 @@
               <button
                 class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-emerald-600 dark:hover:text-emerald-400 saturate-200"
                 :class="{
-                  'text-neutral-600 dark:text-neutral-400': !isRepost(item.id),
-                  'text-emerald-600 dark:text-emerald-400': isRepost(item.id)
+                  'text-neutral-600 dark:text-neutral-400': !isBoost(item.id),
+                  'text-emerald-600 dark:text-emerald-400': isBoost(item.id)
                 }"
-                @click="handleRepost"
+                @click="handleBoost"
               >
                 <IconArrowPath
-                  :active="isRepost(item.id)"
+                  :active="isBoost(item.id)"
                   size="sm"
                   class="rounded-full p-2 group-hover:bg-emerald-100/40 dark:group-hover:bg-emerald-100/10"
                 />
-                <span class="sr-only">Repost</span>
-                <span v-if="item.counts.repostCount > 0" class="my-auto text-sm">{{ item.counts.repostCount }}</span>
+                <span class="sr-only">Boost</span>
+                <span v-if="item.counts.boostCount > 0" class="my-auto text-sm">{{ item.counts.boostCount }}</span>
               </button>
             </div>
             <div>
               <button
                 class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-rose-600 dark:hover:text-rose-400 saturate-200"
                 :class="{
-                  'text-neutral-600 dark:text-neutral-400': !isFavorite(item.id),
-                  'text-rose-600 dark:text-rose-400': isFavorite(item.id)
+                  'text-neutral-600 dark:text-neutral-400': !isLike(item.id),
+                  'text-rose-600 dark:text-rose-400': isLike(item.id)
                 }"
-                @click="handleFavorite"
+                @click="handleLike"
               >
                 <IconHeart
-                  :active="isFavorite(item.id)"
+                  :active="isLike(item.id)"
                   size="sm"
                   class="rounded-full p-2 group-hover:bg-rose-100/40 dark:group-hover:bg-rose-100/10"
                 />
                 <span class="sr-only">Love</span>
-                <span v-if="item.counts.favoriteCount > 0" class="my-auto text-sm">{{ item.counts.favoriteCount }}</span>
+                <span v-if="item.counts.likeCount > 0" class="my-auto text-sm">{{ item.counts.likeCount }}</span>
               </button>
             </div>
             <div>
@@ -181,13 +181,13 @@ const { user } = useUser()
 
 const {
   isBookmark,
-  isFavorite,
-  isRepost,
+  isLike,
+  isBoost,
   createdDate,
   share,
   bookmark,
-  favorite,
-  repost
+  like,
+  boost
 } = usePost()
 
 const props = defineProps({
@@ -205,21 +205,24 @@ if (item.value?.parentId) {
 
 const emit = defineEmits(['update'])
 
-const favoriteList = computed(() => {
-  return item.value?.favorites.filter(i => {
-    return user.value?.followers.find(x => x.followeeId === i.authorId)
+const likeList = computed(() => {
+  if (!item.value) return []
+  return item.value.likes.filter(i => {
+    return user.value?.followers.find(x => x.followingId === i.authorId)
   }).slice(0, 2) || []
 })
 
-const repostList = computed(() => {
-  return item.value?.reposts.filter(i => {
-    return user.value?.followers.find(x => x.followeeId === i.authorId)
+const boostList = computed(() => {
+  if (!item.value) return []
+  return item.value.boosts.filter(i => {
+    return user.value?.followers.find(x => x.followingId === i.authorId)
   }).slice(0, 2) || []
 })
 
 const commenterList = computed(() => {
-  return item.value?.commenters.filter(i => {
-    return user.value?.followers.find(x => x.followeeId === i.author.id)
+  if (!item.value) return []
+  return item.value.commenters.filter(i => {
+    return user.value?.followers.find(x => x.followingId === i.author.id)
   }).slice(0, 2) || []
 })
 
@@ -244,15 +247,15 @@ const handleBookmark = async () => {
   showShareDropdown.value = false
 }
 
-const handleFavorite = async () => {
+const handleLike = async () => {
   if (!item.value) return
-  await favorite(item.value.id)
+  await like(item.value.id)
   await update()
 }
 
-const handleRepost = async () => {
+const handleBoost = async () => {
   if (!item.value) return
-  await repost(item.value.id)
+  await boost(item.value.id)
   await update()
 }
 

@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   let data = null
 
   async function main() {
-    return await prisma.favorite.create({
+    return await prisma.like.create({
       data: {
         published: true,
         authorId: parseInt(event.context.params.userId),

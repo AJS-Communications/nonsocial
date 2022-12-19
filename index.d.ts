@@ -4,9 +4,9 @@ interface User {
   name: string
   photoUrl: string
   bookmarks: [Bookmark]
-  favorites: [Favorite]
-  reposts: [Repost]
-  follows: [Follow]
+  likes: [Like]
+  boosts: [Boost]
+  following: [Follow]
   followers: [Follow]
 }
 
@@ -14,8 +14,8 @@ interface Follow {
   id: number
   author: User
   authorId: User.id
-  followee: User
-  followeeId: User.id
+  following: User
+  followingId: User.id
 }
 
 interface Post {
@@ -32,7 +32,7 @@ interface Bookmark {
   authorId: User.id
 }
 
-interface Favorite {
+interface Like {
   id: number
   postId: Post.id
   post: Post
@@ -40,7 +40,7 @@ interface Favorite {
   authorId: User.id
 }
 
-interface Repost {
+interface Boost {
   id: number
   postId: Post.id
   post: Post

@@ -59,12 +59,12 @@
               <span class="text-neutral-500">{{ item.counts.commentCount === 1 ? 'Comment' : 'Comments' }}</span>
             </div>
             <div class="flex gap-2">
-              <span class="font-bold">{{ item.counts.repostCount }}</span>
-              <span class="text-neutral-500">{{ item.counts.repostCount === 1 ? 'Repost' : 'Reposts' }}</span>
+              <span class="font-bold">{{ item.counts.boostCount }}</span>
+              <span class="text-neutral-500">{{ item.counts.boostCount === 1 ? 'Boost' : 'Boosts' }}</span>
             </div>
             <div class="flex gap-2">
-              <span class="font-bold">{{ item.counts.favoriteCount }}</span>
-              <span class="text-neutral-500">{{ item.counts.favoriteCount === 1 ? 'Like' : 'Likes' }}</span>
+              <span class="font-bold">{{ item.counts.likeCount }}</span>
+              <span class="text-neutral-500">{{ item.counts.likeCount === 1 ? 'Like' : 'Likes' }}</span>
             </div>
             <div class="flex gap-2">
               <span class="font-bold">{{ item.counts.bookmarkCount }}</span>
@@ -90,23 +90,23 @@
             <button
               class="p-2 rounded-full flex hover:bg-emerald-100/40 dark:hover:bg-emerald-100/10 hover:text-emerald-600 dark:hover:text-emerald-400 saturate-200 transition-colors duration-200"
               :class="{
-                'text-neutral-600 dark:text-neutral-400': !isRepost(item.id),
-                'text-emerald-600 dark:text-emerald-400': isRepost(item.id)
+                'text-neutral-600 dark:text-neutral-400': !isBoost(item.id),
+                'text-emerald-600 dark:text-emerald-400': isBoost(item.id)
               }"
-              @click="handleRepost"
+              @click="handleBoost"
             >
-              <IconArrowPath :active="isRepost(item.id)" />
-              <span class="sr-only">Repost</span>
+              <IconArrowPath :active="isBoost(item.id)" />
+              <span class="sr-only">Boost</span>
             </button>
             <button
               class="p-2 rounded-full flex hover:bg-rose-100/40 dark:hover:bg-rose-100/10 hover:text-rose-600 dark:hover:text-rose-400 saturate-200 transition-colors duration-200"
               :class="{
-                'text-neutral-600 dark:text-neutral-400': !isFavorite(item.id),
-                'text-rose-600 dark:text-rose-400': isFavorite(item.id)
+                'text-neutral-600 dark:text-neutral-400': !isLike(item.id),
+                'text-rose-600 dark:text-rose-400': isLike(item.id)
               }"
-              @click="handleFavorite"
+              @click="handleLike"
             >
-              <IconHeart :active="isFavorite(item.id)" />
+              <IconHeart :active="isLike(item.id)" />
               <span class="sr-only">Love</span>
             </button>
             <div ref="shareBtn" class="relative w-min">
@@ -175,13 +175,13 @@ const {
 
 const {
   isBookmark,
-  isFavorite,
-  isRepost,
+  isLike,
+  isBoost,
   createdDate,
   share,
   bookmark,
-  favorite,
-  repost
+  like,
+  boost
 } = usePost()
 
 if (!user.value) {
@@ -244,9 +244,9 @@ useNuxtApp().hooks.hook('compose' as any, async () => {
   await update()
 })
 
-const handleFavorite = async () => {
+const handleLike = async () => {
   if (!item.value) return
-  await favorite(item.value.id)
+  await like(item.value.id)
   await update()
 }
 
@@ -257,9 +257,9 @@ const handleBookmark = async () => {
   showShareDropdown.value = false
 }
 
-const handleRepost = async () => {
+const handleBoost = async () => {
   if (!item.value) return
-  await repost(item.value.id)
+  await boost(item.value.id)
   await update()
 }
 

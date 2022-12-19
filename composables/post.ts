@@ -6,14 +6,14 @@ export const usePost = () => {
     return user.value.bookmarks.filter(i => i.postId === postId).length > 0
   }
 
-  const isFavorite = (postId: number) => {
+  const isLike = (postId: number) => {
     if (!user.value) return false
-    return user.value.favorites.filter(i => i.postId === postId).length > 0
+    return user.value.likes.filter(i => i.postId === postId).length > 0
   }
 
-  const isRepost = (postId: number) => {
+  const isBoost = (postId: number) => {
     if (!user.value) return false
-    return user.value.reposts.filter(i => i.postId === postId).length > 0
+    return user.value.boosts.filter(i => i.postId === postId).length > 0
   }
 
   const createdDate = (dateString: Date, type: 'short' | 'long' = 'short') => {
@@ -69,19 +69,19 @@ export const usePost = () => {
     await updateUser()
   }
   
-  const favorite = async (postId: number) => {
+  const like = async (postId: number) => {
     if (!user.value) return
   
-    if (isFavorite(postId)) {
-      const favorite = user.value.favorites.find(i => i.postId ===  postId)
-      await useFetch(`/api/users/${user.value.id}/favorites`, {
+    if (isLike(postId)) {
+      const like = user.value.likes.find(i => i.postId ===  postId)
+      await useFetch(`/api/users/${user.value.id}/likes`, {
         method: 'delete',
         body: {
-          id: favorite && favorite.id
+          id: like && like.id
         }
       })
     } else {
-      await useFetch(`/api/users/${user.value.id}/favorites`, {
+      await useFetch(`/api/users/${user.value.id}/likes`, {
         method: 'post',
         body: {
           postId: postId
@@ -91,19 +91,19 @@ export const usePost = () => {
     await updateUser()
   }
 
-  const repost = async (postId: number) => {
+  const boost = async (postId: number) => {
     if (!user.value) return
   
-    if (isRepost(postId)) {
-      const repost = user.value.reposts.find(i => i.postId ===  postId)
-      await useFetch(`/api/users/${user.value.id}/reposts`, {
+    if (isBoost(postId)) {
+      const boost = user.value.boosts.find(i => i.postId ===  postId)
+      await useFetch(`/api/users/${user.value.id}/boosts`, {
         method: 'delete',
         body: {
-          id: repost && repost.id
+          id: boost && boost.id
         }
       })
     } else {
-      await useFetch(`/api/users/${user.value.id}/reposts`, {
+      await useFetch(`/api/users/${user.value.id}/boosts`, {
         method: 'post',
         body: {
           postId: postId
@@ -115,12 +115,12 @@ export const usePost = () => {
 
   return {
     isBookmark,
-    isFavorite,
-    isRepost,
+    isLike,
+    isBoost,
     createdDate,
     share,
     bookmark,
-    favorite,
-    repost
+    like,
+    boost
   }
 }

@@ -23,7 +23,7 @@ This isn't a complete list of items but its a good start for focus. There is a t
 - [x] Recommendation engine
   - [x] Get your own posts
   - [x] Get posts of the users you follow
-  - [x] Get posts that the users you follow have reposted
+  - [x] Get posts that the users you follow have boosted
   - [x] Get posts that the users you follow have liked
   - [x] Get posts that the users you follow have commented on
 - [ ] Posting
@@ -38,7 +38,7 @@ This isn't a complete list of items but its a good start for focus. There is a t
   - [ ] Location
 - [ ] Delete Post
 - [ ] Edit Post
-- [x] Reposting
+- [x] Boosting
 - [x] Commenting
 - [x] Likes
 - [x] Bookmarks
@@ -49,7 +49,7 @@ This isn't a complete list of items but its a good start for focus. There is a t
   - [x] Get most recent public posts
   - [ ] Get all public posts with most used tags that day
   - [ ] Get all public posts that have been liked the most that day
-  - [ ] Get all public posts that have been reposted the most that day
+  - [ ] Get all public posts that have been boosted the most that day
 - [ ] Administration Portal
 - [ ] Moderation Portal
 - [ ] Code cleanup and keeping things DRY

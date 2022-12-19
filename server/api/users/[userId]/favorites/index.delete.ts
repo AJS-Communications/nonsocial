@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   let data = null
 
   async function main() {
-    return await prisma.favorite.delete({
+    return await prisma.like.delete({
       where: {
         id: body.id
       }

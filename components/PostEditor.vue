@@ -79,7 +79,7 @@ const activated = ref(false)
 
 const textarea = ref()
 const fauxTextareaContent = ref('')
-const maxLength = ref(280)
+const maxLength = ref(1000)
 
 const visibility = ref('PUBLIC')
 const visibilityOptions = computed(() => [

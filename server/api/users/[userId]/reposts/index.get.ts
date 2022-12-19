@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   let data: any = []
 
   async function main() {
-    return await prisma.repost.findMany({
+    return await prisma.boost.findMany({
       where: {
         author: {
           id: parseInt(event.context.params.userId)

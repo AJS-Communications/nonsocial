@@ -4,11 +4,11 @@
     <Teleport to="body">
       <UseFocusTrap v-if="open" :options="{ immediate: true }">
         <div
-          class="bg-neutral-900/40 dark:bg-sky-100/10 fixed inset-0 z-50"
+          class="bg-neutral-900/40 dark:bg-sky-100/10 fixed inset-0 z-50 overflow-auto"
           ref="modal"
           @click.self="open = false"
         >
-          <div class="m-4 mt-12">
+          <div class="m-4 my-12">
             <div class="flex flex-col-reverse mx-auto max-w-screen-sm p-4 rounded-xl bg-white dark:bg-black shadow-md shadow-neutral-500 dark:shadow-neutral-900">
               <PostEditor v-model="text" @submit="update" />
               <div>

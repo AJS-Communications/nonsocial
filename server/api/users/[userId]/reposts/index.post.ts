@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   let data = null
 
   async function main() {
-    return await prisma.repost.create({
+    return await prisma.boost.create({
       data: {
         published: true,
         authorId: parseInt(event.context.params.userId),

@@ -12,9 +12,9 @@ export default defineEventHandler(async (event) => {
       },
       include: {
         bookmarks: true,
-        favorites: true,
-        reposts: true,
-        follows: true,
+        likes: true,
+        boosts: true,
+        following: true,
         followers: true
       }
     })

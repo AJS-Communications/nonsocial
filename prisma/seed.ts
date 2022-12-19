@@ -18,6 +18,12 @@ async function main() {
         username: 'gtakei',
         photoUrl: 'https://pbs.twimg.com/profile_images/1395773050881196032/yCpIyKBt_x96.jpg'
       },
+      {
+        name: 'William Shatner',
+        email: 'cool@awesome.com',
+        username: 'wshatner',
+        photoUrl: 'https://pbs.twimg.com/profile_images/1478179341582299138/2paPd3Uk_x96.jpg'
+      },
     ]
   })
   console.log(user)

@@ -7,17 +7,17 @@ export default defineEventHandler(async (event) => {
   let data: any = []
 
   async function main() {
-    const follows = await prisma.follow.findMany({
+    const following = await prisma.follow.findMany({
       where: { authorId: parseInt(event.context.params.userId) },
       select: {
-        followeeId: true
+        followingId: true
       }
     }) || []
 
-    const favorites = await prisma.favorite.findMany({
+    const likes = await prisma.like.findMany({
       where: { 
         authorId: { 
-          in: [...follows.map(i => i.followeeId)]
+          in: [...following.map(i => i.followingId)]
         }
       },
       select: {
@@ -25,10 +25,10 @@ export default defineEventHandler(async (event) => {
       }
     }) || []
 
-    const reposts = await prisma.repost.findMany({
+    const boosts = await prisma.boost.findMany({
       where: { 
         authorId: { 
-          in: [...follows.map(i => i.followeeId)]
+          in: [...following.map(i => i.followingId)]
         }
       },
       select: {
@@ -49,8 +49,8 @@ export default defineEventHandler(async (event) => {
             {
               id: {
                 in: [
-                  ...favorites.map(i => i.postId),
-                  ...reposts.map(i => i.postId)
+                  ...likes.map(i => i.postId),
+                  ...boosts.map(i => i.postId)
                 ]
               }
             },
@@ -58,7 +58,7 @@ export default defineEventHandler(async (event) => {
               author: {
                 id: {
                   in: [
-                    ...follows.map(i => i.followeeId),
+                    ...following.map(i => i.followingId),
                     parseInt(event.context.params.userId)
                   ]
                 }
@@ -85,8 +85,8 @@ export default defineEventHandler(async (event) => {
           {
             id: {
               in: [
-                ...favorites.map(i => i.postId),
-                ...reposts.map(i => i.postId)
+                ...likes.map(i => i.postId),
+                ...boosts.map(i => i.postId)
               ]
             }
           },
@@ -94,7 +94,7 @@ export default defineEventHandler(async (event) => {
             author: {
               id: {
                 in: [
-                  ...follows.map(i => i.followeeId),
+                  ...following.map(i => i.followingId),
                   parseInt(event.context.params.userId)
                 ]
               }

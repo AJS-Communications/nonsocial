@@ -16,15 +16,15 @@ model User {
   username   String         @unique
   photoUrl   String
   name       String?        @db.VarChar(100)
-  bio        String?        @db.Text
+  bio        String?        @db.VarChar(500)
   role       UserRole       @default(UNVERIFIED)
   visibility UserVisibility @default(PUBLIC)
   posts      Post[]
-  follows    Follow[]       @relation("followee")
+  following  Follow[]       @relation("following")
   followers  Follow[]       @relation("follower")
   bookmarks  Bookmark[]
-  favorites  Favorite[]
-  reposts    Repost[]
+  likes  Like[]
+  boosts    Boost[]
 }
 
 enum UserVisibility {
@@ -37,8 +37,8 @@ model Follow {
   createdDate DateTime @default(now())
   author      User     @relation("follower", fields: [authorId], references: [id])
   authorId    Int
-  followee    User     @relation("followee", fields: [followeeId], references: [id])
-  followeeId  Int
+  following   User     @relation("following", fields: [followingId], references: [id])
+  followingId Int
 }
 
 enum UserRole {
@@ -51,7 +51,7 @@ enum UserRole {
 
 model Post {
   id          Int        @id @default(autoincrement())
-  text        String     @db.Text
+  text        String     @db.VarChar(1000)
   published   Boolean    @default(false)
   createdDate DateTime   @default(now())
   author      User       @relation(fields: [authorId], references: [id])
@@ -59,8 +59,8 @@ model Post {
   visibility  Visibility @default(PUBLIC)
   parentId    Int?
   bookmarks   Bookmark[]
-  favorites   Favorite[]
-  reposts     Repost[]
+  likes   Like[]
+  boosts     Boost[]
 }
 
 enum Visibility {
@@ -80,7 +80,7 @@ model Bookmark {
   @@unique([authorId, postId])
 }
 
-model Favorite {
+model Like {
   id          Int      @id @default(autoincrement())
   published   Boolean  @default(false)
   createdDate DateTime @default(now())
@@ -92,7 +92,7 @@ model Favorite {
   @@unique([authorId, postId])
 }
 
-model Repost {
+model Boost {
   id          Int      @id @default(autoincrement())
   published   Boolean  @default(false)
   createdDate DateTime @default(now())
