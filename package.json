@@ -16,15 +16,15 @@
     "seed": "ts-node --compiler-options {\"module\":\"commonjs\"} prisma/seed.ts"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^6.2.0",
-    "@prisma/client": "^4.7.1",
+    "@nuxtjs/tailwindcss": "^6.6.0",
+    "@prisma/client": "^4.11.0",
     "@tailwindcss/forms": "^0.5.3",
     "@vueuse/core": "^9.5.0",
-    "@vueuse/integrations": "^9.7.0",
-    "@vueuse/nuxt": "^9.7.0",
-    "focus-trap": "^7.2.0",
-    "nuxt": "^3.0.0",
-    "prisma": "^4.7.1",
+    "@vueuse/integrations": "^9.13.0",
+    "@vueuse/nuxt": "^9.13.0",
+    "focus-trap": "^7.4.0",
+    "nuxt": "^3.3.1",
+    "prisma": "^4.11.0",
     "ts-node": "^10.9.1"
   }
 }
