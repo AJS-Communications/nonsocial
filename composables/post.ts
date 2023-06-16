@@ -16,7 +16,7 @@ export const usePost = () => {
     return user.value.boosts.filter(i => i.postId === postId).length > 0
   }
 
-  const createdDate = (dateString: Date, type: 'short' | 'long' = 'short') => {
+  const createdDate = (dateString: string, type: 'short' | 'long' = 'short') => {
     const date = new Date(dateString)
     if (type === 'long') {
       return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(date)
