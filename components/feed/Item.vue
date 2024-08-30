@@ -5,7 +5,7 @@
       class="bg-neutral-200 dark:bg-neutral-800 w-1 absolute top-10 left-[2.35rem] bottom-24 -z-10"
     />
     <article class="relative flex flex-col gap-1 p-4">
-      <div>
+      <div v-if="showComments">
         <div ref="moreBtn" class="absolute z-10 top-2 right-2 w-min">
           <button
             class="cursor-pointer flex gap-1 w-min z-10 p-2 rounded-full text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200/40 dark:hover:bg-neutral-200/10 hover:text-neutral-800 dark:hover:text-neutral-400 saturate-200 transition-colors duration-200"

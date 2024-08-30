@@ -13,7 +13,10 @@
       </div>
     </div>
     <div class="relative">
-      <div ref="moreBtn" class="absolute z-10 top-2 right-2 w-min">
+      <div
+        ref="moreBtn"
+        class="absolute z-10 top-2 right-2 w-min"
+      >
         <button
           class="p-2 rounded-full flex text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200/40 dark:hover:bg-neutral-200/10 hover:text-neutral-800 dark:hover:text-neutral-400 saturate-200 transition-colors duration-200"
           :class="{ 'bg-neutral-200/40 dark:bg-neutral-200/10 text-neutral-800 dark:text-neutral-400': showMoreDropdown }"
