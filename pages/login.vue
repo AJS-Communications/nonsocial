@@ -9,6 +9,7 @@
 
 <script setup lang="ts">
 const { user } = useUser()
+const redirectUrl = useCookie('redirect-url', { secure: true })
 
 const login = async (value: string) => {
   if (value === 'jason') {
@@ -18,6 +19,7 @@ const login = async (value: string) => {
   } else if (value === 'will') {
     user.value = await $fetch<User>('/api/users/3')
   }
-  await navigateTo('/')
+  await navigateTo(redirectUrl.value)
+  redirectUrl.value = null
 }
 </script>
