@@ -184,9 +184,11 @@ if (!user.value) {
 }
 
 const route = useRoute()
+
 const { data: item, refresh } = await useFetch(`/api/posts/${route.params.id}`)
 
 const parentItem = ref()
+
 if (item.value?.parentId) {
   const { data } = await useFetch(`/api/posts/${item.value.parentId}`)
   parentItem.value = data.value
@@ -211,19 +213,19 @@ onClickOutside(moreBtn, () => showMoreDropdown.value = false)
 onKeyStroke('Escape', () => showMoreDropdown.value = false)
 
 useIntersectionObserver(el, async ([{ isIntersecting }]) => {
-  if (comments.value && user.value && isIntersecting) {
+  if (comments.value && user.value && route.params.id && isIntersecting) {
     const lastItem = comments.value[comments.value.length - 1]
-    const lastId = lastItem && lastItem.id || null
+    const lastId = lastItem && lastItem.id || undefined
     if (lastId === cursor.value) return
 
     cursor.value = lastId
-    const { data } = await useFetch<[Post]>(`/api/posts/${route.params.id}/comments`, {
+    const data = await $fetch<[Post]>(`/api/posts/${route.params.id}/comments`, {
       params: {
         cursor: cursor.value
       }
     })
-    if (data.value) {
-      comments.value.push(...data.value)
+    if (data) {
+      comments.value.push(...data)
     }
   }
 })

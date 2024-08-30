@@ -52,14 +52,14 @@ export const usePost = () => {
   
     if (isBookmark(postId)) {
       const bookmark = user.value.bookmarks.find(i => i.postId === postId)
-      await useFetch(`/api/users/${user.value.id}/bookmarks`, {
+      await $fetch(`/api/users/${user.value.id}/bookmarks`, {
         method: 'delete',
         body: {
           id: bookmark && bookmark.id
         }
       })
     } else {
-      await useFetch(`/api/users/${user.value.id}/bookmarks`, {
+      await $fetch(`/api/users/${user.value.id}/bookmarks`, {
         method: 'post',
         body: {
           postId: postId
@@ -74,14 +74,14 @@ export const usePost = () => {
   
     if (isLike(postId)) {
       const like = user.value.likes.find(i => i.postId ===  postId)
-      await useFetch(`/api/users/${user.value.id}/likes`, {
+      await $fetch(`/api/users/${user.value.id}/likes`, {
         method: 'delete',
         body: {
           id: like && like.id
         }
       })
     } else {
-      await useFetch(`/api/users/${user.value.id}/likes`, {
+      await $fetch(`/api/users/${user.value.id}/likes`, {
         method: 'post',
         body: {
           postId: postId
@@ -96,14 +96,14 @@ export const usePost = () => {
   
     if (isBoost(postId)) {
       const boost = user.value.boosts.find(i => i.postId ===  postId)
-      await useFetch(`/api/users/${user.value.id}/boosts`, {
+      await $fetch(`/api/users/${user.value.id}/boosts`, {
         method: 'delete',
         body: {
           id: boost && boost.id
         }
       })
     } else {
-      await useFetch(`/api/users/${user.value.id}/boosts`, {
+      await $fetch(`/api/users/${user.value.id}/boosts`, {
         method: 'post',
         body: {
           postId: postId

@@ -142,7 +142,7 @@ const resetEditor = () => {
 
 const submit = async () => {
   if (!user.value) return
-  await useFetch(`/api/users/${user.value.id}/posts`, {
+  await $fetch(`/api/users/${user.value.id}/posts`, {
     method: 'post',
     body: {
       text: text.value,

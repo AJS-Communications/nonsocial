@@ -6,6 +6,8 @@ export default defineEventHandler(async (event) => {
   let data = null
 
   async function main() {
+    if (!event.context.params) return
+
     const [bookmarkCount, likeCount, boostCount, commentCount, commenters, post] = await prisma.$transaction([
       prisma.bookmark.count({
         where: {
@@ -57,6 +59,7 @@ export default defineEventHandler(async (event) => {
         }
       })
     ])
+
     return Object.assign({}, post, {
       counts: {
         bookmarkCount,

@@ -39,25 +39,25 @@ const posts = ref(bookmarks.value?.flatMap(i => i.post) || [])
 useIntersectionObserver(el, async ([{ isIntersecting }]) => {
   if (bookmarks.value && isIntersecting) {
     const lastItem = bookmarks.value[bookmarks.value.length - 1]
-    const lastId = lastItem && lastItem.id || null
+    const lastId = lastItem && lastItem.id || undefined
     if (lastId === cursor.value) return
 
     cursor.value = lastId
-    const { data } = await useFetch<[Bookmark]>(`/api/users/${user.value?.id}/bookmarks`, {
+    const data = await $fetch<[Bookmark]>(`/api/users/${user.value?.id}/bookmarks`, {
       params: {
         cursor: cursor.value
       }
     })
-    if (data.value) {
-      posts.value.push(...data.value?.flatMap(i => i.post) || [])
+    if (data) {
+      posts.value.push(...data?.flatMap(i => i.post) || [])
     }
   }
 })
 
 const update = async () => {
   if (!user.value) return
-  const { data } = await useFetch<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
-  bookmarks.value = data.value
+  const data = await $fetch<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
+  bookmarks.value = data
   posts.value = bookmarks.value?.flatMap(i => i.post) || []
   await updateUser()
 }

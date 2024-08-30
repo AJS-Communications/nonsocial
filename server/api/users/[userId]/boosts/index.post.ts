@@ -8,6 +8,8 @@ export default defineEventHandler(async (event) => {
   let data = null
 
   async function main() {
+    if (!event.context.params) return
+
     return await prisma.boost.create({
       data: {
         published: true,

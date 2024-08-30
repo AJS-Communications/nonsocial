@@ -6,6 +6,8 @@ export default defineEventHandler(async (event) => {
   let data = null
 
   async function main() {
+    if (!event.context.params) return
+
     return await prisma.user.findUnique({
       where: {
         id: parseInt(event.context.params.userId),

@@ -7,6 +7,8 @@ export default defineEventHandler(async (event) => {
   let data: any = []
 
   async function main() {
+    if (!event.context.params) return
+
     if (typeof query.cursor !== 'undefined') {
       return await prisma.post.findMany({
         take: 10,

@@ -38,25 +38,25 @@ const items = ref(data.value)
 useIntersectionObserver(el, async ([{ isIntersecting }]) => {
   if (user.value && items.value && isIntersecting) {
     const lastItem = items.value[items.value.length - 1]
-    const lastId = lastItem && lastItem.id || null
+    const lastId = lastItem && lastItem.id || undefined
     if (lastId === cursor.value) return
 
     cursor.value = lastId
-    const { data } = await useFetch<[Post]>(`/api/posts`, {
+    const data = await $fetch<[Post]>(`/api/posts`, {
       params: {
         cursor: cursor.value
       }
     })
-    if (data.value) {
-      items.value.push(...data.value)
+    if (data) {
+      items.value.push(...data)
     }
   }
 })
 
 const update = async () => {
   if (!user.value) return
-  const { data } = await useFetch<[Post]>(`/api/posts`)
-  items.value = data.value
+  const data = await $fetch<[Post]>(`/api/posts`)
+  items.value = data
   await updateUser()
 }
 

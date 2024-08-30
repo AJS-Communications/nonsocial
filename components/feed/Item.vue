@@ -202,6 +202,7 @@ const props = defineProps({
 const { data: item, refresh } = await useFetch(`/api/posts/${props.itemId}`)
 
 const parentItem = ref()
+
 if (item.value?.parentId) {
   const { data } = await useFetch(`/api/posts/${item.value.parentId}`)
   parentItem.value = data.value

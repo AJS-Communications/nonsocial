@@ -7,6 +7,8 @@ export default defineEventHandler(async (event) => {
   let data: any = []
 
   async function main() {
+    if (!event.context.params) return
+
     const following = await prisma.follow.findMany({
       where: { authorId: parseInt(event.context.params.userId) },
       select: {

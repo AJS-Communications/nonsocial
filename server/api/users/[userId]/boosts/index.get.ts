@@ -6,6 +6,8 @@ export default defineEventHandler(async (event) => {
   let data: any = []
 
   async function main() {
+    if (!event.context.params) return
+
     return await prisma.boost.findMany({
       where: {
         author: {
