@@ -1,5 +1,5 @@
 interface User {
-  id: number
+  id: string
   username: string
   name: string
   photoUrl: string
@@ -11,7 +11,7 @@ interface User {
 }
 
 interface Follow {
-  id: number
+  id: string
   author: User
   authorId: User.id
   following: User
@@ -19,13 +19,13 @@ interface Follow {
 }
 
 interface Post {
-  id: number
+  id: string
   author: User
   authorId: User.id
 }
 
 interface Bookmark {
-  id: number
+  id: string
   postId: Post.id
   post: Post
   author?: User
@@ -33,7 +33,7 @@ interface Bookmark {
 }
 
 interface Like {
-  id: number
+  id: string
   postId: Post.id
   post: Post
   author: User
@@ -41,7 +41,7 @@ interface Like {
 }
 
 interface Boost {
-  id: number
+  id: string
   postId: Post.id
   post: Post
   author: User

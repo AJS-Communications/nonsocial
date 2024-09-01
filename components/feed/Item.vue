@@ -32,7 +32,7 @@
           <span
             v-for="(boost, index) in boostList"
             :key="boost.id"
-          >{{ boost.author.name }} {{ index < boostList.length - 1 ? 'and ' : '' }}</span>
+          >{{ boost.author.username }} {{ index < boostList.length - 1 ? 'and ' : '' }}</span>
           <span>boosted</span>
         </div>
       </div>
@@ -42,7 +42,7 @@
           <span
             v-for="(commenter, index) in commenterList"
             :key="commenter.id"
-          >{{ commenter.author.name }}  {{ index < commenterList.length - 1 ? 'and ' : '' }}</span>
+          >{{ commenter.author.username }}  {{ index < commenterList.length - 1 ? 'and ' : '' }}</span>
           <span>commented</span>
         </div>
       </div>
@@ -52,15 +52,16 @@
           <span
             v-for="(like, index) in likeList"
             :key="like.id"
-          >{{ like.author.name }}  {{ index < likeList.length - 1 ? 'and ' : '' }}</span>
+          >{{ like.author.username }}  {{ index < likeList.length - 1 ? 'and ' : '' }}</span>
           <span>liked</span>
         </div>
       </div>
       <div class="flex items-center space-x-4">
         <img
+          v-if="item.author.photoUrl"
           :src="item.author.photoUrl"
-          :alt="item.author.name || ''"
-          class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-4 ring-white dark:ring-black"
+          :alt="item.author.username"
+          class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-4 ring-white dark:ring-black bg-white dark:bg-black"
           loading="lazy"
           decoding="async"
         >
@@ -77,7 +78,7 @@
               :to="`/${item.author.username}`"
               class="my-auto hover:underline z-10"
             >
-              <span>{{ item.author.name }}</span>
+              <span>{{ item.author.username }}</span>
             </NuxtLink>
             <div class="mt-0.5 text-sm text-neutral-500 whitespace-nowrap space-x-2">
               <span>&middot;</span>
@@ -181,7 +182,7 @@
 </template>
 
 <script setup lang="ts">
-const { user } = useUser()
+const { user } = await useAuth()
 
 const {
   isBookmark,
@@ -192,10 +193,10 @@ const {
   bookmark,
   like,
   boost
-} = usePost()
+} = await usePost()
 
 const props = defineProps({
-  itemId: { type: Number, required: true },
+  itemId: { type: String, required: true },
   showComments: { type: Boolean, default: false }
 })
 

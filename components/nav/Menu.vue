@@ -41,5 +41,5 @@
 </template>
 
 <script setup lang="ts">
-const { user } = useUser()
+const { user } = await useAuth()
 </script>

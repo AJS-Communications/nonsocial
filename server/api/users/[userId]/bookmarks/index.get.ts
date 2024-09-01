@@ -14,11 +14,11 @@ export default defineEventHandler(async (event) => {
         take: 10,
         skip: 1,
         cursor: {
-          id: parseInt(query.cursor as string)
+          id: query.cursor as string
         },
         where: {
           author: {
-            id: parseInt(event.context.params.userId)
+            id: event.context.params.userId
           }
         },
         include: {
@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
       take: 10,
       where: {
         author: {
-          id: parseInt(event.context.params.userId)
+          id: event.context.params.userId
         }
       },
       include: {

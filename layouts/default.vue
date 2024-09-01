@@ -24,7 +24,6 @@
 </template>
 
 <script setup lang="ts">
-const title = useTitle()
 useHead({
   bodyAttrs: {
     class: 'bg-white text-neutral-900 dark:bg-black dark:text-white antialiased h-screen'

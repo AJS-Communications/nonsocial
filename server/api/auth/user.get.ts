@@ -3,18 +3,19 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event)
-
   let data = null
 
   async function main() {
-    if (!event.context.params) return
-
-    return await prisma.like.create({
-      data: {
-        published: true,
-        authorId: event.context.params.userId,
-        postId: body.postId
+    return await prisma.user.findUnique({
+      where: {
+        id: event.context.auth.userId,
+      },
+      include: {
+        bookmarks: true,
+        likes: true,
+        boosts: true,
+        following: true,
+        followers: true
       }
     })
   }

@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
 
     return await prisma.user.findUnique({
       where: {
-        id: parseInt(event.context.params.userId),
+        id: event.context.params.userId,
       },
       include: {
         bookmarks: true,

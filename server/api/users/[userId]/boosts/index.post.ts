@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     return await prisma.boost.create({
       data: {
         published: true,
-        authorId: parseInt(event.context.params.userId),
+        authorId: event.context.params.userId,
         postId: body.postId
       }
     })

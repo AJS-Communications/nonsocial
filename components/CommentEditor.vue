@@ -7,8 +7,8 @@
     <div class="flex space-x-4 w-full">
       <img
         :src="user?.photoUrl"
-        :alt="user?.name"
-        class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-4 ring-white dark:ring-black"
+        :alt="user?.username"
+        class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-4 ring-white dark:ring-black bg-white dark:bg-black"
         loading="lazy"
         decoding="async"
       >
@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-const { user } = useUser()
+const { user } = await useAuth()
 
 const props = defineProps({
   modelValue: { type: String, default: '' },

@@ -1,25 +1,32 @@
 <template>
   <div class="grid gap-4 p-4">
-    <p>Select a user:</p>
-    <button class="border px-4 py-2" @click="login('jason')">Login as Jason</button>
-    <button class="border px-4 py-2" @click="login('george')">Login as George</button>
-    <button class="border px-4 py-2" @click="login('will')">Login as William</button>
+    <form
+      class="grid gap-4 p-4"
+      @submit.prevent="handleLogin"
+    >
+      <input v-model="username" type="text" placeholder="username" required>
+      <input v-model="email" type="email" placeholder="email (register only)" required>
+      <input v-model="password" type="password" placeholder="password" required>
+      <button type="submit">Login</button>
+      <button type="button" @click="handleRegister">Register</button>
+    </form>
   </div>
 </template>
 
 <script setup lang="ts">
-const { user } = useUser()
-const redirectUrl = useCookie('redirect-url', { secure: true })
+const { login, register } = await useAuth()
 
-const login = async (value: string) => {
-  if (value === 'jason') {
-    user.value = await $fetch<User>('/api/users/1')
-  } else if (value === 'george') {
-    user.value = await $fetch<User>('/api/users/2')
-  } else if (value === 'will') {
-    user.value = await $fetch<User>('/api/users/3')
-  }
-  await navigateTo(redirectUrl.value)
-  redirectUrl.value = null
+const username = ref('')
+const email = ref('')
+const password = ref('')
+
+const handleLogin = async () => {
+  await login(username.value, password.value)
+  await navigateTo('/')
+}
+
+const handleRegister = async () => {
+  await register(username.value, email.value, password.value)
+  alert('registered!')
 }
 </script>

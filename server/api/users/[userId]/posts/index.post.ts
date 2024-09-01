@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
       data: {
         text: body.text,
         published: true,
-        authorId: parseInt(event.context.params.userId),
+        authorId: event.context.params.userId,
         parentId: body.parentId || null,
         visibility: body.visibility || 'PUBLIC'
       }

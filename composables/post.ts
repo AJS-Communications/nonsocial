@@ -1,17 +1,17 @@
-export const usePost = () => {
-  const { user, updateUser } = useUser()
+export const usePost = async () => {
+  const { user, refreshUser } = await useAuth()
 
-  const isBookmark = (postId: number) => {
+  const isBookmark = (postId: string) => {
     if (!user.value) return false
     return user.value.bookmarks.filter(i => i.postId === postId).length > 0
   }
 
-  const isLike = (postId: number) => {
+  const isLike = (postId: string) => {
     if (!user.value) return false
     return user.value.likes.filter(i => i.postId === postId).length > 0
   }
 
-  const isBoost = (postId: number) => {
+  const isBoost = (postId: string) => {
     if (!user.value) return false
     return user.value.boosts.filter(i => i.postId === postId).length > 0
   }
@@ -32,7 +32,7 @@ export const usePost = () => {
     }
   }
 
-  const share = async (postId: number) => {
+  const share = async (postId: string) => {
     const url = `${window.location.protocol}//${window.location.host}/posts/${postId}`
     if (!navigator.canShare()) {
       try {
@@ -47,7 +47,7 @@ export const usePost = () => {
     }
   }
 
-  const bookmark = async (postId: number) => {
+  const bookmark = async (postId: string) => {
     if (!user.value) return
   
     if (isBookmark(postId)) {
@@ -66,10 +66,10 @@ export const usePost = () => {
         }
       })
     }
-    await updateUser()
+    await refreshUser()
   }
   
-  const like = async (postId: number) => {
+  const like = async (postId: string) => {
     if (!user.value) return
   
     if (isLike(postId)) {
@@ -88,10 +88,10 @@ export const usePost = () => {
         }
       })
     }
-    await updateUser()
+    await refreshUser()
   }
 
-  const boost = async (postId: number) => {
+  const boost = async (postId: string) => {
     if (!user.value) return
   
     if (isBoost(postId)) {
@@ -110,7 +110,7 @@ export const usePost = () => {
         }
       })
     }
-    await updateUser()
+    await refreshUser()
   }
 
   return {

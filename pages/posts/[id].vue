@@ -39,14 +39,15 @@
         v-if="parentItem"
         class="bg-neutral-200 dark:bg-neutral-800 w-1 absolute top-10 left-[2.35rem] bottom-10 -z-10"
       />
-      <LazyFeedItem v-if="parentItem" :item-id="parentItem.id" @update="updateUser" />
+      <LazyFeedItem v-if="parentItem" :item-id="parentItem.id" @update="refreshUser" />
       <article class="bg-white dark:bg-black">
         <div class="relative flex flex-col-reverse px-4 pb-2 mt-4">
           <div class="flex items-center space-x-4">
             <img
+              v-if="item.author.photoUrl"
               :src="item.author.photoUrl"
-              :alt="item.author.name || ''"
-              class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-4 ring-white dark:ring-black"
+              :alt="item.author.username"
+              class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-4 ring-white dark:ring-black bg-white dark:bg-black"
               loading="lazy"
               decoding="async"
             >
@@ -57,7 +58,7 @@
                   class="hover:underline my-auto"
                   tabindex="0"
                 >
-                  {{ item.author.name }}
+                  {{ item.author.username }}
                 </NuxtLink>
               </div>
               <p class="text-neutral-500 font-medium">{{ createdDate(item.createdDate, 'long') }}</p>
@@ -158,7 +159,7 @@
         :key="comment.id"
         :item-id="comment.id"
         show-comments
-        @update="updateUser"
+        @update="refreshUser"
       />
     </div>
     <div ref="el" />
@@ -168,8 +169,8 @@
 <script setup lang="ts">
 const {
   user,
-  updateUser
-} = useUser()
+  refreshUser
+} = await useAuth()
 
 const {
   isBookmark,
@@ -180,7 +181,7 @@ const {
   bookmark,
   like,
   boost
-} = usePost()
+} = await usePost()
 
 if (!user.value) {
   throw createError({ statusCode: 501, message: 'Access Denied' })
@@ -237,7 +238,7 @@ const update = async () => {
   if (!user.value) return
   await refresh()
   await refreshComments()
-  await updateUser()
+  await refreshUser()
 }
 
 useNuxtApp().hooks.hook('compose' as any, async () => {

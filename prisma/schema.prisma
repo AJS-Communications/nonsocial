@@ -11,10 +11,11 @@ datasource db {
 }
 
 model User {
-  id         Int            @id @default(autoincrement())
+  id         String         @id @default(cuid())
   email      String         @unique
   username   String         @unique
-  photoUrl   String
+  password   String
+  photoUrl   String?        @default("/user-avatar.svg")
   name       String?        @db.VarChar(100)
   bio        String?        @db.VarChar(500)
   role       UserRole       @default(UNVERIFIED)
@@ -23,8 +24,8 @@ model User {
   following  Follow[]       @relation("following")
   followers  Follow[]       @relation("follower")
   bookmarks  Bookmark[]
-  likes  Like[]
-  boosts    Boost[]
+  likes      Like[]
+  boosts     Boost[]
 }
 
 enum UserVisibility {
@@ -33,12 +34,12 @@ enum UserVisibility {
 }
 
 model Follow {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   createdDate DateTime @default(now())
   author      User     @relation("follower", fields: [authorId], references: [id])
-  authorId    Int
+  authorId    String
   following   User     @relation("following", fields: [followingId], references: [id])
-  followingId Int
+  followingId String
 }
 
 enum UserRole {
@@ -50,17 +51,17 @@ enum UserRole {
 }
 
 model Post {
-  id          Int        @id @default(autoincrement())
+  id          String     @id @default(cuid())
   text        String     @db.VarChar(1000)
   published   Boolean    @default(false)
   createdDate DateTime   @default(now())
   author      User       @relation(fields: [authorId], references: [id])
-  authorId    Int
+  authorId    String
   visibility  Visibility @default(PUBLIC)
-  parentId    Int?
+  parentId    String?
   bookmarks   Bookmark[]
-  likes   Like[]
-  boosts     Boost[]
+  likes       Like[]
+  boosts      Boost[]
 }
 
 enum Visibility {
@@ -69,37 +70,37 @@ enum Visibility {
 }
 
 model Bookmark {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   published   Boolean  @default(false)
   createdDate DateTime @default(now())
   author      User     @relation(fields: [authorId], references: [id])
-  authorId    Int
+  authorId    String
   post        Post     @relation(fields: [postId], references: [id])
-  postId      Int
+  postId      String
 
   @@unique([authorId, postId])
 }
 
 model Like {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   published   Boolean  @default(false)
   createdDate DateTime @default(now())
   author      User     @relation(fields: [authorId], references: [id])
-  authorId    Int
+  authorId    String
   post        Post     @relation(fields: [postId], references: [id])
-  postId      Int
+  postId      String
 
   @@unique([authorId, postId])
 }
 
 model Boost {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   published   Boolean  @default(false)
   createdDate DateTime @default(now())
   author      User     @relation(fields: [authorId], references: [id])
-  authorId    Int
+  authorId    String
   post        Post     @relation(fields: [postId], references: [id])
-  postId      Int
+  postId      String
 
   @@unique([authorId, postId])
 }

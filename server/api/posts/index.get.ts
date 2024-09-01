@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
         take: 10,
         skip: 1,
         cursor: {
-          id: parseInt(query.cursor as string)
+          id: query.cursor as string
         },
         where: {
           parentId: null,

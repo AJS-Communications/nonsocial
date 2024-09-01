@@ -29,8 +29,8 @@
                 <div class="flex items-center space-x-4 pt-4">
                   <img
                     :src="item.author.photoUrl"
-                    :alt="item.author.name || ''"
-                    class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-4 ring-white dark:ring-black"
+                    :alt="item.author.username"
+                    class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-4 ring-white dark:ring-black bg-white dark:bg-black"
                     loading="lazy"
                     decoding="async"
                   >
@@ -40,7 +40,7 @@
                         :to="`/${item.author.username}`"
                         class="my-auto hover:underline z-10"
                       >
-                        <span>{{ item.author.name }}</span>
+                        <span>{{ item.author.username }}</span>
                       </NuxtLink>
                       <div class="mt-0.5 text-sm text-neutral-500 whitespace-nowrap space-x-2">
                         <span>&middot;</span>
@@ -70,7 +70,7 @@
 <script setup lang="ts">
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component'
 
-const { createdDate } = usePost()
+const { createdDate } = await usePost()
 
 defineProps({
   item: { type: Object, required: true }

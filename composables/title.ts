@@ -1,9 +1,7 @@
 export const useTitle = () => {
   const title = useState('title', () => '')
-  watch(title, () => {
-    useHead({
-      title: title.value
-    })
+  useHead({
+    title: computed(() => title.value)
   })
   return title
 }

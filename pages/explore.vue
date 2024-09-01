@@ -5,7 +5,10 @@
       @click="goToTop"
     >
       <h1 class="p-4 pb-0 text-xl font-bold">{{ title }}</h1>
-      <p v-if="user" class="px-4 pb-4 text-neutral-500">@{{ user.username }}</p>
+      <p
+        v-if="user?.username"
+        class="px-4 pb-4 text-neutral-500"
+      >@{{ user.username }}</p>
     </div>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
       <LazyFeedItem
@@ -13,7 +16,7 @@
         :key="item.id"
         :item-id="item.id"
         show-comments
-        @update="updateUser"
+        @update="refreshUser"
       />
     </div>
     <div ref="el" />
@@ -21,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-const { user, updateUser } = useUser()
+const { user, refreshUser } = await useAuth()
 
 if (!user.value) {
   throw createError({ statusCode: 501, message: 'Access Denied' })
@@ -57,7 +60,7 @@ const update = async () => {
   if (!user.value) return
   const data = await $fetch<[Post]>(`/api/posts`)
   items.value = data
-  await updateUser()
+  await refreshUser()
 }
 
 useNuxtApp().hooks.hook('compose' as any, async () => {

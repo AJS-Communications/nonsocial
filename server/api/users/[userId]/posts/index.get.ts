@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     if (!event.context.params) return
 
     const following = await prisma.follow.findMany({
-      where: { authorId: parseInt(event.context.params.userId) },
+      where: { authorId: event.context.params.userId },
       select: {
         followingId: true
       }
@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
         take: 10,
         skip: 1,
         cursor: {
-          id: parseInt(query.cursor as string)
+          id: query.cursor as string
         },
         where: {
           OR: [
@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
                 id: {
                   in: [
                     ...following.map(i => i.followingId),
-                    parseInt(event.context.params.userId)
+                    event.context.params.userId
                   ]
                 }
               }
@@ -97,7 +97,7 @@ export default defineEventHandler(async (event) => {
               id: {
                 in: [
                   ...following.map(i => i.followingId),
-                  parseInt(event.context.params.userId)
+                  event.context.params.userId
                 ]
               }
             }

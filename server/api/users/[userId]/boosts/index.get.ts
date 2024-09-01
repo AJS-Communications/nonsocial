@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     return await prisma.boost.findMany({
       where: {
         author: {
-          id: parseInt(event.context.params.userId)
+          id: event.context.params.userId
         }
       },
       include: {

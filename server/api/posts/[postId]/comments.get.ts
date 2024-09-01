@@ -14,10 +14,10 @@ export default defineEventHandler(async (event) => {
         take: 10,
         skip: 1,
         cursor: {
-          id: parseInt(query.cursor as string)
+          id: query.cursor as string
         },
         where: {
-          parentId: parseInt(event.context.params.postId),
+          parentId: event.context.params.postId,
         },
         include: {
           author: true
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
     return await prisma.post.findMany({
       take: 10,
       where: {
-        parentId: parseInt(event.context.params.postId),
+        parentId: event.context.params.postId,
       },
       include: {
         author: true

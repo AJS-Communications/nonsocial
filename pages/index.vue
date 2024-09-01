@@ -13,7 +13,7 @@
         :key="item.id"
         :item-id="item.id"
         show-comments
-        @update="updateUser"
+        @update="refreshUser"
       />
     </div>
     <div ref="el" />
@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-const { user, updateUser } = useUser()
+const { user, refreshUser } = await useAuth()
 
 if (!user.value) {
   throw createError({ statusCode: 501, message: 'Access Denied' })
@@ -58,7 +58,7 @@ const update = async () => {
   if (!user.value) return
   const data = await $fetch<[Post]>(`/api/users/${user.value.id}/posts`)
   items.value = data
-  await updateUser()
+  await refreshUser()
 }
 
 useNuxtApp().hooks.hook('compose' as any, async () => {
