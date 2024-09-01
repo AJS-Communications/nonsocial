@@ -32,6 +32,7 @@ export const useAuth = async () => {
     })
     isAuthenticated.value = false
     user.value = null
+    await navigateTo('/login')
   }
 
   return {
