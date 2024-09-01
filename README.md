@@ -10,10 +10,13 @@ I believe in a town square for everyone. I believe social media should be a publ
 
 This isn't a complete list of items but its a good start for focus. There is a ton of work ahead and what's already been done is up for refactor to improve code quality. Feel free to come up with ideas.
 
-- [X] User Authentication
+- [] User Authentication
   - [X] Login
   - [X] Logout
   - [X] Register
+  - [X] Password-based
+  - [ ] 2-Factor Authentication
+  - [ ] Passkeys
 - [ ] User Groups
 - [ ] User Notifications
 - [ ] User (Direct) Messaging

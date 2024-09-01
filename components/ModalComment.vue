@@ -70,7 +70,11 @@
 <script setup lang="ts">
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component'
 
-const { createdDate } = await usePost()
+const {
+  $post: {
+    createdDate
+  }
+} = useNuxtApp()
 
 defineProps({
   item: { type: Object, required: true }

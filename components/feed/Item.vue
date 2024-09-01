@@ -182,18 +182,21 @@
 </template>
 
 <script setup lang="ts">
-const { $auth: { user } } = useNuxtApp()
-
 const {
-  isBookmark,
-  isLike,
-  isBoost,
-  createdDate,
-  share,
-  bookmark,
-  like,
-  boost
-} = await usePost()
+  $auth: {
+    user
+  },
+  $post: {
+    isBookmark,
+    isLike,
+    isBoost,
+    createdDate,
+    share,
+    bookmark,
+    like,
+    boost
+  }
+} = useNuxtApp()
 
 const props = defineProps({
   itemId: { type: String, required: true },

@@ -167,18 +167,22 @@
 </template>
 
 <script setup lang="ts">
-const { $auth: { user, refreshUser } } = useNuxtApp()
-
 const {
-  isBookmark,
-  isLike,
-  isBoost,
-  createdDate,
-  share,
-  bookmark,
-  like,
-  boost
-} = await usePost()
+  $auth: {
+    user,
+    refreshUser
+  },
+  $post: {
+    isBookmark,
+    isLike,
+    isBoost,
+    createdDate,
+    share,
+    bookmark,
+    like,
+    boost
+  }
+} = useNuxtApp()
 
 if (!user.value) {
   throw createError({ statusCode: 501, message: 'Access Denied' })
