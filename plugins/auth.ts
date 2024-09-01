@@ -1,4 +1,4 @@
-export const useAuth = async () => {
+export default defineNuxtPlugin(async () => {
   const isAuthenticated = useState('isAuthenticated', () => false)
 
   const { data: user, refresh: refreshUser } = await useFetch<User>('/api/auth/user')
@@ -36,11 +36,15 @@ export const useAuth = async () => {
   }
 
   return {
-    isAuthenticated,
-    user,
-    refreshUser,
-    login,
-    register,
-    logout
+    provide: {
+      auth: {
+        isAuthenticated,
+        user,
+        refreshUser,
+        login,
+        register,
+        logout
+      }
+    }
   }
-}
+})

@@ -1,5 +1,5 @@
 export const usePost = async () => {
-  const { user, refreshUser } = await useAuth()
+  const { $auth: { user, refreshUser } } = useNuxtApp()
 
   const isBookmark = (postId: string) => {
     if (!user.value) return false

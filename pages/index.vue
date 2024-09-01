@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-const { user, refreshUser } = await useAuth()
+const { $auth: { user, refreshUser } } = useNuxtApp()
 
 if (!user.value) {
   throw createError({ statusCode: 501, message: 'Access Denied' })

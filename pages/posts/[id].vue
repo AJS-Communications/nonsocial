@@ -167,10 +167,7 @@
 </template>
 
 <script setup lang="ts">
-const {
-  user,
-  refreshUser
-} = await useAuth()
+const { $auth: { user, refreshUser } } = useNuxtApp()
 
 const {
   isBookmark,

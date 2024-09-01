@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-const { login, register } = await useAuth()
+const { $auth: { login, register } } = useNuxtApp()
 
 const username = ref('')
 const email = ref('')

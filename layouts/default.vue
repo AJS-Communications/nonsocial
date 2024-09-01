@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-const { isAuthenticated, logout } = await useAuth()
+const { $auth: { isAuthenticated, logout } } = useNuxtApp()
 
 useHead({
   bodyAttrs: {

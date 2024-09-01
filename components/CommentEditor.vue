@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-const { user } = await useAuth()
+const { $auth: { user } } = useNuxtApp()
 
 const props = defineProps({
   modelValue: { type: String, default: '' },

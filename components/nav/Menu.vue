@@ -41,5 +41,5 @@
 </template>
 
 <script setup lang="ts">
-const { user } = await useAuth()
+const { $auth: { user } } = useNuxtApp()
 </script>
