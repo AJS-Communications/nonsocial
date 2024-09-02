@@ -2,13 +2,13 @@
   <div class="grid gap-4 p-4">
     <form
       class="grid gap-4 p-4"
-      @submit.prevent="handleLogin"
+      @submit.prevent="handleRegister"
     >
       <input v-model="username" type="text" placeholder="username" required>
-      <input v-model="email" type="email" placeholder="email (register only)" required>
-      <input v-model="password" type="password" placeholder="password" required>
-      <button type="submit">Login</button>
-      <button type="button" @click="handleRegister">Register</button>
+      <input v-model="email" type="email" placeholder="email" required>
+      <button type="submit" class="border p-2">Register</button>
+      <p class="text-center">or</p>
+      <button type="button" class="border p-2" @click="handleLogin">Login</button>
     </form>
   </div>
 </template>
@@ -18,15 +18,22 @@ const { $auth: { login, register } } = useNuxtApp()
 
 const username = ref('')
 const email = ref('')
-const password = ref('')
 
 const handleLogin = async () => {
-  await login(username.value, password.value)
-  await navigateTo('/')
+  try {
+    await login()
+    await navigateTo('/')
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 const handleRegister = async () => {
-  await register(username.value, email.value, password.value)
-  alert('registered!')
+  try {
+    await register(username.value, email.value)
+    await handleLogin()
+  } catch (e) {
+    console.error(e)
+  }
 }
 </script>

@@ -1,19 +1,18 @@
 import jwt from 'jsonwebtoken'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   const runtimeConfig = useRuntimeConfig()
   const cookies = parseCookies(event)
-  const token = cookies.auth_token
+  const token = cookies.token
 
   if (token) {
     try {
-      const decoded = jwt.verify(token, runtimeConfig.JWT_SECRET)
+      const decoded = await jwt.verify(token, runtimeConfig.JWT_SECRET)
       event.context.auth = decoded
     } catch (error) {
-      throw createError({
-        statusCode: 401,
-        message: 'Invalid token'
-      })
+      deleteCookie(event, 'token')
+      event.context.auth = null
+      return sendRedirect(event, '/login')
     }
   }
 })

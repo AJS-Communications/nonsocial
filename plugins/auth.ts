@@ -1,3 +1,13 @@
+import {
+  startAuthentication,
+  startRegistration
+} from '@simplewebauthn/browser'
+
+import type {
+  PublicKeyCredentialCreationOptionsJSON,
+  PublicKeyCredentialRequestOptionsJSON
+} from '@simplewebauthn/types'
+
 export default defineNuxtPlugin({
   name: 'auth',
   async setup () {
@@ -9,23 +19,58 @@ export default defineNuxtPlugin({
       isAuthenticated.value = true
     }
 
-    const login = async (username: string, password: string) => {
-      const data = await $fetch('/api/auth/login', {
-        method: 'post',
-        body: { username, password }
-      })
+    const login = async () => {
+      const {
+        $auth: {
+          isAuthenticated,
+          refreshUser
+        }
+      } = useNuxtApp()
 
-      if (data) {
+      const options = await $fetch<PublicKeyCredentialRequestOptionsJSON>('/api/auth/passkey', {
+        method: 'POST',
+        body: { action: 'authenticate' },
+      })
+  
+      const response = await startAuthentication(options)
+  
+      const verification = await $fetch<{ verified: boolean }>('/api/auth/passkey', {
+        method: 'POST',
+        body: {
+          action: 'verifyAuthentication',
+          response,
+          challenge: options.challenge
+        }
+      })
+  
+      if (verification.verified) {
         isAuthenticated.value = true
         await refreshUser()
       }
+
+      return verification.verified
     }
 
-    const register = async (username: string, email: string, password: string) => {
-      return await $fetch('/api/auth/register', {
-        method: 'post',
-        body: { username, email, password }
+    const register = async (username: string, email: string) => {
+      const options = await $fetch<PublicKeyCredentialCreationOptionsJSON>('/api/auth/passkey', {
+        method: 'POST',
+        body: { action: 'register', email }
       })
+  
+      const response = await startRegistration(options)
+  
+      const verification = await $fetch<{ verified: boolean }>('/api/auth/passkey', {
+        method: 'POST',
+        body: {
+          action: 'verifyRegistration',
+          response,
+          challenge: options.challenge,
+          username,
+          email
+        }
+      })
+  
+      return verification.verified
     }
 
     const logout = async () => {

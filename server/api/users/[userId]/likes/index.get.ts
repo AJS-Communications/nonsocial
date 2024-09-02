@@ -1,14 +1,15 @@
 import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient({
-  omit: {
-    user: {
-      password: true
-    }
-  }
-})
+const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
+  if (!event.context.auth) {
+    throw createError({
+      status: 401,
+      message: 'Unauthorized'
+    })
+  }
+
   let data: any = []
 
   async function main() {
@@ -34,8 +35,8 @@ export default defineEventHandler(async (event) => {
     data = await main()
     await prisma.$disconnect()
   } catch (e) {
-    console.error(e)
     await prisma.$disconnect()
+    throw createError(e as Error)
   }
 
   return data

@@ -12,23 +12,35 @@ datasource db {
 }
 
 model User {
-  id         String         @id @default(cuid())
-  email      String         @unique
-  username   String         @unique
-  password   String
-  photoUrl   String?        @default("/user-avatar.svg")
-  name       String?        @db.VarChar(100)
-  bio        String?        @db.VarChar(500)
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
-  role       UserRole       @default(UNVERIFIED)
-  visibility UserVisibility @default(PUBLIC)
-  posts      Post[]
-  following  Follow[]       @relation("following")
-  followers  Follow[]       @relation("follower")
-  bookmarks  Bookmark[]
-  likes      Like[]
-  boosts     Boost[]
+  id             String          @id @default(cuid())
+  email          String          @unique
+  username       String          @unique
+  photoUrl       String?         @default("/user-avatar.svg")
+  name           String?         @db.VarChar(100)
+  bio            String?         @db.VarChar(500)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  authenticators Authenticator[]
+  role           UserRole        @default(UNVERIFIED)
+  visibility     UserVisibility  @default(PUBLIC)
+  posts          Post[]
+  following      Follow[]        @relation("following")
+  followers      Follow[]        @relation("follower")
+  bookmarks      Bookmark[]
+  likes          Like[]
+  boosts         Boost[]
+}
+
+model Authenticator {
+  id           String   @id @default(cuid())
+  credentialId String   @unique
+  userId       String
+  publicKey    Bytes
+  counter      Int
+  transports   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
 }
 
 enum UserVisibility {

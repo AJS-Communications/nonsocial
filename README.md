@@ -14,9 +14,8 @@ This isn't a complete list of items but its a good start for focus. There is a t
   - [X] Login
   - [X] Logout
   - [X] Register
-  - [X] Password-based
-  - [ ] 2-Factor Authentication
-  - [ ] Passkeys
+  - [X] Passkeys
+  - [ ] Account Recovery
 - [ ] User Groups
 - [ ] User Notifications
 - [ ] User (Direct) Messaging
@@ -87,11 +86,14 @@ This application is built with [Nuxt 3](https://http://nuxt.com), [Tailwind CSS]
 
 Development has been done with a MySQL database up to this point (wanted ENUM support). I am open to whatever database makes sense. If you are an expert in the field, please chime in.
 
-You will need a `.env` file with your database and JWT secret specified. For example:
+You will need a `.env` file with some values specified. For example:
 
 ```
 DATABASE_URL="mysql://<USERNAME>:<PASSWORD>@localhost:3306/nonsocial"
 JWT_SECRET="secret-jwt-salt-value"
+WEBAUTHN_NAME="Nonsocial"
+WEBAUTHN_ORIGIN="http://localhost:3000"
+WEBAUTHN_RPID="localhost"
 ```
 
 ## Database

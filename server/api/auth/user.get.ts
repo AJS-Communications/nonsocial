@@ -1,41 +1,38 @@
 import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient({
-  omit: {
-    user: {
-      password: true
-    }
-  }
-})
+const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
+  if (!event.context.auth) {
+    throw createError({
+      status: 401,
+      message: 'Unauthorized'
+    })
+  }
+
   let data = null
 
   async function main() {
-    if (event.context.auth?.userId) {
-      return await prisma.user.findUnique({
-        where: {
-          id: event.context.auth.userId,
-        },
-        include: {
-          bookmarks: true,
-          likes: true,
-          boosts: true,
-          following: true,
-          followers: true
-        }
-      })
-    } else {
-      return null
-    }
+    return await prisma.user.findUnique({
+      where: {
+        id: event.context.auth.userId,
+      },
+      include: {
+        bookmarks: true,
+        likes: true,
+        boosts: true,
+        following: true,
+        followers: true
+      }
+    })
   }
 
   try {
     data = await main()
     await prisma.$disconnect()
   } catch (e) {
-    console.error(e)
     await prisma.$disconnect()
+    throw createError(e as Error)
   }
 
   return data
