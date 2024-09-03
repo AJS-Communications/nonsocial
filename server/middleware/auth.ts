@@ -4,6 +4,7 @@ export default defineEventHandler(async (event) => {
   const runtimeConfig = useRuntimeConfig()
   const cookies = parseCookies(event)
   const token = cookies.token
+  const refreshToken = cookies['refresh-token']
 
   if (token) {
     try {
@@ -11,6 +12,45 @@ export default defineEventHandler(async (event) => {
       event.context.auth = decoded
     } catch (error) {
       event.context.auth = null
+      deleteCookie(event, 'token')
+    }
+  }
+
+  if (!event.context.auth && refreshToken) {
+    try {
+      const decoded = await jwt.verify(refreshToken, runtimeConfig.JWT_SECRET)
+      event.context.auth = decoded
+
+      const newRefreshToken = jwt.sign({
+        userId: event.context.auth.userId
+      }, runtimeConfig.JWT_SECRET, {
+        expiresIn: '30d'
+      })
+  
+      setCookie(event, 'refresh-token', newRefreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 30 // 30d
+      })
+  
+      const token = jwt.sign({
+        userId: event.context.auth.userId
+      }, runtimeConfig.JWT_SECRET, {
+        expiresIn: '1h'
+      })
+  
+      setCookie(event, 'token', token, {
+        httpOnly: false,
+        secure: true,
+        sameSite: 'lax',
+        maxAge: 60 * 60 // 1h
+      })
+
+      return sendRedirect(event, event.node.req.url || '/')
+    } catch (error) {
+      event.context.auth = null
+      deleteCookie(event, 'refresh-token')
       deleteCookie(event, 'token')
     }
   }
@@ -23,22 +63,8 @@ export default defineEventHandler(async (event) => {
         event.context.auth = decoded
       } catch (error) {
         event.context.auth = null
+        setHeader(event, 'Authorization', '')
       }
     }
-  }
-
-  if (event.context.auth?.userId) {
-    const token = jwt.sign({
-      userId: event.context.auth.userId
-    }, runtimeConfig.JWT_SECRET, {
-      expiresIn: '24h'
-    })
-
-    setCookie(event, 'token', token, {
-      httpOnly: false,
-      secure: true,
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 // 24h
-    })
   }
 })

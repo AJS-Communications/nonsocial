@@ -22,7 +22,7 @@ const email = ref('')
 const handleLogin = async () => {
   try {
     await login()
-    await navigateTo('/')
+    await navigateTo('/', { external: true })
   } catch (e) {
     console.error(e)
   }

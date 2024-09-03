@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.12.1",
-    "@prisma/client": "^5.19.0",
+    "@prisma/client": "^5.19.1",
     "@simplewebauthn/browser": "^10.0.0",
     "@simplewebauthn/server": "^10.0.1",
     "@simplewebauthn/types": "^10.0.0",
@@ -35,7 +35,7 @@
     "npm": "^10.8.3",
     "nuxt": "^3.13.0",
     "nuxt-security": "^2.0.0-rc.9",
-    "prisma": "^5.19.0",
+    "prisma": "^5.19.1",
     "ts-node": "^10.9.2"
   }
 }

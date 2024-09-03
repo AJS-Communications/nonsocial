@@ -4,6 +4,7 @@ export default defineNuxtPlugin({
     const token = useCookie('token')
 
     const $api = $fetch.create({
+      retry: 1,
       async onRequest({ options }) {
         if (token.value) {
           const headers = options.headers ||= {}

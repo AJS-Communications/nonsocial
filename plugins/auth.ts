@@ -86,10 +86,11 @@ export default defineNuxtPlugin({
     }
 
     const logout = async () => {
+      await $api('/api/auth/logout', { method: 'post' })
       token.value = null
       isAuthenticated.value = false
       user.value = null
-      await navigateTo('/login')
+      await navigateTo('/login', { external: true })
     }
 
     return {
