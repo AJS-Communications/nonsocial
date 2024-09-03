@@ -94,6 +94,9 @@ JWT_SECRET="secret-jwt-salt-value"
 WEBAUTHN_NAME="Nonsocial"
 WEBAUTHN_ORIGIN="http://localhost:3000"
 WEBAUTHN_RPID="localhost"
+APP_TITLE="Nonsocial"
+APP_TITLE_SHORT="NS"
+APP_META_DESCRIPTION="An open-source townsquare for everyone."
 ```
 
 ## Database

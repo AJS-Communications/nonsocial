@@ -32,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+const runtimeConfig = useRuntimeConfig()
 const { $auth: { isAuthenticated, logout } } = useNuxtApp()
 
 useHead({
@@ -39,8 +40,17 @@ useHead({
     class: 'bg-white text-neutral-900 dark:bg-black dark:text-white antialiased h-screen'
   },
   htmlAttrs: {
-    class: 'h-screen'
+    class: 'h-screen',
+    lang: 'en'
   },
-  titleTemplate: (title) => title ? `${title} | Nonsocial` : 'Nonsocial'
+  meta: [
+    {
+      name: 'description',
+      content: runtimeConfig.public.APP_META_DESCRIPTION
+    }
+  ],
+  titleTemplate: (title) => title ?
+    `${title} | ${runtimeConfig.public.APP_TITLE}` :
+    runtimeConfig.public.APP_TITLE
 })
 </script>

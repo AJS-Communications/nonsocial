@@ -49,7 +49,7 @@
       </div>
       <button
         :disabled="text.trim().length < 1 || remainingLength < 0"
-        class="text-white bg-sky-500 rounded-full px-4 py-1 font-bold hover:bg-sky-600 disabled:opacity-50 disabled:pointer-events-none"
+        class="text-white bg-sky-700 rounded-full px-4 py-1 font-bold hover:bg-sky-700/90 disabled:opacity-50 disabled:pointer-events-none"
         @click="submit"
       >Post</button>
     </div>

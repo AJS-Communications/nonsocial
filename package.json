@@ -16,6 +16,7 @@
     "seed": "ts-node --compiler-options {\"module\":\"commonjs\"} prisma/seed.mjs"
   },
   "devDependencies": {
+    "@nuxtjs/robots": "^4.1.6",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@prisma/client": "^5.19.1",
     "@simplewebauthn/browser": "^10.0.0",
