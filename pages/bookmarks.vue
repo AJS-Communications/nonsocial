@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-const { $auth: { user, refreshUser } } = useNuxtApp()
+const { $api, $auth: { user, refreshUser } } = useNuxtApp()
 
 if (!user.value) {
   throw createError({ statusCode: 501, message: 'Access Denied' })
@@ -33,7 +33,7 @@ if (!user.value) {
 const title = useTitle()
 title.value = 'Bookmarks'
 const cursor = ref()
-const { data } = await useFetch<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
+const { data } = await useApiFetch<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
 const el = ref()
 
 const bookmarks = ref(data.value)
@@ -46,7 +46,7 @@ useIntersectionObserver(el, async ([{ isIntersecting }]) => {
     if (lastId === cursor.value) return
 
     cursor.value = lastId
-    const data = await $fetch<[Bookmark]>(`/api/users/${user.value?.id}/bookmarks`, {
+    const data = await $api<[Bookmark]>(`/api/users/${user.value?.id}/bookmarks`, {
       params: {
         cursor: cursor.value
       }
@@ -59,7 +59,7 @@ useIntersectionObserver(el, async ([{ isIntersecting }]) => {
 
 const update = async () => {
   if (!user.value) return
-  const data = await $fetch<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
+  const data = await $api<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
   bookmarks.value = data
   posts.value = bookmarks.value?.flatMap(i => i.post) || []
   await refreshUser()

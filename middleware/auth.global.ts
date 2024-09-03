@@ -1,9 +1,12 @@
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   const {
     $auth: {
-      isAuthenticated
+      isAuthenticated,
+      refreshUser
     }
   } = useNuxtApp()
+
+  await refreshUser()
 
   if (!isAuthenticated.value && to.path !== '/login') {
     return navigateTo('/login')

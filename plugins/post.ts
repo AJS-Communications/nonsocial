@@ -1,8 +1,8 @@
 export default defineNuxtPlugin({
   name: 'post',
-  dependsOn: ['auth'],
+  dependsOn: ['api', 'auth'],
   async setup () {
-    const { $auth: { user, refreshUser } } = useNuxtApp()
+    const { $api, $auth: { user, refreshUser } } = useNuxtApp()
 
     const isBookmark = (postId: string) => {
       if (!user.value) return false
@@ -55,14 +55,14 @@ export default defineNuxtPlugin({
     
       if (isBookmark(postId)) {
         const bookmark = user.value.bookmarks.find(i => i.postId === postId)
-        await $fetch(`/api/users/${user.value.id}/bookmarks`, {
+        await $api(`/api/users/${user.value.id}/bookmarks`, {
           method: 'delete',
           body: {
             id: bookmark && bookmark.id
           }
         })
       } else {
-        await $fetch(`/api/users/${user.value.id}/bookmarks`, {
+        await $api(`/api/users/${user.value.id}/bookmarks`, {
           method: 'post',
           body: {
             postId: postId
@@ -77,14 +77,14 @@ export default defineNuxtPlugin({
     
       if (isLike(postId)) {
         const like = user.value.likes.find(i => i.postId ===  postId)
-        await $fetch(`/api/users/${user.value.id}/likes`, {
+        await $api(`/api/users/${user.value.id}/likes`, {
           method: 'delete',
           body: {
             id: like && like.id
           }
         })
       } else {
-        await $fetch(`/api/users/${user.value.id}/likes`, {
+        await $api(`/api/users/${user.value.id}/likes`, {
           method: 'post',
           body: {
             postId: postId
@@ -99,14 +99,14 @@ export default defineNuxtPlugin({
     
       if (isBoost(postId)) {
         const boost = user.value.boosts.find(i => i.postId ===  postId)
-        await $fetch(`/api/users/${user.value.id}/boosts`, {
+        await $api(`/api/users/${user.value.id}/boosts`, {
           method: 'delete',
           body: {
             id: boost && boost.id
           }
         })
       } else {
-        await $fetch(`/api/users/${user.value.id}/boosts`, {
+        await $api(`/api/users/${user.value.id}/boosts`, {
           method: 'post',
           body: {
             postId: postId

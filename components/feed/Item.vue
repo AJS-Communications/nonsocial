@@ -203,12 +203,12 @@ const props = defineProps({
   showComments: { type: Boolean, default: false }
 })
 
-const { data: item, refresh } = await useFetch(`/api/posts/${props.itemId}`)
+const { data: item, refresh } = await useApiFetch<Post>(`/api/posts/${props.itemId}`)
 
 const parentItem = ref()
 
 if (item.value?.parentId) {
-  const { data } = await useFetch(`/api/posts/${item.value.parentId}`)
+  const { data } = await useApiFetch(`/api/posts/${item.value.parentId}`)
   parentItem.value = data.value
 }
 

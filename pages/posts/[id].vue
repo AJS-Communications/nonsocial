@@ -168,6 +168,7 @@
 
 <script setup lang="ts">
 const {
+  $api,
   $auth: {
     user,
     refreshUser
@@ -190,12 +191,12 @@ if (!user.value) {
 
 const route = useRoute()
 
-const { data: item, refresh } = await useFetch(`/api/posts/${route.params.id}`)
+const { data: item, refresh } = await useApiFetch<Post>(`/api/posts/${route.params.id}`)
 
 const parentItem = ref()
 
 if (item.value?.parentId) {
-  const { data } = await useFetch(`/api/posts/${item.value.parentId}`)
+  const { data } = await useApiFetch(`/api/posts/${item.value.parentId}`)
   parentItem.value = data.value
 }
 
@@ -203,7 +204,7 @@ if (!item.value) {
   throw createError({ statusCode: 404, message: 'Page Not Found' })
 }
 
-const { data: comments, refresh: refreshComments } = await useFetch<[Post]>(`/api/posts/${route.params.id}/comments`)
+const { data: comments, refresh: refreshComments } = await useApiFetch<[Post]>(`/api/posts/${route.params.id}/comments`)
 
 const title = useTitle()
 title.value = 'Post'
@@ -224,7 +225,7 @@ useIntersectionObserver(el, async ([{ isIntersecting }]) => {
     if (lastId === cursor.value) return
 
     cursor.value = lastId
-    const data = await $fetch<[Post]>(`/api/posts/${route.params.id}/comments`, {
+    const data = await $api<[Post]>(`/api/posts/${route.params.id}/comments`, {
       params: {
         cursor: cursor.value
       }

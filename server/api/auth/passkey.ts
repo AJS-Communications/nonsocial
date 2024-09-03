@@ -84,13 +84,17 @@ export default defineEventHandler(async (event) => {
         data: { counter: verification.authenticationInfo.newCounter }
       })
 
-      const token = jwt.sign({ userId: authenticator.userId }, runtimeConfig.JWT_SECRET, { expiresIn: '30d' })
+      const token = jwt.sign({
+        userId: authenticator.userId
+      }, runtimeConfig.JWT_SECRET, {
+        expiresIn: '24h'
+      })
 
       setCookie(event, 'token', token, {
-        httpOnly: true,
+        httpOnly: false,
         secure: true,
         sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 30 // 30 days
+        maxAge: 60 * 60 * 24 // 24h
       })
     }
 

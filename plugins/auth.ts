@@ -10,31 +10,36 @@ import type {
 
 export default defineNuxtPlugin({
   name: 'auth',
+  dependsOn: ['api'],
   async setup () {
+    const { $api } = useNuxtApp()
+
+    const user = useState<User | null>('user')
+
     const isAuthenticated = useState('isAuthenticated', () => false)
 
-    const { data: user, refresh: refreshUser } = await useFetch<User>('/api/auth/user')
-
-    if (user.value) {
-      isAuthenticated.value = true
+    const refreshUser = async () => {
+      try {
+        const data = await $api<User>('/api/auth/user')
+        user.value = data
+        if (user.value) {
+          isAuthenticated.value = true
+        }
+      } catch (e) {
+        user.value = null
+        isAuthenticated.value = false
+      }
     }
 
     const login = async () => {
-      const {
-        $auth: {
-          isAuthenticated,
-          refreshUser
-        }
-      } = useNuxtApp()
-
-      const options = await $fetch<PublicKeyCredentialRequestOptionsJSON>('/api/auth/passkey', {
+      const options = await $api<PublicKeyCredentialRequestOptionsJSON>('/api/auth/passkey', {
         method: 'POST',
         body: { action: 'authenticate' },
       })
   
       const response = await startAuthentication(options)
   
-      const verification = await $fetch<{ verified: boolean }>('/api/auth/passkey', {
+      const verification = await $api<{ verified: boolean }>('/api/auth/passkey', {
         method: 'POST',
         body: {
           action: 'verifyAuthentication',
@@ -52,14 +57,14 @@ export default defineNuxtPlugin({
     }
 
     const register = async (username: string, email: string) => {
-      const options = await $fetch<PublicKeyCredentialCreationOptionsJSON>('/api/auth/passkey', {
+      const options = await $api<PublicKeyCredentialCreationOptionsJSON>('/api/auth/passkey', {
         method: 'POST',
         body: { action: 'register', email }
       })
   
       const response = await startRegistration(options)
   
-      const verification = await $fetch<{ verified: boolean }>('/api/auth/passkey', {
+      const verification = await $api<{ verified: boolean }>('/api/auth/passkey', {
         method: 'POST',
         body: {
           action: 'verifyRegistration',
@@ -74,7 +79,7 @@ export default defineNuxtPlugin({
     }
 
     const logout = async () => {
-      await $fetch('/api/auth/logout', {
+      await $api('/api/auth/logout', {
         method: 'post'
       })
       isAuthenticated.value = false

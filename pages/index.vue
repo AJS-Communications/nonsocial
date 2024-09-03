@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-const { $auth: { user, refreshUser } } = useNuxtApp()
+const { $api, $auth: { user, refreshUser } } = useNuxtApp()
 
 if (!user.value) {
   throw createError({ statusCode: 501, message: 'Access Denied' })
@@ -30,7 +30,7 @@ if (!user.value) {
 const title = useTitle()
 title.value = 'Home'
 const cursor = ref()
-const { data } = await useFetch<[Post]>(`/api/users/${user.value.id}/posts`)
+const { data } = await useApiFetch<[Post]>(`/api/users/${user.value.id}/posts`)
 const text = ref('')
 const el = ref()
 
@@ -43,7 +43,7 @@ useIntersectionObserver(el, async ([{ isIntersecting }]) => {
     if (lastId === cursor.value) return
 
     cursor.value = lastId
-    const data = await $fetch<[Post]>(`/api/users/${user.value.id}/posts`, {
+    const data = await $api<[Post]>(`/api/users/${user.value.id}/posts`, {
       params: {
         cursor: cursor.value
       }
@@ -56,7 +56,7 @@ useIntersectionObserver(el, async ([{ isIntersecting }]) => {
 
 const update = async () => {
   if (!user.value) return
-  const data = await $fetch<[Post]>(`/api/users/${user.value.id}/posts`)
+  const data = await $api<[Post]>(`/api/users/${user.value.id}/posts`)
   items.value = data
   await refreshUser()
 }

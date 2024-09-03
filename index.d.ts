@@ -20,8 +20,20 @@ interface Follow {
 
 interface Post {
   id: string
+  createdDate: DateTime
+  text: string
   author: User
   authorId: User.id
+  parentId: Post.id
+  commenters: Post[]
+  bookmarks: Bookmark[]
+  likes: Like[]
+  boosts: Boost[]
+  counts: {
+    commentCount: number
+    boostCount: number
+    likeCount: number
+  }
 }
 
 interface Bookmark {

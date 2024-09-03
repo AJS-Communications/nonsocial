@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-const { $auth: { user } } = useNuxtApp()
+const { $api, $auth: { user } } = useNuxtApp()
 
 const props = defineProps({
   modelValue: { type: String, default: '' },
@@ -142,7 +142,7 @@ const resetEditor = () => {
 
 const submit = async () => {
   if (!user.value) return
-  await $fetch(`/api/users/${user.value.id}/posts`, {
+  await $api(`/api/users/${user.value.id}/posts`, {
     method: 'post',
     body: {
       text: text.value,
