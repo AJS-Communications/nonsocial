@@ -14,20 +14,27 @@ export default defineNuxtPlugin({
   async setup () {
     const { $api } = useNuxtApp()
 
+    const token = useCookie('token')
+
     const user = useState<User | null>('user')
 
     const isAuthenticated = useState('isAuthenticated', () => false)
 
     const refreshUser = async () => {
-      try {
-        const data = await $api<User>('/api/auth/user')
-        user.value = data
-        if (user.value) {
-          isAuthenticated.value = true
-        }
-      } catch (e) {
+      if (!token.value) {
         user.value = null
         isAuthenticated.value = false
+      } else {
+        try {
+          const data = await $api<User>('/api/auth/user')
+          user.value = data
+          if (user.value) {
+            isAuthenticated.value = true
+          }
+        } catch (e) {
+          user.value = null
+          isAuthenticated.value = false
+        }
       }
     }
 
@@ -79,9 +86,7 @@ export default defineNuxtPlugin({
     }
 
     const logout = async () => {
-      await $api('/api/auth/logout', {
-        method: 'post'
-      })
+      token.value = null
       isAuthenticated.value = false
       user.value = null
       await navigateTo('/login')

@@ -6,7 +6,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
   } = useNuxtApp()
 
-  await refreshUser()
+  const token = useCookie('token')
+
+  if (token.value) {
+    await refreshUser()
+  }
 
   if (!isAuthenticated.value && to.path !== '/login') {
     return navigateTo('/login')
