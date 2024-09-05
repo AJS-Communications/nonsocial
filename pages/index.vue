@@ -13,7 +13,6 @@
         :key="item.id"
         :item="item"
         show-comments
-        @update="refreshUser"
       />
     </div>
     <div ref="el" />
@@ -60,7 +59,9 @@ const update = async () => {
 }
 
 useNuxtApp().hooks.hook('compose', async () => {
-  await update()
+  if (useRoute().name === 'index') {
+    await update()
+  }
 })
 
 const goToTop = () => {

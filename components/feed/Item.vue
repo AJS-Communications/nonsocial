@@ -208,8 +208,6 @@ const props = defineProps({
   showComments: { type: Boolean, default: false }
 })
 
-const emit = defineEmits(['update'])
-
 const likeList = computed(() => {
   if (!props.item?.likes) return []
   return props.item.likes.filter(i => {
@@ -236,31 +234,23 @@ const showMoreDropdown = ref(false)
 onClickOutside(moreBtn, () => showMoreDropdown.value = false)
 onKeyStroke('Escape', () => showMoreDropdown.value = false)
 
-const update = async () => {
-  emit('update')
-}
-
-useNuxtApp().hooks.hook('compose', async () => {
-  await update()
-})
-
 const handleBookmark = async () => {
   if (!props.item) return
   await bookmark(props.item.id)
-  await update()
+  useNuxtApp().callHook('compose')
   showMoreDropdown.value = false
 }
 
 const handleLike = async () => {
   if (!props.item) return
   await like(props.item.id)
-  await update()
+  useNuxtApp().callHook('compose')
 }
 
 const handleBoost = async () => {
   if (!props.item) return
   await boost(props.item.id)
-  await update()
+  useNuxtApp().callHook('compose')
 }
 
 const handleShare = async () => {

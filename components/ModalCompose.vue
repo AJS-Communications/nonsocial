@@ -48,5 +48,9 @@ onKeyStroke('Escape', (e) => {
 const update = async () => {
   useNuxtApp().callHook('compose')
   open.value = false
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
 }
 </script>

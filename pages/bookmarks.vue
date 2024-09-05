@@ -16,7 +16,6 @@
         :key="item.id"
         :item="item"
         show-comments
-        @update="update"
       />
     </div>
     <div ref="el" />
@@ -65,7 +64,9 @@ const update = async () => {
 }
 
 useNuxtApp().hooks.hook('compose', async () => {
-  await update()
+  if (useRoute().name === 'bookmarks') {
+    await update()
+  }
 })
 
 const goToTop = () => {

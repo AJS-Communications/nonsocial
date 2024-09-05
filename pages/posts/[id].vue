@@ -42,7 +42,6 @@
       <LazyFeedItem
         v-if="data.parentItem?.id"
         :item="data.parentItem"
-        @update="refreshUser"
       />
       <article class="bg-white dark:bg-black">
         <div class="relative flex flex-col-reverse px-4 pb-2 mt-4">
@@ -174,7 +173,6 @@
         :key="comment.id"
         :item="comment"
         show-comments
-        @update="refreshUser"
       />
     </div>
     <div ref="el" />
@@ -256,7 +254,9 @@ const update = async () => {
 }
 
 useNuxtApp().hooks.hook('compose', async () => {
-  await update()
+  if (useRoute().name === 'posts-id') {
+    await update()
+  }
 })
 
 const handleLike = async () => {
