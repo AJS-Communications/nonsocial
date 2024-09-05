@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-const { $api, $auth: { user, refreshUser } } = useNuxtApp()
+const { $api, $auth: { user } } = useNuxtApp()
 
 if (!user.value) {
   throw createError({ statusCode: 501, message: 'Access Denied' })
@@ -60,7 +60,6 @@ const update = async () => {
   const data = await $api<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
   bookmarks.value = data
   posts.value = bookmarks.value?.flatMap(i => i.post) || []
-  await refreshUser()
 }
 
 useNuxtApp().hooks.hook('compose', async () => {

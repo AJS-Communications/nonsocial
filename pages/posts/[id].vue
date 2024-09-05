@@ -182,10 +182,7 @@
 <script setup lang="ts">
 const {
   $api,
-  $auth: {
-    user,
-    refreshUser
-  },
+  $auth: { user },
   $post: {
     isBookmark,
     isLike,
@@ -250,7 +247,6 @@ useIntersectionObserver(el, async ([{ isIntersecting }]) => {
 const update = async () => {
   if (!user.value) return
   await refresh()
-  await refreshUser()
 }
 
 useNuxtApp().hooks.hook('compose', async () => {

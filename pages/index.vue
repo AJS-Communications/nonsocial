@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-const { $api, $auth: { user, refreshUser } } = useNuxtApp()
+const { $api, $auth: { user } } = useNuxtApp()
 
 if (!user.value) {
   throw createError({ statusCode: 501, message: 'Access Denied' })
@@ -55,7 +55,6 @@ const update = async () => {
   if (!user.value) return
   const data = await $api<[Post]>(`/api/users/${user.value.id}/posts`)
   items.value = data
-  await refreshUser()
 }
 
 useNuxtApp().hooks.hook('compose', async () => {
