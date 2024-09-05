@@ -95,7 +95,7 @@ onKeyStroke('Escape', (e) => {
 })
 
 const update = async () => {
-  useNuxtApp().callHook('compose' as any)
+  useNuxtApp().callHook('compose')
   open.value = false
 }
 </script>

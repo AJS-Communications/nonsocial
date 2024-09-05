@@ -1,5 +1,5 @@
 <template>
-  <div v-if="item">
+  <div v-if="data?.item">
     <div class="bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-20">
       <div class="p-2.5 flex gap-2">
         <button
@@ -36,17 +36,21 @@
         </nav>
       </div>
       <div
-        v-if="parentItem"
+        v-if="data?.parentItem"
         class="bg-neutral-200 dark:bg-neutral-800 w-1 absolute top-10 left-[2.35rem] bottom-10 -z-10"
       />
-      <LazyFeedItem v-if="parentItem" :item-id="parentItem.id" @update="refreshUser" />
+      <LazyFeedItem
+        v-if="data.parentItem?.id"
+        :item-id="data.parentItem.id"
+        @update="refreshUser"
+      />
       <article class="bg-white dark:bg-black">
         <div class="relative flex flex-col-reverse px-4 pb-2 mt-4">
           <div class="flex items-center space-x-4">
             <img
-              v-if="item.author.photoUrl"
-              :src="item.author.photoUrl"
-              :alt="item.author.username"
+              v-if="data?.item.author.photoUrl"
+              :src="data?.item.author.photoUrl"
+              :alt="data?.item.author.username"
               class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-4 ring-white dark:ring-black bg-white dark:bg-black"
               loading="lazy"
               decoding="async"
@@ -54,47 +58,47 @@
             <div class="flex-auto">
               <div class="text-base font-semibold flex gap-1">
                 <NuxtLink
-                  :to="`/${item.author.username}`"
+                  :to="`/${data?.item.author.username}`"
                   class="hover:underline my-auto"
                   tabindex="0"
                 >
-                  {{ item.author.username }}
+                  {{ data?.item.author.username }}
                 </NuxtLink>
               </div>
-              <p class="text-neutral-500 font-medium">{{ createdDate(item.createdDate, 'long') }}</p>
+              <p class="text-neutral-500 font-medium">{{ createdDate(data?.item.createdDate, 'long') }}</p>
             </div>
           </div>
         </div>
         <div class="px-4 py-2 space-y-2">
-          <p v-if="item.parentId" class="text-neutral-500 font-medium">
+          <p v-if="data?.item.parentId && data?.parentItem" class="text-neutral-500 font-medium">
             Replying to
-            <NuxtLink :to="`/${parentItem.author.username}`" class="text-sky-600 dark:text-sky-400 group">
-              @<span class="group-hover:underline">{{ parentItem.author.username }}</span>
+            <NuxtLink :to="`/${data?.parentItem.author.username}`" class="text-sky-600 dark:text-sky-400 group">
+              @<span class="group-hover:underline">{{ data?.parentItem.author.username }}</span>
             </NuxtLink>
           </p>
           <blockquote class="max-w-prose text-2xl pb-4">
-            <div class="font-sans whitespace-pre-line">{{ item.text }}</div>
+            <div class="font-sans whitespace-pre-line">{{ data?.item.text }}</div>
           </blockquote>
           <hr class="border-neutral-100 dark:border-neutral-900" />
           <div class="flex gap-4 sm:gap-12 text-sm">
             <div class="flex gap-2">
-              <span class="font-bold">{{ item.counts.commentCount }}</span>
-              <span class="text-neutral-500">{{ item.counts.commentCount === 1 ? 'Comment' : 'Comments' }}</span>
+              <span class="font-bold">{{ data?.item.counts.commentCount }}</span>
+              <span class="text-neutral-500">{{ data?.item.counts.commentCount === 1 ? 'Comment' : 'Comments' }}</span>
             </div>
             <div class="flex gap-2">
-              <span class="font-bold">{{ item.counts.boostCount }}</span>
-              <span class="text-neutral-500">{{ item.counts.boostCount === 1 ? 'Boost' : 'Boosts' }}</span>
+              <span class="font-bold">{{ data?.item.counts.boostCount }}</span>
+              <span class="text-neutral-500">{{ data?.item.counts.boostCount === 1 ? 'Boost' : 'Boosts' }}</span>
             </div>
             <div class="flex gap-2">
-              <span class="font-bold">{{ item.counts.likeCount }}</span>
-              <span class="text-neutral-500">{{ item.counts.likeCount === 1 ? 'Like' : 'Likes' }}</span>
+              <span class="font-bold">{{ data?.item.counts.likeCount }}</span>
+              <span class="text-neutral-500">{{ data?.item.counts.likeCount === 1 ? 'Like' : 'Likes' }}</span>
             </div>
           </div>
           <hr class="border-neutral-100 dark:border-neutral-900" />
           <div class="flex justify-around gap-2">
             <ModalComment
               v-slot="{ toggle }"
-              :item="item"
+              :item="data?.item"
             >
               <button
                 class="w-min flex gap-1 z-10 px-2 transition-colors duration-200 group text-neutral-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 saturate-200"
@@ -109,34 +113,43 @@
             <button
               class="p-2 rounded-full flex hover:bg-emerald-100/40 dark:hover:bg-emerald-100/10 hover:text-emerald-600 dark:hover:text-emerald-400 saturate-200 transition-colors duration-200"
               :class="{
-                'text-neutral-600 dark:text-neutral-400': !isBoost(item.id),
-                'text-emerald-600 dark:text-emerald-400': isBoost(item.id)
+                'text-neutral-600 dark:text-neutral-400': !isBoost(data?.item.id),
+                'text-emerald-600 dark:text-emerald-400': isBoost(data?.item.id)
               }"
               @click="handleBoost"
             >
-              <IconArrowPath :active="isBoost(item.id)" />
+              <IconArrowPath
+                v-if="data?.item"
+                :active="isBoost(data?.item.id)"
+              />
               <span class="sr-only">Boost</span>
             </button>
             <button
               class="p-2 rounded-full flex hover:bg-rose-100/40 dark:hover:bg-rose-100/10 hover:text-rose-600 dark:hover:text-rose-400 saturate-200 transition-colors duration-200"
               :class="{
-                'text-neutral-600 dark:text-neutral-400': !isLike(item.id),
-                'text-rose-600 dark:text-rose-400': isLike(item.id)
+                'text-neutral-600 dark:text-neutral-400': !isLike(data?.item.id),
+                'text-rose-600 dark:text-rose-400': isLike(data?.item.id)
               }"
               @click="handleLike"
             >
-              <IconHeart :active="isLike(item.id)" />
+              <IconHeart
+                v-if="data?.item"
+                :active="isLike(data?.item.id)"
+              />
               <span class="sr-only">Love</span>
             </button>
             <button
               class="p-2 rounded-full flex hover:bg-amber-100/40 dark:hover:bg-amber-100/10 hover:text-amber-600 dark:hover:text-amber-400 saturate-200 transition-colors duration-200"
               :class="{
-                'text-neutral-600 dark:text-neutral-400': !isBookmark(item.id),
-                'text-amber-600 dark:text-amber-400': isBookmark(item.id)
+                'text-neutral-600 dark:text-neutral-400': !isBookmark(data.item.id),
+                'text-amber-600 dark:text-amber-400': isBookmark(data?.item.id)
               }"
               @click="handleBookmark"
             >
-              <IconBookmark :active="isBookmark(item.id)" />
+              <IconBookmark
+                v-if="data?.item"
+                :active="isBookmark(data?.item.id)"
+              />
               <span class="sr-only">Bookmark</span>
             </button>
           </div>
@@ -146,16 +159,16 @@
     <hr class="border-neutral-100 dark:border-neutral-900" />
     <div class="border-b border-neutral-100 dark:border-neutral-900 p-4">
       <CommentEditor
-        v-if="item"
+        v-if="data?.item"
         v-model="text"
         ref="commentEditor"
-        :item="item"
+        :item="data?.item"
         @submit="update"
       />
     </div>
-    <div v-if="comments" class="divide-y divide-neutral-100 dark:divide-neutral-900">
+    <div v-if="data?.comments" class="divide-y divide-neutral-100 dark:divide-neutral-900">
       <LazyFeedItem
-        v-for="comment in comments"
+        v-for="comment in data.comments"
         :key="comment.id"
         :item-id="comment.id"
         show-comments
@@ -191,20 +204,18 @@ if (!user.value) {
 
 const route = useRoute()
 
-const { data: item, refresh } = await useApiFetch<Post>(`/api/posts/${route.params.id}`)
+const { data, refresh } = await useAsyncData(`post-${route.params.id}`, async () => {
+  const [item, comments] = await Promise.all([
+    $api<Post>(`/api/posts/${route.params.id}`),
+    $api<[Post]>(`/api/posts/${route.params.id}/comments`)
+  ])
+  const parentItem = item?.parentId ? await $api<Post>(`/api/posts/${item.parentId}`) : null
+  return { item, comments, parentItem }
+})
 
-const parentItem = ref()
-
-if (item.value?.parentId) {
-  const { data } = await useApiFetch(`/api/posts/${item.value.parentId}`)
-  parentItem.value = data.value
-}
-
-if (!item.value) {
+if (!data.value?.item) {
   throw createError({ statusCode: 404, message: 'Page Not Found' })
 }
-
-const { data: comments, refresh: refreshComments } = await useApiFetch<[Post]>(`/api/posts/${route.params.id}/comments`)
 
 const title = useTitle()
 title.value = 'Post'
@@ -219,19 +230,19 @@ onClickOutside(moreBtn, () => showMoreDropdown.value = false)
 onKeyStroke('Escape', () => showMoreDropdown.value = false)
 
 useIntersectionObserver(el, async ([{ isIntersecting }]) => {
-  if (comments.value && user.value && route.params.id && isIntersecting) {
-    const lastItem = comments.value[comments.value.length - 1]
+  if (data.value?.comments && user.value && route.params.id && isIntersecting) {
+    const lastItem = data.value?.comments[data.value?.comments.length - 1]
     const lastId = lastItem && lastItem.id || undefined
     if (lastId === cursor.value) return
 
     cursor.value = lastId
-    const data = await $api<[Post]>(`/api/posts/${route.params.id}/comments`, {
+    const newComments = await $api<[Post]>(`/api/posts/${route.params.id}/comments`, {
       params: {
         cursor: cursor.value
       }
     })
     if (data) {
-      comments.value.push(...data)
+      data.value.comments.push(...newComments)
     }
   }
 })
@@ -239,36 +250,35 @@ useIntersectionObserver(el, async ([{ isIntersecting }]) => {
 const update = async () => {
   if (!user.value) return
   await refresh()
-  await refreshComments()
   await refreshUser()
 }
 
-useNuxtApp().hooks.hook('compose' as any, async () => {
+useNuxtApp().hooks.hook('compose', async () => {
   await update()
 })
 
 const handleLike = async () => {
-  if (!item.value) return
-  await like(item.value.id)
+  if (!data.value?.item) return
+  await like(data.value?.item.id)
   await update()
 }
 
 const handleBookmark = async () => {
-  if (!item.value) return
-  await bookmark(item.value.id)
+  if (!data.value?.item) return
+  await bookmark(data.value?.item.id)
   await update()
   showMoreDropdown.value = false
 }
 
 const handleBoost = async () => {
-  if (!item.value) return
-  await boost(item.value.id)
+  if (!data.value?.item) return
+  await boost(data.value?.item.id)
   await update()
 }
 
 const handleShare = async () => {
-  if (!item.value) return
-  share(item.value.id)
+  if (!data.value?.item) return
+  share(data.value?.item.id)
   showMoreDropdown.value = false
 }
 </script>

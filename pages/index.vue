@@ -30,11 +30,9 @@ if (!user.value) {
 const title = useTitle()
 title.value = 'Home'
 const cursor = ref()
-const { data } = await useApiFetch<[Post]>(`/api/users/${user.value.id}/posts`)
+const { data: items } = await useApiFetch<[Post]>(`/api/users/${user.value.id}/posts`)
 const text = ref('')
 const el = ref()
-
-const items = ref(data.value)
 
 useIntersectionObserver(el, async ([{ isIntersecting }]) => {
   if (user.value && items.value && isIntersecting) {
@@ -61,12 +59,12 @@ const update = async () => {
   await refreshUser()
 }
 
-useNuxtApp().hooks.hook('compose' as any, async () => {
+useNuxtApp().hooks.hook('compose', async () => {
   await update()
 })
 
 const goToTop = () => {
-  el.value.scrollTo({
+  window.scrollTo({
     top: 0,
     behavior: 'smooth'
   })

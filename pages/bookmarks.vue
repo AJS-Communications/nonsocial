@@ -33,10 +33,9 @@ if (!user.value) {
 const title = useTitle()
 title.value = 'Bookmarks'
 const cursor = ref()
-const { data } = await useApiFetch<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
+const { data: bookmarks } = await useApiFetch<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
 const el = ref()
 
-const bookmarks = ref(data.value)
 const posts = ref(bookmarks.value?.flatMap(i => i.post) || [])
 
 useIntersectionObserver(el, async ([{ isIntersecting }]) => {
@@ -65,12 +64,12 @@ const update = async () => {
   await refreshUser()
 }
 
-useNuxtApp().hooks.hook('compose' as any, async () => {
+useNuxtApp().hooks.hook('compose', async () => {
   await update()
 })
 
 const goToTop = () => {
-  el.value.scrollTo({
+  window.scrollTo({
     top: 0,
     behavior: 'smooth'
   })
