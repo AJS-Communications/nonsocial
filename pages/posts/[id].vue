@@ -41,7 +41,7 @@
       />
       <LazyFeedItem
         v-if="data.parentItem?.id"
-        :item-id="data.parentItem.id"
+        :item="data.parentItem"
         @update="refreshUser"
       />
       <article class="bg-white dark:bg-black">
@@ -159,18 +159,20 @@
     <hr class="border-neutral-100 dark:border-neutral-900" />
     <div class="border-b border-neutral-100 dark:border-neutral-900 p-4">
       <CommentEditor
-        v-if="data?.item"
         v-model="text"
         ref="commentEditor"
-        :item="data?.item"
+        :item="data.item"
         @submit="update"
       />
     </div>
-    <div v-if="data?.comments" class="divide-y divide-neutral-100 dark:divide-neutral-900">
+    <div
+      v-if="data?.comments"
+      class="divide-y divide-neutral-100 dark:divide-neutral-900"
+    >
       <LazyFeedItem
         v-for="comment in data.comments"
         :key="comment.id"
-        :item-id="comment.id"
+        :item="comment"
         show-comments
         @update="refreshUser"
       />

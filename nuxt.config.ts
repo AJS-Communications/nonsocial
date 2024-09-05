@@ -8,7 +8,8 @@ export default defineNuxtConfig({
     public: {
       APP_TITLE: process.env.APP_TITLE,
       APP_TITLE_SHORT: process.env.APP_TITLE_SHORT,
-      APP_META_DESCRIPTION: process.env.APP_META_DESCRIPTION
+      APP_META_DESCRIPTION: process.env.APP_META_DESCRIPTION,
+      RESULTS_PER_PAGE: process.env.RESULTS_PER_PAGE
     }
   },
   modules: [

@@ -10,6 +10,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const runtimeConfig = useRuntimeConfig()
   const query = getQuery(event)
   let data: any = []
 
@@ -18,7 +19,7 @@ export default defineEventHandler(async (event) => {
 
     if (typeof query.cursor !== 'undefined') {
       return await prisma.bookmark.findMany({
-        take: 10,
+        take: parseInt(runtimeConfig.public.RESULTS_PER_PAGE),
         skip: 1,
         cursor: {
           id: query.cursor as string
@@ -42,7 +43,7 @@ export default defineEventHandler(async (event) => {
     }
 
     return await prisma.bookmark.findMany({
-      take: 10,
+      take: parseInt(runtimeConfig.public.RESULTS_PER_PAGE),
       where: {
         author: {
           id: event.context.params.userId

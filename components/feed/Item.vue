@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="data?.item"
+    v-if="item"
     class="relative"
   >
     <div
@@ -61,16 +61,16 @@
       </div>
       <div class="flex items-center space-x-4">
         <img
-          v-if="data.item.author"
-          :src="data.item.author.photoUrl"
-          :alt="data.item.author.username"
+          v-if="item.author"
+          :src="item.author.photoUrl"
+          :alt="item.author.username"
           class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-4 ring-white dark:ring-black bg-white dark:bg-black"
           loading="lazy"
           decoding="async"
         >
         <div class="flex-auto">
           <NuxtLink
-            :to="`/posts/${data.item.id}`"
+            :to="`/posts/${item.id}`"
             class="my-auto group"
           >
             <span class="absolute inset-0 group-focus-visible:border border-black dark:border-white" />
@@ -78,34 +78,34 @@
           </NuxtLink>
           <div class="text-base font-semibold flex gap-2">
             <NuxtLink
-              v-if="data.item.author"
-              :to="`/${data.item.author?.username}`"
+              v-if="item.author"
+              :to="`/${item.author?.username}`"
               class="my-auto hover:underline z-10"
             >
-              <span>{{ data.item.author.username }}</span>
+              <span>{{ item.author.username }}</span>
             </NuxtLink>
             <div class="mt-0.5 text-sm text-neutral-500 whitespace-nowrap space-x-2">
               <span>&middot;</span>
-              <span>{{ createdDate(data.item.createdDate) }}</span>
+              <span>{{ createdDate(item.createdDate) }}</span>
             </div>
           </div>
-          <div v-if="data.parentItem?.author" class="text-neutral-500 font-medium">
+          <div v-if="parentItem?.author" class="text-neutral-500 font-medium">
             Replying to
             <NuxtLink
-              :to="`/${data.parentItem.author.username}`"
+              :to="`/${parentItem.author.username}`"
               class="relative text-sky-600 dark:text-sky-400 z-10 group"
             >
-              @<span class="group-hover:underline">{{ data.parentItem.author.username }}</span>
+              @<span class="group-hover:underline">{{ parentItem.author.username }}</span>
             </NuxtLink>
           </div>
           <blockquote class="mt-0.5 max-w-prose">
-            <div class="font-sans whitespace-pre-line">{{ data.item.text }}</div>
+            <div class="font-sans whitespace-pre-line">{{ item.text }}</div>
           </blockquote>
           <div class="grid grid-cols-4 gap-2 mt-2">
             <div>
               <ModalComment
                 v-slot="{ toggle }"
-                :item="data.item"
+                :item="item"
               >
                 <button
                   class="w-min flex gap-1 z-10 px-2 transition-colors duration-200 group text-neutral-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 saturate-200"
@@ -116,7 +116,7 @@
                     class="rounded-full p-2 group-hover:bg-blue-100/40 dark:group-hover:bg-blue-100/10"
                   />
                   <span class="sr-only">Comment</span>
-                  <span v-if="data.item.counts?.commentCount > 0" class="my-auto text-sm">{{ data.item.counts?.commentCount }}</span>
+                  <span v-if="item.counts?.commentCount > 0" class="my-auto text-sm">{{ item.counts?.commentCount }}</span>
                 </button>
               </ModalComment>
             </div>
@@ -124,49 +124,49 @@
               <button
                 class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-emerald-600 dark:hover:text-emerald-400 saturate-200"
                 :class="{
-                  'text-neutral-600 dark:text-neutral-400': !isBoost(data.item.id),
-                  'text-emerald-600 dark:text-emerald-400': isBoost(data.item.id)
+                  'text-neutral-600 dark:text-neutral-400': !isBoost(item.id),
+                  'text-emerald-600 dark:text-emerald-400': isBoost(item.id)
                 }"
                 @click="handleBoost"
               >
                 <IconArrowPath
-                  :active="isBoost(data.item.id)"
+                  :active="isBoost(item.id)"
                   size="sm"
                   class="rounded-full p-2 group-hover:bg-emerald-100/40 dark:group-hover:bg-emerald-100/10"
                 />
                 <span class="sr-only">Boost</span>
-                <span v-if="data.item.counts?.boostCount > 0" class="my-auto text-sm">{{ data.item.counts?.boostCount }}</span>
+                <span v-if="item.counts?.boostCount > 0" class="my-auto text-sm">{{ item.counts?.boostCount }}</span>
               </button>
             </div>
             <div>
               <button
                 class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-rose-600 dark:hover:text-rose-400 saturate-200"
                 :class="{
-                  'text-neutral-600 dark:text-neutral-400': !isLike(data.item.id),
-                  'text-rose-600 dark:text-rose-400': isLike(data.item.id)
+                  'text-neutral-600 dark:text-neutral-400': !isLike(item.id),
+                  'text-rose-600 dark:text-rose-400': isLike(item.id)
                 }"
                 @click="handleLike"
               >
                 <IconHeart
-                  :active="isLike(data.item.id)"
+                  :active="isLike(item.id)"
                   size="sm"
                   class="rounded-full p-2 group-hover:bg-rose-100/40 dark:group-hover:bg-rose-100/10"
                 />
                 <span class="sr-only">Love</span>
-                <span v-if="data.item.counts?.likeCount > 0" class="my-auto text-sm">{{ data.item.counts?.likeCount }}</span>
+                <span v-if="item.counts?.likeCount > 0" class="my-auto text-sm">{{ item.counts?.likeCount }}</span>
               </button>
             </div>
             <div>
               <button
                 class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-amber-600 dark:hover:text-amber-400 saturate-200"
                 :class="{
-                  'text-neutral-600 dark:text-neutral-400': !isBookmark(data.item.id),
-                  'text-amber-600 dark:text-amber-400': isBookmark(data.item.id)
+                  'text-neutral-600 dark:text-neutral-400': !isBookmark(item.id),
+                  'text-amber-600 dark:text-amber-400': isBookmark(item.id)
                 }"
                 @click="handleBookmark"
               >
                 <IconBookmark
-                  :active="isBookmark(data.item.id)"
+                  :active="isBookmark(item.id)"
                   size="sm"
                   class="rounded-full p-2 group-hover:bg-amber-100/40 dark:group-hover:bg-amber-100/10"
                 />
@@ -179,7 +179,7 @@
     </article>
     <LazyFeedItem
       v-if="showComments && commenterList.length > 0"
-      :item-id="commenterList[commenterList.length - 1].id"
+      :item="commenterList[commenterList.length - 1]"
       show-comments
     />
   </div>
@@ -187,7 +187,6 @@
 
 <script setup lang="ts">
 const {
-  $api,
   $auth: {
     user
   },
@@ -204,35 +203,30 @@ const {
 } = useNuxtApp()
 
 const props = defineProps({
-  itemId: { type: String, required: true },
+  parentItem: { type: Object as PropType<Post> },
+  item: { type: Object as PropType<Post> },
   showComments: { type: Boolean, default: false }
-})
-
-const { data, refresh } = await useAsyncData(`item-${props.itemId}`, async () => {
-  const item = await $api<Post>(`/api/posts/${props.itemId}`)
-  const parentItem = item?.parentId ? await $api<Post>(`/api/posts/${item.parentId}`) : null
-  return { item, parentItem }
 })
 
 const emit = defineEmits(['update'])
 
 const likeList = computed(() => {
-  if (!data.value?.item?.likes) return []
-  return data.value?.item.likes.filter(i => {
+  if (!props.item?.likes) return []
+  return props.item.likes.filter(i => {
     return user.value?.followers.find(x => x.followingId === i.authorId)
   }).slice(0, 2) || []
 })
 
 const boostList = computed(() => {
-  if (!data.value?.item?.boosts) return []
-  return data.value?.item.boosts.filter(i => {
+  if (!props.item?.boosts) return []
+  return props.item.boosts.filter(i => {
     return user.value?.followers.find(x => x.followingId === i.authorId)
   }).slice(0, 2) || []
 })
 
 const commenterList = computed(() => {
-  if (!data.value?.item?.commenters) return []
-  return data.value?.item.commenters.filter(i => {
+  if (!props.item?.commenters) return []
+  return props.item.commenters.filter(i => {
     return user.value?.followers.find(x => x.followingId === i.author.id)
   }).slice(0, 2) || []
 })
@@ -243,7 +237,6 @@ onClickOutside(moreBtn, () => showMoreDropdown.value = false)
 onKeyStroke('Escape', () => showMoreDropdown.value = false)
 
 const update = async () => {
-  await refresh()
   emit('update')
 }
 
@@ -252,27 +245,27 @@ useNuxtApp().hooks.hook('compose', async () => {
 })
 
 const handleBookmark = async () => {
-  if (!data.value?.item) return
-  await bookmark(data.value?.item.id)
+  if (!props.item) return
+  await bookmark(props.item.id)
   await update()
   showMoreDropdown.value = false
 }
 
 const handleLike = async () => {
-  if (!data.value?.item) return
-  await like(data.value?.item.id)
+  if (!props.item) return
+  await like(props.item.id)
   await update()
 }
 
 const handleBoost = async () => {
-  if (!data.value?.item) return
-  await boost(data.value?.item.id)
+  if (!props.item) return
+  await boost(props.item.id)
   await update()
 }
 
 const handleShare = async () => {
-  if (!data.value?.item) return
-  share(data.value?.item.id)
+  if (!props.item) return
+  share(props.item.id)
   showMoreDropdown.value = false
 }
 </script>

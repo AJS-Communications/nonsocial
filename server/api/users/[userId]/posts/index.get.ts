@@ -10,6 +10,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const runtimeConfig = useRuntimeConfig()
   const query = getQuery(event)
   let data: any = []
 
@@ -48,7 +49,7 @@ export default defineEventHandler(async (event) => {
 
     if (typeof query.cursor !== 'undefined') {
       return await prisma.post.findMany({
-        take: 10,
+        take: parseInt(runtimeConfig.public.RESULTS_PER_PAGE),
         skip: 1,
         cursor: {
           id: query.cursor as string
@@ -78,8 +79,8 @@ export default defineEventHandler(async (event) => {
           published: true,
           visibility: 'PUBLIC'
         },
-        select: {
-          id: true
+        include: {
+          author: true
         },
         orderBy: {
           createdDate: 'desc'
@@ -88,7 +89,7 @@ export default defineEventHandler(async (event) => {
     }
 
     return await prisma.post.findMany({
-      take: 10,
+      take: parseInt(runtimeConfig.public.RESULTS_PER_PAGE),
       where: {
         OR: [
           {
@@ -114,8 +115,8 @@ export default defineEventHandler(async (event) => {
         published: true,
         visibility: 'PUBLIC'
       },
-      select: {
-        id: true
+      include: {
+        author: true
       },
       orderBy: {
         createdDate: 'desc'

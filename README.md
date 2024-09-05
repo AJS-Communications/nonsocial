@@ -97,6 +97,7 @@ WEBAUTHN_RPID="localhost"
 APP_TITLE="Nonsocial"
 APP_TITLE_SHORT="NS"
 APP_META_DESCRIPTION="An open-source townsquare for everyone."
+RESULTS_PER_PAGE="50"
 ```
 
 ## Database

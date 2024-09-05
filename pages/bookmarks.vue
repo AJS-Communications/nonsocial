@@ -14,7 +14,7 @@
       <LazyFeedItem
         v-for="item in posts"
         :key="item.id"
-        :item-id="item.id"
+        :item="item"
         show-comments
         @update="update"
       />
