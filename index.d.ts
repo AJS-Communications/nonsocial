@@ -25,14 +25,17 @@ interface Post {
   author: User
   authorId: User.id
   parentId: Post.id
-  commenters: Post[]
+  parent: Post
+  children: Post[]
   bookmarks: Bookmark[]
   likes: Like[]
   boosts: Boost[]
-  counts: {
-    commentCount: number
-    boostCount: number
-    likeCount: number
+  _count: {
+    children: number
+    comments: number
+    bookmarks: number
+    boosts: number
+    likes: number
   }
 }
 

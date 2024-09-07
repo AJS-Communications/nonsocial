@@ -10,71 +10,69 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const runtimeConfig = useRuntimeConfig()
   let data = null
 
   async function main() {
     if (!event.context.params) return
 
-    const [bookmarkCount, likeCount, boostCount, commentCount, commenters, post] = await prisma.$transaction([
-      prisma.bookmark.count({
-        where: {
-          postId: event.context.params.postId
-        }
-      }),
-      prisma.like.count({
-        where: {
-          postId: event.context.params.postId
-        }
-      }),
-      prisma.boost.count({
-        where: {
-          postId: event.context.params.postId
-        }
-      }),
-      prisma.post.count({
-        where: {
-          parentId: event.context.params.postId
-        }
-      }),
-      prisma.post.findMany({
-        where: {
-          parentId: event.context.params.postId
-        },
-        select: {
-          id: true,
-          author: true
-        }
-      }),
-      prisma.post.findFirst({
-        where: {
-          id: event.context.params.postId,
-          published: true,
-          visibility: 'PUBLIC'
-        },
-        include: {
-          author: true,
-          likes: {
-            include: {
-              author: true
-            }
-          },
-          boosts: {
-            include: {
-              author: true
+    return await prisma.post.findFirst({
+      where: {
+        id: event.context.params.postId,
+        published: true,
+        visibility: 'PUBLIC'
+      },
+      include: {
+        author: true,
+        parent: {
+          include: {
+            author: true,
+            _count: {
+              select: {
+                children: true,
+                bookmarks: true,
+                likes: true,
+                boosts: true
+              }
             }
           }
+        },
+        children: {
+          include: {
+            author: true,
+            _count: {
+              select: {
+                children: true,
+                bookmarks: true,
+                likes: true,
+                boosts: true
+              }
+            }
+          },
+          take: parseInt(runtimeConfig.public.RESULTS_PER_PAGE),
+          orderBy: {
+            createdDate: 'desc',
+          }
+        },
+        likes: {
+          include: {
+            author: true
+          }
+        },
+        boosts: {
+          include: {
+            author: true
+          }
+        },
+        _count: {
+          select: {
+            children: true,
+            bookmarks: true,
+            likes: true,
+            boosts: true
+          }
         }
-      })
-    ])
-
-    return Object.assign({}, post, {
-      counts: {
-        bookmarkCount,
-        likeCount,
-        boostCount,
-        commentCount,
-      },
-      commenters
+      }
     })
   }
 

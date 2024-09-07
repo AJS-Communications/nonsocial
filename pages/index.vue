@@ -57,12 +57,6 @@ const update = async () => {
   items.value = data
 }
 
-useNuxtApp().hooks.hook('compose', async () => {
-  if (useRoute().name === 'index') {
-    await update()
-  }
-})
-
 const goToTop = () => {
   window.scrollTo({
     top: 0,

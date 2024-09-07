@@ -71,13 +71,25 @@
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component'
 
 const {
+  $api,
   $post: {
     createdDate
   }
 } = useNuxtApp()
 
-defineProps({
-  item: { type: Object, required: true }
+const props = defineProps({
+  modelValue: { type: Object, required: true }
+})
+
+const emit = defineEmits(['update:model-value'])
+
+const item = computed({
+  get() {
+    return props.modelValue
+  },
+  set(value) {
+    emit('update:model-value', value)
+  }
 })
 
 const modal = ref()
@@ -95,7 +107,7 @@ onKeyStroke('Escape', (e) => {
 })
 
 const update = async () => {
-  useNuxtApp().callHook('compose')
+  item.value = await $api<Post>(`/api/posts/${item.value.id}`)
   open.value = false
 }
 </script>

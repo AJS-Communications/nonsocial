@@ -16,6 +16,17 @@ export default defineEventHandler(async (event) => {
     return await prisma.user.findMany({
       where: {
         visibility: 'PUBLIC'
+      },
+      include: {
+        _count: {
+          select: {
+            bookmarks: true,
+            likes: true,
+            boosts: true,
+            followers: true,
+            following: true
+          }
+        }
       }
     })
   }

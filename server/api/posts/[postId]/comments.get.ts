@@ -17,32 +17,25 @@ export default defineEventHandler(async (event) => {
   async function main() {
     if (!event.context.params) return
 
-    if (typeof query.cursor !== 'undefined') {
-      return await prisma.post.findMany({
-        take: parseInt(runtimeConfig.public.RESULTS_PER_PAGE),
-        skip: 1,
-        cursor: {
-          id: query.cursor as string
-        },
-        where: {
-          parentId: event.context.params.postId,
-        },
-        include: {
-          author: true
-        },
-        orderBy: {
-          createdDate: 'desc'
-        }
-      })
-    }
-
     return await prisma.post.findMany({
       take: parseInt(runtimeConfig.public.RESULTS_PER_PAGE),
+      skip: query.cursor ? 1 : undefined,
+      cursor: query.cursor ? {
+        id: query.cursor as string
+      } : undefined,
       where: {
         parentId: event.context.params.postId,
       },
       include: {
-        author: true
+        author: true,
+        _count: {
+          select: {
+            children: true,
+            bookmarks: true,
+            likes: true,
+            boosts: true
+          }
+        }
       },
       orderBy: {
         createdDate: 'desc'

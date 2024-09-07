@@ -53,18 +53,6 @@ useIntersectionObserver(el, async ([{ isIntersecting }]) => {
   }
 })
 
-const update = async () => {
-  if (!user.value) return
-  const data = await $api<[Post]>(`/api/posts`)
-  items.value = data
-}
-
-useNuxtApp().hooks.hook('compose', async () => {
-  if (useRoute().name === 'explore') {
-    await update()
-  }
-})
-
 const goToTop = () => {
   window.scrollTo({
     top: 0,

@@ -50,7 +50,7 @@ export default defineNuxtPlugin({
       }
     }
 
-    const bookmark = async (postId: string) => {
+    const bookmark = async (postId: string): Promise<Post | undefined> => {
       if (!user.value) return
     
       if (isBookmark(postId)) {
@@ -70,9 +70,10 @@ export default defineNuxtPlugin({
         })
       }
       await refreshUser()
+      return await $api<Post>(`/api/posts/${postId}`)
     }
     
-    const like = async (postId: string) => {
+    const like = async (postId: string): Promise<Post | undefined> => {
       if (!user.value) return
     
       if (isLike(postId)) {
@@ -92,9 +93,10 @@ export default defineNuxtPlugin({
         })
       }
       await refreshUser()
+      return await $api<Post>(`/api/posts/${postId}`)
     }
 
-    const boost = async (postId: string) => {
+    const boost = async (postId: string): Promise<Post | undefined> => {
       if (!user.value) return
     
       if (isBoost(postId)) {
@@ -114,6 +116,7 @@ export default defineNuxtPlugin({
         })
       }
       await refreshUser()
+      return await $api<Post>(`/api/posts/${postId}`)
     }
 
     return {

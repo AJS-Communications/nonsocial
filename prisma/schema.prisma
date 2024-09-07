@@ -74,6 +74,8 @@ model Post {
   authorId    String
   visibility  Visibility @default(PUBLIC)
   parentId    String?
+  parent      Post?      @relation("PostToPost", fields: [parentId], references: [id])
+  children    Post[]     @relation("PostToPost")
   bookmarks   Bookmark[]
   likes       Like[]
   boosts      Boost[]

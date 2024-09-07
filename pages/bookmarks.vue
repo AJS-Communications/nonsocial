@@ -55,19 +55,6 @@ useIntersectionObserver(el, async ([{ isIntersecting }]) => {
   }
 })
 
-const update = async () => {
-  if (!user.value) return
-  const data = await $api<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
-  bookmarks.value = data
-  posts.value = bookmarks.value?.flatMap(i => i.post) || []
-}
-
-useNuxtApp().hooks.hook('compose', async () => {
-  if (useRoute().name === 'bookmarks') {
-    await update()
-  }
-})
-
 const goToTop = () => {
   window.scrollTo({
     top: 0,

@@ -15,39 +15,30 @@ export default defineEventHandler(async (event) => {
   let data: any = []
 
   async function main() {
-    if (typeof query.cursor !== 'undefined') {
-      return await prisma.post.findMany({
-        take: parseInt(runtimeConfig.public.RESULTS_PER_PAGE),
-        skip: 1,
-        cursor: {
-          id: query.cursor as string
-        },
-        where: {
-          parentId: null,
-          published: true,
-          visibility: 'PUBLIC'
-        },
-        include: {
-          author: true
-        },
-        orderBy: {
-          createdDate: 'desc',
-        }
-      })
-    }
-
     return await prisma.post.findMany({
       take: parseInt(runtimeConfig.public.RESULTS_PER_PAGE),
+      skip: query.cursor ? 1 : undefined,
+      cursor: query.cursor ? {
+        id: query.cursor as string
+      } : undefined,
       where: {
         parentId: null,
         published: true,
         visibility: 'PUBLIC'
       },
       include: {
-        author: true
+        author: true,
+        _count: {
+          select: {
+            children: true,
+            bookmarks: true,
+            likes: true,
+            boosts: true
+          }
+        }
       },
       orderBy: {
-        createdDate: 'desc'
+        createdDate: 'desc',
       }
     })
   }

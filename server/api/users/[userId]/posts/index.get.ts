@@ -45,51 +45,13 @@ export default defineEventHandler(async (event) => {
         postId: true
       }
     }) || []
-    
-
-    if (typeof query.cursor !== 'undefined') {
-      return await prisma.post.findMany({
-        take: parseInt(runtimeConfig.public.RESULTS_PER_PAGE),
-        skip: 1,
-        cursor: {
-          id: query.cursor as string
-        },
-        where: {
-          OR: [
-            {
-              id: {
-                in: [
-                  ...likes.map(i => i.postId),
-                  ...boosts.map(i => i.postId)
-                ]
-              }
-            },
-            {
-              author: {
-                id: {
-                  in: [
-                    ...following.map(i => i.followingId),
-                    event.context.params.userId
-                  ]
-                }
-              }
-            }
-          ],
-          parentId: null,
-          published: true,
-          visibility: 'PUBLIC'
-        },
-        include: {
-          author: true
-        },
-        orderBy: {
-          createdDate: 'desc'
-        }
-      })
-    }
 
     return await prisma.post.findMany({
       take: parseInt(runtimeConfig.public.RESULTS_PER_PAGE),
+      skip: query.cursor ? 1 : undefined,
+      cursor: query.cursor ? {
+        id: query.cursor as string
+      } : undefined,
       where: {
         OR: [
           {
@@ -116,7 +78,15 @@ export default defineEventHandler(async (event) => {
         visibility: 'PUBLIC'
       },
       include: {
-        author: true
+        author: true,
+        _count: {
+          select: {
+            children: true,
+            bookmarks: true,
+            likes: true,
+            boosts: true
+          }
+        }
       },
       orderBy: {
         createdDate: 'desc'
