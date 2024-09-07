@@ -55,7 +55,7 @@
                     </blockquote>
                   </div>
                 </div>
-                <p class="ml-16 pt-4 mt-4 text-neutral-500 font-medium">
+                <p class="ml-16 mt-4 text-neutral-500 font-medium">
                   Replying to
                   <NuxtLink :to="`/${item.author.username}`" class="text-sky-600 dark:text-sky-400 group">
                     @<span class="group-hover:underline">{{ item.author.username }}</span>
