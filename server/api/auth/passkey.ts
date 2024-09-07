@@ -18,6 +18,11 @@ export default defineEventHandler(async (event) => {
   const { action } = body
 
   if (action === 'register') {
+    // Log out to ensure clean state
+    await $fetch('/api/auth/logout', {
+      method: 'post'
+    })
+
     const options = await generateRegistrationOptions({
       rpName: runtimeConfig.WEBAUTHN_NAME,
       rpID: runtimeConfig.WEBAUTHN_RPID,
@@ -26,6 +31,11 @@ export default defineEventHandler(async (event) => {
 
     return options
   } else if (action === 'authenticate') {
+    // Log out to ensure clean state
+    await $fetch('/api/auth/logout', {
+      method: 'post'
+    })
+
     const options = await generateAuthenticationOptions({
       rpID: runtimeConfig.WEBAUTHN_RPID
     })

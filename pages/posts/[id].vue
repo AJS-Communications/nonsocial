@@ -78,7 +78,7 @@
               @<span class="group-hover:underline">{{ item.parent.author.username }}</span>
             </NuxtLink>
           </p>
-          <blockquote class="max-w-prose text-2xl pb-4">
+          <blockquote class="max-w-max text-2xl pb-4">
             <div
               class="font-sans whitespace-pre-line"
               v-html="formattedText"

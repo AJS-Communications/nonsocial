@@ -47,8 +47,11 @@
                         <span>{{ createdDate(item.createdDate) }}</span>
                       </div>
                     </div>
-                    <blockquote class="mt-0.5 max-w-prose">
-                      <div class="font-sans whitespace-pre-line">{{ item.text }}</div>
+                    <blockquote class="mt-0.5 max-w-max">
+                        <div
+                          class="font-sans whitespace-pre-line"
+                          v-html="formattedText"
+                        />
                     </blockquote>
                   </div>
                 </div>
@@ -90,6 +93,10 @@ const item = computed({
   set(value) {
     emit('update:model-value', value)
   }
+})
+
+const formattedText = computed(() => {
+  return parsePostText(item.value.text, true)
 })
 
 const modal = ref()
