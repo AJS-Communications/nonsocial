@@ -5,11 +5,11 @@ export const parsePostText = (text?: string, readonly = false) => {
       /((https:\/\/)(?!https:\/\/)\S+)/gm,
       readonly ?
         `<span
-          data-link="true"
+          data-link="external"
           class="text-sky-700 font-medium dark:text-sky-400"
         >$1</span>` :
         `<a
-          data-link="true"
+          data-link="external"
           href="$1"
           target="_blank"
           rel="noopener noreferrer"
@@ -17,16 +17,28 @@ export const parsePostText = (text?: string, readonly = false) => {
         >$1</a>`
     )
     .replaceAll(
-      /((#|@)(?!#|@)\w+)/gm,
+      /(@((?!@)\w+))/gm,
       readonly ?
         `<span
-          data-link="true"
+          data-link="mention"
           class="text-sky-700 font-medium dark:text-sky-400"
         >$1</span>` :
         `<a
-          href="$1"
-          target="_blank"
-          rel="noopener noreferrer"
+          data-link="mention"
+          href="/$2"
+          class="text-sky-700 font-medium hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
+        >$1</a>`
+    )
+    .replaceAll(
+      /(#((?!#)\w+))/gm,
+      readonly ?
+        `<span
+          data-link="hashtag"
+          class="text-sky-700 font-medium dark:text-sky-400"
+        >$1</span>` :
+        `<a
+          data-link="hashtag"
+          href="/explore/$2"
           class="text-sky-700 font-medium hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
         >$1</a>`
     )

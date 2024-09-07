@@ -1,0 +1,66 @@
+<template>
+  <div>
+    <div
+      class="bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-20 cursor-pointer"
+      @click="goToTop"
+    >
+      <h1 class="p-4 pb-0 text-xl font-bold">{{ title }}</h1>
+      <p
+        v-if="user?.username"
+        class="px-4 pb-4 text-neutral-500"
+      >@{{ user.username }}</p>
+    </div>
+    <p
+      class="p-4 text-red-600 dark:text-red-400"
+    >Need to build out this page... this is a placeholder (just copy/paste of explore page).</p>
+    <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
+      <LazyFeedItem
+        v-for="item in items"
+        :key="item.id"
+        :item="item"
+        show-comments
+      />
+    </div>
+    <div ref="el" />
+  </div>
+</template>
+
+<script setup lang="ts">
+const { $api, $auth: { user } } = useNuxtApp()
+
+if (!user.value) {
+  throw createError({ statusCode: 501, message: 'Access Denied' })
+}
+
+const id = computed(() => useRoute().params.id)
+const title = useTitle()
+title.value = `Explore #${id.value}`
+const cursor = ref()
+const { data: items } = await useApiFetch<[Post]>(`/api/posts`)
+const el = ref()
+
+useIntersectionObserver(el, async ([{ isIntersecting }]) => {
+  if (user.value && items.value && isIntersecting) {
+    const lastItem = items.value[items.value.length - 1]
+    const lastId = lastItem && lastItem.id || undefined
+    if (lastId === cursor.value) return
+
+    cursor.value = lastId
+    const data = await $api<[Post]>(`/api/posts`, {
+      params: {
+        cursor: cursor.value
+      }
+    })
+    if (data) {
+      items.value.push(...data)
+    }
+  }
+})
+
+const goToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+}
+</script>

@@ -97,19 +97,22 @@ const onCompose = () => {
     fauxTextareaContent.value = 
       encodeHTMLEntities(allowedValuePart)
         .replaceAll(/<br>/g, '\n')
-        .replaceAll(/((https:\/\/)(?!https:\/\/)\S+)/gm, '<span data-link="true">$1</span>')
-        .replaceAll(/((#|@)(?!#|@)\w+)/gm, '<span data-link="true">$1</span>') +
+        .replaceAll(/((https:\/\/)(?!https:\/\/)\S+)/gm, '<span data-link="external">$1</span>')
+        .replaceAll(/(#(?!#)\w+)/gm, '<span data-link="hashtag">$1</span>')
+        .replaceAll(/(@(?!@)\w+)/gm, '<span data-link="mention">$1</span>') +
         '<span data-error="true">' +
       encodeHTMLEntities(refusedValuePart)
         .replaceAll(/<br>/g, '\n')
-        .replaceAll(/((https:\/\/)(?!https:\/\/)\S+)/gm, '<span data-link="true">$1</span>')
-        .replaceAll(/((#|@)(?!#|@)\w+)/gm, '<span data-link="true">$1</span>') +
+        .replaceAll(/((https:\/\/)(?!https:\/\/)\S+)/gm, '<span data-link="external">$1</span>')
+        .replaceAll(/(#(?!#)\w+)/gm, '<span data-link="hashtag">$1</span>')
+        .replaceAll(/(@(?!@)\w+)/gm, '<span data-link="mention">$1</span>') +
         '</span>'
   } else {
     fauxTextareaContent.value = encodeHTMLEntities(text.value)
       .replaceAll(/<br>/g, '\n')
-      .replaceAll(/((https:\/\/)(?!https:\/\/)\S+)/gm, '<span data-link="true">$1</span>')
-      .replaceAll(/((#|@)(?!#|@)\w+)/gm, '<span data-link="true">$1</span>')
+      .replaceAll(/((https:\/\/)(?!https:\/\/)\S+)/gm, '<span data-link="external">$1</span>')
+      .replaceAll(/(#(?!#)\w+)/gm, '<span data-link="hashtag">$1</span>')
+      .replaceAll(/(@(?!@)\w+)/gm, '<span data-link="mention">$1</span>')
   }
 }
 
