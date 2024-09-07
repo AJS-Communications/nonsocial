@@ -98,10 +98,11 @@
               @<span class="group-hover:underline">{{ localItem.parent?.author.username }}</span>
             </NuxtLink>
           </div>
-          <blockquote class="mt-0.5 max-w-max relative">
+          <blockquote class="mt-0.5 max-w-max cursor-pointer relative">
             <div
               class="font-sans whitespace-pre-line"
               v-html="formattedText"
+              @click="handlePostClick(localItem, $event)"
             />
           </blockquote>
           <div class="grid grid-cols-4 gap-2 mt-2">
