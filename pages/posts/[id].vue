@@ -79,7 +79,10 @@
             </NuxtLink>
           </p>
           <blockquote class="max-w-prose text-2xl pb-4">
-            <div class="font-sans whitespace-pre-line">{{ item.text }}</div>
+            <div
+              class="font-sans whitespace-pre-line"
+              v-html="formattedText"
+            />
           </blockquote>
           <hr class="border-neutral-100 dark:border-neutral-900" />
           <div class="flex gap-4 sm:gap-12 text-sm">
@@ -242,6 +245,28 @@ useIntersectionObserver(el, async ([{ isIntersecting }]) => {
       item.value?.children.push(...newComments)
     }
   }
+})
+
+const formattedText = computed(() => {
+  return item.value?.text
+    .replaceAll(
+      /((https:\/\/)(?!https:\/\/)\S+)/gm,
+      `<a
+        href="$1"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-sky-700 font-semibold hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
+      >$1</a>`
+    )
+    .replaceAll(
+      /((#|@)(?!#|@)\w+)/gm,
+      `<a
+        href="$1"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-sky-700 font-semibold hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
+      >$1</a>`
+    )
 })
 
 const update = async () => {

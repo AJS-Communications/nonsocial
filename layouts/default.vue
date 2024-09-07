@@ -20,7 +20,7 @@
                 @click="logout"
               >Logout</button>
             </div>
-            <small class="text-neutral-500">
+            <small class="text-neutral-600 dark:text-neutral-400">
               Available under MIT License<br/>
               Copyright &copy; 2022-present,<br />AJS Communications
             </small>

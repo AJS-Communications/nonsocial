@@ -98,8 +98,11 @@
               @<span class="group-hover:underline">{{ localItem.parent?.author.username }}</span>
             </NuxtLink>
           </div>
-          <blockquote class="mt-0.5 max-w-prose">
-            <div class="font-sans whitespace-pre-line">{{ localItem.text }}</div>
+          <blockquote class="mt-0.5 max-w-prose relative z-10">
+            <div
+              class="font-sans whitespace-pre-line"
+              v-html="formattedText"
+            />
           </blockquote>
           <div class="grid grid-cols-4 gap-2 mt-2">
             <div>
@@ -215,6 +218,28 @@ watch(() => props.item, (value) => {
 })
 
 const emit = defineEmits(['update:model-value'])
+
+const formattedText = computed(() => {
+  return localItem.value?.text
+    .replaceAll(
+      /((https:\/\/)(?!https:\/\/)\S+)/gm,
+      `<a
+        href="$1"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-sky-700 font-semibold hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
+      >$1</a>`
+    )
+    .replaceAll(
+      /((#|@)(?!#|@)\w+)/gm,
+      `<a
+        href="$1"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-sky-700 font-semibold hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
+      >$1</a>`
+    )
+})
 
 const likeList = computed(() => {
   if (!props.item?.likes) return []
