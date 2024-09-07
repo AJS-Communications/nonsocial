@@ -10,9 +10,6 @@
         class="px-4 pb-4 text-neutral-500"
       >@{{ user.username }}</p>
     </div>
-    <p
-      class="p-4 text-red-600 dark:text-red-400"
-    >Need to build out this page... this is a placeholder (just copy/paste of explore page).</p>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
       <LazyFeedItem
         v-for="item in items"
@@ -36,7 +33,7 @@ const id = computed(() => useRoute().params.id)
 const title = useTitle()
 title.value = `Explore #${id.value}`
 const cursor = ref()
-const { data: items } = await useApiFetch<[Post]>(`/api/posts`)
+const { data: items } = await useApiFetch<[Post]>(`/api/posts/explore/${id.value}`)
 const el = ref()
 
 useIntersectionObserver(el, async ([{ isIntersecting }]) => {
@@ -46,7 +43,7 @@ useIntersectionObserver(el, async ([{ isIntersecting }]) => {
     if (lastId === cursor.value) return
 
     cursor.value = lastId
-    const data = await $api<[Post]>(`/api/posts`, {
+    const data = await $api<[Post]>(`/api/posts/explore/${id.value}`, {
       params: {
         cursor: cursor.value
       }

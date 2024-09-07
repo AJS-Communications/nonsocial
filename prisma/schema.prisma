@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["omitApi"]
+  previewFeatures = ["omitApi", "fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -79,6 +79,8 @@ model Post {
   bookmarks   Bookmark[]
   likes       Like[]
   boosts      Boost[]
+
+  @@fulltext([text])
 }
 
 enum Visibility {
