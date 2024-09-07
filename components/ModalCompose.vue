@@ -50,5 +50,6 @@ const update = async () => {
   await navigateTo({
     name: 'index'
   })
+  await refreshNuxtData()
 }
 </script>

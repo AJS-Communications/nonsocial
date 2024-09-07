@@ -220,25 +220,7 @@ watch(() => props.item, (value) => {
 const emit = defineEmits(['update:model-value'])
 
 const formattedText = computed(() => {
-  return localItem.value?.text
-    .replaceAll(
-      /((https:\/\/)(?!https:\/\/)\S+)/gm,
-      `<a
-        href="$1"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-sky-700 font-semibold hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
-      >$1</a>`
-    )
-    .replaceAll(
-      /((#|@)(?!#|@)\w+)/gm,
-      `<a
-        href="$1"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-sky-700 font-semibold hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
-      >$1</a>`
-    )
+  return parsePostText(localItem.value?.text)
 })
 
 const likeList = computed(() => {
