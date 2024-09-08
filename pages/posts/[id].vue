@@ -1,6 +1,9 @@
 <template>
   <div v-if="item">
-    <div class="bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-20">
+    <div
+      class="border-b border-neutral-100 dark:border-neutral-900 bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-20 cursor-pointer"
+      @click="goToTop"
+    >
       <div class="p-2.5 flex gap-2">
         <button
           type="button"

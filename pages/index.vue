@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-20 cursor-pointer"
+      class="border-b border-neutral-100 dark:border-neutral-900 bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-20 cursor-pointer"
       @click="goToTop"
     >
       <h1 class="p-4 text-xl font-bold">{{ title }}</h1>
@@ -55,12 +55,5 @@ const update = async () => {
   if (!user.value) return
   const data = await $api<[Post]>(`/api/users/${user.value.id}/posts`)
   items.value = data
-}
-
-const goToTop = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  })
 }
 </script>

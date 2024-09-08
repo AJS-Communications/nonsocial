@@ -14,16 +14,28 @@
           <div class="sticky top-0 p-4">
             <div
               v-if="isAuthenticated"
-              class="mb-4"
+              class="mb-4 space-y-4"
             >
-              <button
-                @click="logout"
-              >Logout</button>
+              <div v-if="user">
+                <button
+                  class="border rounded px-4 py-2 w-full flex items-center gap-4 hover:bg-neutral-50 dark:hover:bg-neutral-900 dark:border-neutral-800"
+                  @click="logout()"
+                >
+                  <img
+                    :src="user?.photoUrl"
+                    :alt="user?.username"
+                    class="mb-auto flex-none w-8 h-8 rounded-full object-cover ring-4 ring-white dark:ring-black bg-white dark:bg-black"
+                    loading="lazy"
+                    decoding="async"
+                  >
+                  <span>Logout {{ user.username }}</span>
+                </button>
+              </div>
+              <small class="block text-neutral-600 dark:text-neutral-400">
+                Available under MIT License<br/>
+                Copyright &copy; 2022-present,<br />AJS Communications
+              </small>
             </div>
-            <small class="text-neutral-600 dark:text-neutral-400">
-              Available under MIT License<br/>
-              Copyright &copy; 2022-present,<br />AJS Communications
-            </small>
           </div>
         </footer>
       </div>
@@ -33,7 +45,7 @@
 
 <script setup lang="ts">
 const runtimeConfig = useRuntimeConfig()
-const { $auth: { isAuthenticated, logout } } = useNuxtApp()
+const { $auth: { isAuthenticated, user, logout } } = useNuxtApp()
 
 useHead({
   bodyAttrs: {

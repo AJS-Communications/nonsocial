@@ -1,14 +1,10 @@
 <template>
   <div>
     <div
-      class="bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-20 cursor-pointer"
+      class="border-b border-neutral-100 dark:border-neutral-900 bg-white/80 dark:bg-black/80 backdrop-blur sticky top-0 z-20 cursor-pointer"
       @click="goToTop"
     >
-      <h1 class="p-4 pb-0 text-xl font-bold">{{ title }}</h1>
-      <p
-        v-if="user?.username"
-        class="px-4 pb-4 text-neutral-500"
-      >@{{ user.username }}</p>
+      <h1 class="p-4 text-xl font-bold">{{ title }}</h1>
     </div>
     <div class="divide-y divide-neutral-100 dark:divide-neutral-900">
       <LazyFeedItem
@@ -54,11 +50,4 @@ useIntersectionObserver(el, async ([{ isIntersecting }]) => {
     }
   }
 })
-
-const goToTop = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  })
-}
 </script>
