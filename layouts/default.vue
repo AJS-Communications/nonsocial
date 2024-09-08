@@ -11,15 +11,15 @@
           <slot />
         </main>
         <footer class="hidden lg:block w-80 shrink-0 min-h-screen border-l border-neutral-100 dark:border-neutral-900">
-          <div class="sticky top-0 p-4">
+          <div class="sticky top-0 p-4 pr-8">
             <div
               v-if="isAuthenticated"
               class="mb-4 space-y-4"
             >
               <div v-if="user">
-                <button
+                <NuxtLink
                   class="border rounded px-4 py-2 w-full flex items-center gap-4 hover:bg-neutral-50 dark:hover:bg-neutral-900 dark:border-neutral-800"
-                  @click="logout()"
+                  to="/account"
                 >
                   <img
                     :src="user?.photoUrl"
@@ -28,8 +28,8 @@
                     loading="lazy"
                     decoding="async"
                   >
-                  <span>Logout {{ user.username }}</span>
-                </button>
+                  <span>{{ user.username }}</span>
+                </NuxtLink>
               </div>
               <small class="block text-neutral-600 dark:text-neutral-400">
                 Available under MIT License<br/>
@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 const runtimeConfig = useRuntimeConfig()
-const { $auth: { isAuthenticated, user, logout } } = useNuxtApp()
+const { $auth: { isAuthenticated, user } } = useNuxtApp()
 
 useHead({
   bodyAttrs: {
