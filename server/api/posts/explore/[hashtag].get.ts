@@ -27,12 +27,47 @@ export default defineEventHandler(async (event) => {
         parentId: null,
         published: true,
         visibility: 'PUBLIC',
-        text: {
-          contains: `#${event.context.params.hashtag}`
-        }
+        OR: [
+          {
+            text: {
+              contains: `#${event.context.params.hashtag}`
+            }
+          },
+          {
+            children: {
+              some: {
+                text: {
+                  contains: `#${event.context.params.hashtag}`
+                }
+              }
+            }
+          }
+        ]
       },
       include: {
         author: true,
+        children: {
+          where: {
+            text: {
+              contains: `#${event.context.params.hashtag}`
+            }
+          },
+          include: {
+            author: true,
+            _count: {
+              select: {
+                children: true,
+                bookmarks: true,
+                likes: true,
+                boosts: true
+              }
+            }
+          },
+          take: 1,
+          orderBy: {
+            createdDate: 'desc',
+          }
+        },
         _count: {
           select: {
             children: true,

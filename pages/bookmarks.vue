@@ -6,7 +6,6 @@
         v-for="item in posts"
         :key="item.id"
         :item="item"
-        show-comments
       />
     </div>
     <div ref="el" />
@@ -17,13 +16,18 @@
 const { $api, $auth: { user } } = useNuxtApp()
 
 if (!user.value) {
-  throw createError({ statusCode: 501, message: 'Access Denied' })
+  throw createError({ statusCode: 501, message: 'Access Denied', fatal: true })
 }
 
 const title = useTitle()
 title.value = 'Bookmarks'
 const cursor = ref()
 const { data: bookmarks } = await useApiFetch<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
+
+if (!bookmarks.value) {
+  throw createError({ statusCode: 404, message: 'Page Not Found', fatal: true })
+}
+
 const el = ref()
 
 const posts = ref(bookmarks.value?.flatMap(i => i.post) || [])

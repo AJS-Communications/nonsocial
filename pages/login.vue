@@ -20,12 +20,12 @@
       >
       <button
         type="submit"
-        class="border rounded px-4 py-2 w-full justify-center flex items-center gap-4 hover:bg-neutral-50 dark:hover:bg-neutral-900 dark:border-neutral-800"
+        class="border rounded px-4 py-2 w-full justify-center flex items-center gap-4 bg-neutral-100 hover:bg-neutral-50 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:border-neutral-800"
       >Register</button>
       <p class="text-center">or</p>
       <button
         type="button"
-        class="border rounded px-4 py-2 w-full justify-center flex items-center gap-4 hover:bg-neutral-50 dark:hover:bg-neutral-900 dark:border-neutral-800"
+        class="border rounded px-4 py-2 w-full justify-center flex items-center gap-4 bg-neutral-100 hover:bg-neutral-50 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:border-neutral-800"
         @click="handleLogin"
       >Login</button>
     </form>

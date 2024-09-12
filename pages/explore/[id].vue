@@ -6,7 +6,6 @@
         v-for="item in items"
         :key="item.id"
         :item="item"
-        show-comments
       />
     </div>
     <div ref="el" />
@@ -17,7 +16,7 @@
 const { $api, $auth: { user } } = useNuxtApp()
 
 if (!user.value) {
-  throw createError({ statusCode: 501, message: 'Access Denied' })
+  throw createError({ statusCode: 501, message: 'Access Denied', fatal: true })
 }
 
 const id = computed(() => useRoute().params.id)
@@ -25,6 +24,11 @@ const title = useTitle()
 title.value = `Explore #${id.value}`
 const cursor = ref()
 const { data: items } = await useApiFetch<[Post]>(`/api/posts/explore/${id.value}`)
+
+if (!items.value) {
+  throw createError({ statusCode: 404, message: 'Page Not Found', fatal: true })
+}
+
 const el = ref()
 
 useIntersectionObserver(el, async ([{ isIntersecting }]) => {

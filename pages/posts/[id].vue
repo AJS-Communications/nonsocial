@@ -41,7 +41,7 @@
             <img
               v-if="item.author.photoUrl"
               :src="item.author.photoUrl"
-              :alt="item.author.username"
+              :alt="item.author.name || item.author.username"
               class="mb-auto flex-none w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-4 ring-white dark:ring-black bg-white dark:bg-black"
               loading="lazy"
               decoding="async"
@@ -53,7 +53,7 @@
                   class="hover:underline my-auto"
                   tabindex="0"
                 >
-                  {{ item.author.username }}
+                  {{ item.author.name || item.author.username }}
                 </NuxtLink>
               </div>
               <p class="text-neutral-500 font-medium">{{ createdDate(item.createdDate, 'long') }}</p>
@@ -64,7 +64,12 @@
           <p v-if="item.parent" class="text-neutral-500 font-medium">
             Replying to
             <NuxtLink :to="`/${item.parent.author.username}`" class="text-sky-600 dark:text-sky-400 group">
-              @<span class="group-hover:underline">{{ item.parent.author.username }}</span>
+              <template v-if="item.parent.author.name">
+                <span class="group-hover:underline">{{ item.parent.author.name }}</span>
+              </template>
+              <template v-else>
+                @<span class="group-hover:underline">{{ item.parent.author.username }}</span>
+              </template>
             </NuxtLink>
           </p>
           <blockquote class="max-w-max text-2xl pb-4">
@@ -76,6 +81,10 @@
           <hr class="border-neutral-100 dark:border-neutral-900" />
           <div class="flex gap-4 sm:gap-12 text-sm">
             <div class="flex gap-2">
+              <span class="font-bold">{{ item._count.likes }}</span>
+              <span class="text-neutral-500">{{ item._count.likes === 1 ? 'Like' : 'Likes' }}</span>
+            </div>
+            <div class="flex gap-2">
               <span class="font-bold">{{ item._count.children }}</span>
               <span class="text-neutral-500">{{ item._count.children === 1 ? 'Comment' : 'Comments' }}</span>
             </div>
@@ -84,16 +93,26 @@
               <span class="text-neutral-500">{{ item._count.boosts === 1 ? 'Boost' : 'Boosts' }}</span>
             </div>
             <div class="flex gap-2">
-              <span class="font-bold">{{ item._count.likes }}</span>
-              <span class="text-neutral-500">{{ item._count.likes === 1 ? 'Like' : 'Likes' }}</span>
-            </div>
-            <div class="flex gap-2">
               <span class="font-bold">{{ item._count.bookmarks }}</span>
               <span class="text-neutral-500">{{ item._count.bookmarks === 1 ? 'Bookmarks' : 'Bookmarks' }}</span>
             </div>
           </div>
           <hr class="border-neutral-100 dark:border-neutral-900" />
           <div class="flex justify-around gap-2">
+            <button
+              class="p-2 rounded-full flex hover:bg-rose-100/40 dark:hover:bg-rose-100/10 hover:text-rose-600 dark:hover:text-rose-400 saturate-200 transition-colors duration-200"
+              :class="{
+                'text-neutral-600 dark:text-neutral-400': !isLike(item.id),
+                'text-rose-600 dark:text-rose-400': isLike(item.id)
+              }"
+              @click="handleLike"
+            >
+              <IconHeart
+                v-if="item"
+                :active="isLike(item.id)"
+              />
+              <span class="sr-only">Love</span>
+            </button>
             <ModalComment
               v-slot="{ toggle }"
               v-model="item"
@@ -121,20 +140,6 @@
                 :active="isBoost(item.id)"
               />
               <span class="sr-only">Boost</span>
-            </button>
-            <button
-              class="p-2 rounded-full flex hover:bg-rose-100/40 dark:hover:bg-rose-100/10 hover:text-rose-600 dark:hover:text-rose-400 saturate-200 transition-colors duration-200"
-              :class="{
-                'text-neutral-600 dark:text-neutral-400': !isLike(item.id),
-                'text-rose-600 dark:text-rose-400': isLike(item.id)
-              }"
-              @click="handleLike"
-            >
-              <IconHeart
-                v-if="item"
-                :active="isLike(item.id)"
-              />
-              <span class="sr-only">Love</span>
             </button>
             <button
               class="p-2 rounded-full flex hover:bg-amber-100/40 dark:hover:bg-amber-100/10 hover:text-amber-600 dark:hover:text-amber-400 saturate-200 transition-colors duration-200"
@@ -171,7 +176,6 @@
         v-for="comment in item.children"
         :key="comment.id"
         :item="comment"
-        show-comments
       />
     </div>
     <div ref="el" />
@@ -195,7 +199,7 @@ const {
 } = useNuxtApp()
 
 if (!user.value) {
-  throw createError({ statusCode: 501, message: 'Access Denied' })
+  throw createError({ statusCode: 501, message: 'Access Denied', fatal: true })
 }
 
 const route = useRoute()
@@ -203,7 +207,7 @@ const route = useRoute()
 const { data: item, refresh } = await useApiFetch<Post>(`/api/posts/${route.params.id}`)
 
 if (!item.value) {
-  throw createError({ statusCode: 404, message: 'Page Not Found' })
+  throw createError({ statusCode: 404, message: 'Page Not Found', fatal: true })
 }
 
 const title = useTitle()

@@ -4,11 +4,11 @@
     class="relative"
   >
     <div
-      v-if="showComments && commenterList.length > 0"
-      class="bg-neutral-200 dark:bg-neutral-800 w-1 absolute top-10 left-[2.35rem] bottom-24 -z-10"
+      v-if="commenterList.length > 0 || localItem.children?.length > 0"
+      class="bg-neutral-200 dark:bg-neutral-800 w-1 absolute top-10 left-[2.35rem] bottom-28 -z-10"
     />
     <article class="relative flex flex-col gap-1 p-4">
-      <div v-if="showComments">
+      <div>
         <div ref="moreBtn" class="absolute z-10 top-2 right-2 w-min">
           <button
             class="cursor-pointer flex gap-1 w-min z-10 p-2 rounded-full text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200/40 dark:hover:bg-neutral-200/10 hover:text-neutral-800 dark:hover:text-neutral-400 saturate-200 transition-colors duration-200"
@@ -39,7 +39,7 @@
           <span>boosted</span>
         </div>
       </div>
-      <div v-if="showComments && boostList.length < 1 && commenterList.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
+      <div v-if="boostList.length < 1 && commenterList.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
         <IconChatBubble active size="sm" />
         <div class="flex gap-1">
           <span
@@ -82,7 +82,7 @@
               :to="`/${localItem.author?.username}`"
               class="my-auto hover:underline z-10"
             >
-              <span>{{ localItem.author.username }}</span>
+              <span>{{ localItem.author.name || localItem.author.username }}</span>
             </NuxtLink>
             <div class="mt-0.5 text-sm text-neutral-500 whitespace-nowrap space-x-2">
               <span>&middot;</span>
@@ -95,7 +95,7 @@
               :to="`/${localItem.parent?.author.username}`"
               class="relative text-sky-600 dark:text-sky-400 z-10 group"
             >
-              @<span class="group-hover:underline">{{ localItem.parent?.author.username }}</span>
+              @<span class="group-hover:underline">{{ localItem.parent?.author.name || localItem.parent?.author.username }}</span>
             </NuxtLink>
           </div>
           <blockquote class="mt-0.5 max-w-max cursor-pointer relative">
@@ -106,6 +106,24 @@
             />
           </blockquote>
           <div class="grid grid-cols-4 gap-2 mt-2">
+            <div>
+              <button
+                class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-rose-600 dark:hover:text-rose-400 saturate-200"
+                :class="{
+                  'text-neutral-600 dark:text-neutral-400': !isLike(localItem.id),
+                  'text-rose-600 dark:text-rose-400': isLike(localItem.id)
+                }"
+                @click="handleLike"
+              >
+                <IconHeart
+                  :active="isLike(localItem.id)"
+                  size="sm"
+                  class="rounded-full p-2 group-hover:bg-rose-100/40 dark:group-hover:bg-rose-100/10"
+                />
+                <span class="sr-only">Love</span>
+                <span v-if="localItem._count?.likes > 0" class="my-auto text-sm">{{ localItem._count?.likes }}</span>
+              </button>
+            </div>
             <div>
               <ModalComment
                 v-slot="{ toggle }"
@@ -144,24 +162,6 @@
             </div>
             <div>
               <button
-                class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-rose-600 dark:hover:text-rose-400 saturate-200"
-                :class="{
-                  'text-neutral-600 dark:text-neutral-400': !isLike(localItem.id),
-                  'text-rose-600 dark:text-rose-400': isLike(localItem.id)
-                }"
-                @click="handleLike"
-              >
-                <IconHeart
-                  :active="isLike(localItem.id)"
-                  size="sm"
-                  class="rounded-full p-2 group-hover:bg-rose-100/40 dark:group-hover:bg-rose-100/10"
-                />
-                <span class="sr-only">Love</span>
-                <span v-if="localItem._count?.likes > 0" class="my-auto text-sm">{{ localItem._count?.likes }}</span>
-              </button>
-            </div>
-            <div>
-              <button
                 class="flex gap-1 z-10 px-2 transition-colors duration-200 group hover:text-amber-600 dark:hover:text-amber-400 saturate-200"
                 :class="{
                   'text-neutral-600 dark:text-neutral-400': !isBookmark(localItem.id),
@@ -183,9 +183,12 @@
       </div>
     </article>
     <LazyFeedItem
-      v-if="showComments && commenterList.length > 0"
+      v-for="child in localItem.children"
+      :item="child"
+    />
+    <LazyFeedItem
+      v-if="commenterList.length > 0"
       :item="commenterList[commenterList.length - 1]"
-      show-comments
     />
   </div>
 </template>
@@ -208,8 +211,7 @@ const {
 } = useNuxtApp()
 
 const props = defineProps({
-  item: { type: Object as PropType<Post> },
-  showComments: { type: Boolean, default: false }
+  item: { type: Object as PropType<Post> }
 })
 
 const localItem = ref(props.item)

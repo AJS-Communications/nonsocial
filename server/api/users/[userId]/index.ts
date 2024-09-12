@@ -53,31 +53,13 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  let total = undefined
-  let parents = undefined
-  let comments = undefined
-
   try {
     data = await main()
-    if (data) {
-      total = data._count.posts
-      comments = data.posts.filter(post => post.parentId === null).length
-      parents = total - comments
-    }
     await prisma.$disconnect()
   } catch (e) {
     await prisma.$disconnect()
     throw createError(e as Error)
   }
 
-  return {
-    data,
-    posts: {
-      _count: {
-        total,
-        parents,
-        comments
-      }
-    }
-  }
+  return data
 })

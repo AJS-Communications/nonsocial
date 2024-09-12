@@ -18,7 +18,7 @@
             >
               <div v-if="user">
                 <NuxtLink
-                  class="border rounded px-4 py-2 w-full flex items-center gap-4 hover:bg-neutral-50 dark:hover:bg-neutral-900 dark:border-neutral-800"
+                  class="border rounded px-4 py-2 w-full flex items-center gap-4 bg-neutral-100 hover:bg-neutral-50 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:border-neutral-800"
                   to="/account"
                 >
                   <img
@@ -28,7 +28,7 @@
                     loading="lazy"
                     decoding="async"
                   >
-                  <span>{{ user.username }}</span>
+                  <span>{{ user.name || user.username }}</span>
                 </NuxtLink>
               </div>
               <small class="block text-neutral-600 dark:text-neutral-400">
