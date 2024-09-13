@@ -63,7 +63,7 @@
         <div class="px-4 py-2 space-y-2">
           <p v-if="item.parent" class="text-neutral-500 font-medium">
             Replying to
-            <NuxtLink :to="`/${item.parent.author.username}`" class="text-sky-600 dark:text-sky-400 group">
+            <NuxtLink :to="`/${item.parent.author.username}`" class="text-sky-700 dark:text-sky-300 group">
               <template v-if="item.parent.author.name">
                 <span class="group-hover:underline">{{ item.parent.author.name }}</span>
               </template>

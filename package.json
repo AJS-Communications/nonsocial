@@ -16,7 +16,7 @@
     "seed": "ts-node --compiler-options {\"module\":\"commonjs\"} prisma/seed.mjs"
   },
   "devDependencies": {
-    "@nuxtjs/robots": "^4.1.6",
+    "@nuxtjs/robots": "^4.1.7",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@prisma/client": "^5.19.1",
     "@simplewebauthn/browser": "^10.0.0",
@@ -30,7 +30,7 @@
     "@vueuse/nuxt": "^11.0.3",
     "bcrypt": "^5.1.1",
     "buffer": "^6.0.3",
-    "focus-trap": "^7.5.4",
+    "focus-trap": "^7.6.0",
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
     "npm": "^10.8.3",

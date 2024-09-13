@@ -57,7 +57,7 @@
                 </div>
                 <p class="ml-16 mt-4 text-neutral-500 font-medium">
                   Replying to
-                  <NuxtLink :to="`/${item.author.username}`" class="text-sky-600 dark:text-sky-400 group">
+                  <NuxtLink :to="`/${item.author.username}`" class="text-sky-700 dark:text-sky-300 group">
                     @<span class="group-hover:underline">{{ item.author.username }}</span>
                   </NuxtLink>
                 </p>
@@ -114,7 +114,11 @@ onKeyStroke('Escape', (e) => {
 })
 
 const update = async () => {
-  item.value = await $api<Post>(`/api/posts/${item.value.id}`)
+  item.value = await $api<Post>(`/api/posts/comments/${item.value.id}`, {
+    query: {
+      includeChildren: item.value.children?.length > 0
+    }
+  })
   open.value = false
 }
 </script>

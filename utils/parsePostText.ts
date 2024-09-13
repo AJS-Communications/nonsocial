@@ -6,14 +6,14 @@ export const parsePostText = (text?: string, readonly = false) => {
       readonly ?
         `<span
           data-link="external"
-          class="text-sky-700 font-medium dark:text-sky-400"
+          class="text-sky-700 font-medium dark:text-sky-300"
         >$1</span>` :
         `<a
           data-link="external"
           href="$1"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-sky-700 font-medium hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
+          class="text-sky-700 font-medium hover:underline dark:text-sky-300"
         >$1</a>`
     )
     .replaceAll(
@@ -21,12 +21,12 @@ export const parsePostText = (text?: string, readonly = false) => {
       readonly ?
         `<span
           data-link="mention"
-          class="text-sky-700 font-medium dark:text-sky-400"
+          class="text-sky-700 font-medium dark:text-sky-300"
         >$1</span>` :
         `<a
           data-link="mention"
           href="/$2"
-          class="text-sky-700 font-medium hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
+          class="text-sky-700 font-medium hover:underline dark:text-sky-300"
         >$1</a>`
     )
     .replaceAll(
@@ -34,12 +34,12 @@ export const parsePostText = (text?: string, readonly = false) => {
       readonly ?
         `<span
           data-link="hashtag"
-          class="text-sky-700 font-medium dark:text-sky-400"
+          class="text-sky-700 font-medium dark:text-sky-300"
         >$1</span>` :
         `<a
           data-link="hashtag"
           href="/explore/$2"
-          class="text-sky-700 font-medium hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
+          class="text-sky-700 font-medium hover:underline dark:text-sky-300"
         >$1</a>`
     )
 }

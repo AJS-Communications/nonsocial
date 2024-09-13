@@ -24,6 +24,20 @@ export default defineEventHandler(async (event) => {
       }
     }) || []
 
+    const children = await prisma.post.findMany({
+      where: {
+        authorId: { 
+          in: [...following.map(i => i.followingId)]
+        },
+        parentId: {
+          not: null
+        }
+      },
+      select: {
+        parentId: true
+      }
+    }) || []
+
     const likes = await prisma.like.findMany({
       where: { 
         authorId: { 
@@ -57,6 +71,7 @@ export default defineEventHandler(async (event) => {
           {
             id: {
               in: [
+                ...children.map(i => i.parentId as string),
                 ...likes.map(i => i.postId),
                 ...boosts.map(i => i.postId)
               ]
@@ -79,6 +94,145 @@ export default defineEventHandler(async (event) => {
       },
       include: {
         author: true,
+        parent: {
+          include: {
+            author: true,
+            likes: {
+              include: {
+                author: true
+              }
+            },
+            boosts: {
+              include: {
+                author: true
+              }
+            },
+            _count: {
+              select: {
+                children: true,
+                bookmarks: true,
+                likes: true,
+                boosts: true
+              }
+            }
+          }
+        },
+        children: {
+          take: 1,
+          orderBy: [
+            { createdDate: 'desc' },
+            { likes: { _count: 'desc' } },
+            { boosts: { _count: 'desc' } },
+            { children: { _count: 'desc' } }
+          ],
+          include: {
+            author: true,
+            likes: {
+              include: {
+                author: true
+              }
+            },
+            boosts: {
+              include: {
+                author: true
+              }
+            },
+            _count: {
+              select: {
+                children: true,
+                bookmarks: true,
+                likes: true,
+                boosts: true
+              }
+            },
+            parent: {
+              include: {
+                author: true,
+                likes: {
+                  include: {
+                    author: true
+                  }
+                },
+                boosts: {
+                  include: {
+                    author: true
+                  }
+                },
+                _count: {
+                  select: {
+                    children: true,
+                    bookmarks: true,
+                    likes: true,
+                    boosts: true
+                  }
+                }
+              }
+            },
+            children: {
+              take: 1,
+              orderBy: [
+                { createdDate: 'desc' },
+                { likes: { _count: 'desc' } },
+                { boosts: { _count: 'desc' } },
+                { children: { _count: 'desc' } }
+              ],
+              include: {
+                author: true,
+                parent: {
+                  include: {
+                    author: true,
+                    likes: {
+                      include: {
+                        author: true
+                      }
+                    },
+                    boosts: {
+                      include: {
+                        author: true
+                      }
+                    },
+                    _count: {
+                      select: {
+                        children: true,
+                        bookmarks: true,
+                        likes: true,
+                        boosts: true
+                      }
+                    }
+                  }
+                },
+                likes: {
+                  include: {
+                    author: true
+                  }
+                },
+                boosts: {
+                  include: {
+                    author: true
+                  }
+                },
+                _count: {
+                  select: {
+                    children: true,
+                    bookmarks: true,
+                    likes: true,
+                    boosts: true
+                  }
+                }
+              }
+            }
+          }
+        },
+        likes: {
+          include: {
+            author: true
+          }
+        },
+        boosts: {
+          include: {
+            author: true
+          }
+        },
         _count: {
           select: {
             children: true,
@@ -88,9 +242,12 @@ export default defineEventHandler(async (event) => {
           }
         }
       },
-      orderBy: {
-        createdDate: 'desc'
-      }
+      orderBy: [
+        { createdDate: 'desc' },
+        { likes: { _count: 'desc' } },
+        { boosts: { _count: 'desc' } },
+        { children: { _count: 'desc' } }
+      ]
     })
   }
 

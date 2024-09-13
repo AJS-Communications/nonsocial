@@ -70,7 +70,6 @@ export default defineNuxtPlugin({
         })
       }
       await refreshUser()
-      return await $api<Post>(`/api/posts/${postId}`)
     }
     
     const like = async (postId: string): Promise<Post | undefined> => {
@@ -93,7 +92,6 @@ export default defineNuxtPlugin({
         })
       }
       await refreshUser()
-      return await $api<Post>(`/api/posts/${postId}`)
     }
 
     const boost = async (postId: string): Promise<Post | undefined> => {
@@ -116,7 +114,6 @@ export default defineNuxtPlugin({
         })
       }
       await refreshUser()
-      return await $api<Post>(`/api/posts/${postId}`)
     }
 
     return {

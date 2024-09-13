@@ -14,7 +14,7 @@
       <div class="grow space-y-4" :class="{ 'mt-2': !activated }">
         <label v-if="activated" @click.stop>
           <span class="sr-only">Who can see this?</span>
-          <select v-model="visibility" class="cursor-pointer text-sm focus:ring-sky-500 focus:border-sky-500 w-28 rounded-full px-3 py-0.5 border border-neutral-300 dark:border-neutral-700 font-bold text-sky-600 dark:bg-black dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/40">
+          <select v-model="visibility" class="cursor-pointer text-sm focus:ring-sky-500 focus:border-sky-500 w-28 rounded-full px-3 py-0.5 border border-neutral-300 dark:border-neutral-700 font-bold text-sky-700 dark:bg-black dark:text-sky-300 hover:bg-sky-50 dark:hover:bg-sky-900/40">
             <option v-for="option in visibilityOptions" :key="option.value" :value="option.value">{{ option.text }}</option>
           </select>
         </label>
@@ -34,7 +34,7 @@
             @input="onCompose"
           />
           <div
-            class="text-xl inset-0 absolute break-words whitespace-pre-wrap font-base pointer-events-none [&_[data-error]]:bg-rose-500/30 dark:[&_[data-error]]:bg-rose-400/30 [&_[data-link]]:text-sky-600 dark:[&_[data-link]]:text-sky-400"
+            class="text-xl inset-0 absolute break-words whitespace-pre-wrap font-base pointer-events-none [&_[data-error]]:bg-rose-500/30 dark:[&_[data-error]]:bg-rose-400/30 [&_[data-link]]:text-sky-700 dark:[&_[data-link]]:text-sky-300"
             aria-hidden="true"
             v-html="fauxTextareaContent"
           />

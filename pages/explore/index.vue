@@ -22,7 +22,7 @@ if (!user.value) {
 const title = useTitle()
 title.value = 'Explore'
 const cursor = ref()
-const { data: items } = await useApiFetch<[Post]>(`/api/posts`)
+const { data: items } = await useApiFetch<[Post]>(`/api/posts/explore`)
 
 if (!items.value) {
   throw createError({ statusCode: 404, message: 'Page Not Found', fatal: true })
@@ -37,7 +37,7 @@ useIntersectionObserver(el, async ([{ isIntersecting }]) => {
     if (lastId === cursor.value) return
 
     cursor.value = lastId
-    const data = await $api<[Post]>(`/api/posts`, {
+    const data = await $api<[Post]>(`/api/posts/explore`, {
       params: {
         cursor: cursor.value
       }

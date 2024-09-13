@@ -11,14 +11,18 @@ export default defineEventHandler(async (event) => {
   }
 
   const runtimeConfig = useRuntimeConfig()
-  let data = null
+  const query = getQuery(event)
+  let data: any = []
 
   async function main() {
-    if (!event.context.params) return
-
-    return await prisma.post.findFirst({
+    return await prisma.post.findMany({
+      take: parseInt(runtimeConfig.public.RESULTS_PER_PAGE),
+      skip: query.cursor ? 1 : undefined,
+      cursor: query.cursor ? {
+        id: query.cursor as string
+      } : undefined,
       where: {
-        id: event.context.params.postId,
+        parentId: null,
         published: true,
         visibility: 'PUBLIC'
       },
@@ -48,7 +52,7 @@ export default defineEventHandler(async (event) => {
           }
         },
         children: {
-          take: parseInt(runtimeConfig.public.RESULTS_PER_PAGE),
+          take: 1,
           orderBy: [
             { createdDate: 'desc' },
             { likes: { _count: 'desc' } },

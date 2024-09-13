@@ -4,7 +4,7 @@
     class="relative"
   >
     <div
-      v-if="commenterList.length > 0 || localItem.children?.length > 0"
+      v-if="localItem.children?.length > 0"
       class="bg-neutral-200 dark:bg-neutral-800 w-1 absolute top-10 left-[2.35rem] bottom-28 -z-10"
     />
     <article class="relative flex flex-col gap-1 p-4">
@@ -29,34 +29,38 @@
           </nav>
         </div>
       </div>
-      <div v-if="boostList.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
-        <IconArrowPath active size="sm" />
-        <div class="flex gap-1">
-          <span
-            v-for="(boost, index) in boostList"
-            :key="boost.id"
-          >{{ boost.author.username }} {{ index < boostList.length - 1 ? 'and ' : '' }}</span>
-          <span>boosted</span>
-        </div>
-      </div>
-      <div v-if="boostList.length < 1 && commenterList.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
-        <IconChatBubble active size="sm" />
-        <div class="flex gap-1">
-          <span
-            v-for="(commenter, index) in commenterList"
-            :key="commenter.id"
-          >{{ commenter.author.username }}  {{ index < commenterList.length - 1 ? 'and ' : '' }}</span>
-          <span>commented</span>
-        </div>
-      </div>
-      <div v-if="boostList.length < 1 && commenterList.length < 1 && likeList.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
+      <div v-if="localItem.likes?.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
         <IconHeart active size="sm" />
         <div class="flex gap-1">
           <span
-            v-for="(like, index) in likeList"
+            v-for="(like, index) in localItem.likes"
             :key="like.id"
-          >{{ like.author.username }}  {{ index < likeList.length - 1 ? 'and ' : '' }}</span>
+          >{{ like.author.name || like.author.username }}  {{ index < localItem.likes.length - 1 ? 'and ' : '' }}</span>
           <span>liked</span>
+        </div>
+      </div>
+      <div v-if="localItem.children?.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
+        <IconChatBubble active size="sm" />
+        <div class="flex gap-1">
+          <span
+            v-for="(commenter, index) in localItem.children.filter((item, index, self) =>
+              index === self.findIndex((c) => c.authorId === item.authorId)
+            )"
+            :key="commenter.id"
+          >{{ commenter.author.name || commenter.author.username }} {{ index < localItem.children.filter((item, index, self) =>
+              index === self.findIndex((c) => c.authorId === item.authorId)
+            ).length - 1 ? 'and ' : '' }}</span>
+          <span>commented</span>
+        </div>
+      </div>
+      <div v-if="localItem.boosts?.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
+        <IconArrowPath active size="sm" />
+        <div class="flex gap-1">
+          <span
+            v-for="(boost, index) in localItem.boosts"
+            :key="boost.id"
+          >{{ boost.author.name || boost.author.username }} {{ index < localItem.boosts.length - 1 ? 'and ' : '' }}</span>
+          <span>boosted</span>
         </div>
       </div>
       <div class="flex items-center space-x-4">
@@ -93,7 +97,7 @@
             Replying to
             <NuxtLink
               :to="`/${localItem.parent?.author.username}`"
-              class="relative text-sky-600 dark:text-sky-400 z-10 group"
+              class="relative text-sky-700 dark:text-sky-300 z-10 group"
             >
               @<span class="group-hover:underline">{{ localItem.parent?.author.name || localItem.parent?.author.username }}</span>
             </NuxtLink>
@@ -186,18 +190,11 @@
       v-for="child in localItem.children"
       :item="child"
     />
-    <LazyFeedItem
-      v-if="commenterList.length > 0"
-      :item="commenterList[commenterList.length - 1]"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 const {
-  $auth: {
-    user
-  },
   $post: {
     isBookmark,
     isLike,
@@ -224,27 +221,6 @@ const emit = defineEmits(['update:model-value'])
 
 const formattedText = computed(() => {
   return parsePostText(localItem.value?.text)
-})
-
-const likeList = computed(() => {
-  if (!props.item?.likes) return []
-  return props.item.likes.filter(i => {
-    return user.value?.followers.find(x => x.followingId === i.authorId)
-  }).slice(0, 2) || []
-})
-
-const boostList = computed(() => {
-  if (!props.item?.boosts) return []
-  return props.item.boosts.filter(i => {
-    return user.value?.followers.find(x => x.followingId === i.authorId)
-  }).slice(0, 2) || []
-})
-
-const commenterList = computed(() => {
-  if (!props.item?.children) return []
-  return props.item.children.filter(i => {
-    return user.value?.followers.find(x => x.followingId === i.author.id)
-  }).slice(0, 2) || []
 })
 
 const moreBtn = ref()

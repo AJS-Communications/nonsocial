@@ -37,9 +37,12 @@ export default defineEventHandler(async (event) => {
           }
         }
       },
-      orderBy: {
-        createdDate: 'desc'
-      }
+      orderBy: [
+        { createdDate: 'desc' },
+        { likes: { _count: 'desc' } },
+        { boosts: { _count: 'desc' } },
+        { children: { _count: 'desc' } }
+      ]
     })
   }
 

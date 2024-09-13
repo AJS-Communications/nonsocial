@@ -29,7 +29,7 @@
             @input="onCompose"
           />
           <div
-            class="text-xl inset-0 absolute break-words whitespace-pre-wrap font-base pointer-events-none [&_[data-error]]:bg-rose-500/30 dark:[&_[data-error]]:bg-rose-400/30 [&_[data-link]]:text-sky-600 dark:[&_[data-link]]:text-sky-400"
+            class="text-xl inset-0 absolute break-words whitespace-pre-wrap font-base pointer-events-none [&_[data-error]]:bg-rose-500/30 dark:[&_[data-error]]:bg-rose-400/30 [&_[data-link]]:text-sky-700 dark:[&_[data-link]]:text-sky-300"
             aria-hidden="true"
             v-html="fauxTextareaContent"
           />
