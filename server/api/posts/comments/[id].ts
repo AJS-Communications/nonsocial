@@ -47,61 +47,59 @@ export default defineEventHandler(async (event) => {
             }
           }
         },
-        ...(query.includeChildren === 'true' ? {
-          children: {
-            take: 1,
-            orderBy: [
-              { createdDate: 'desc' },
-              { likes: { _count: 'desc' } },
-              { boosts: { _count: 'desc' } },
-              { children: { _count: 'desc' } }
-            ],
-            include: {
-              author: true,
-              likes: {
-                include: {
-                  author: true
-                }
-              },
-              boosts: {
-                include: {
-                  author: true
-                }
-              },
-              _count: {
-                select: {
-                  children: true,
-                  bookmarks: true,
-                  likes: true,
-                  boosts: true
-                }
-              },
-              parent: {
-                include: {
-                  author: true,
-                  likes: {
-                    include: {
-                      author: true
-                    }
-                  },
-                  boosts: {
-                    include: {
-                      author: true
-                    }
-                  },
-                  _count: {
-                    select: {
-                      children: true,
-                      bookmarks: true,
-                      likes: true,
-                      boosts: true
-                    }
+        children: {
+          take: 1,
+          orderBy: [
+            { createdDate: 'desc' },
+            { likes: { _count: 'desc' } },
+            { boosts: { _count: 'desc' } },
+            { children: { _count: 'desc' } }
+          ],
+          include: {
+            author: true,
+            likes: {
+              include: {
+                author: true
+              }
+            },
+            boosts: {
+              include: {
+                author: true
+              }
+            },
+            _count: {
+              select: {
+                children: true,
+                bookmarks: true,
+                likes: true,
+                boosts: true
+              }
+            },
+            parent: {
+              include: {
+                author: true,
+                likes: {
+                  include: {
+                    author: true
+                  }
+                },
+                boosts: {
+                  include: {
+                    author: true
+                  }
+                },
+                _count: {
+                  select: {
+                    children: true,
+                    bookmarks: true,
+                    likes: true,
+                    boosts: true
                   }
                 }
-              },
-            }
+              }
+            },
           }
-        } : {}),
+        },
         likes: {
           include: {
             author: true

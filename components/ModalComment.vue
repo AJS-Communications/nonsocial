@@ -76,12 +76,13 @@ import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component'
 const {
   $api,
   $post: {
-    createdDate
+    createdDate,
+    update: updatePost
   }
 } = useNuxtApp()
 
 const props = defineProps({
-  modelValue: { type: Object, required: true }
+  modelValue: { type: Object as PropType<Post>, required: true }
 })
 
 const emit = defineEmits(['update:model-value'])
@@ -114,11 +115,7 @@ onKeyStroke('Escape', (e) => {
 })
 
 const update = async () => {
-  item.value = await $api<Post>(`/api/posts/comments/${item.value.id}`, {
-    query: {
-      includeChildren: item.value.children?.length > 0
-    }
-  })
+  item.value = await updatePost(item.value)
   open.value = false
 }
 </script>

@@ -116,6 +116,10 @@ export default defineNuxtPlugin({
       await refreshUser()
     }
 
+    const update = async (item: Post) => {
+      return $api<Post>(`/api/posts/comments/${item.id}`)
+    }
+
     return {
       provide: {
         post: {
@@ -126,7 +130,8 @@ export default defineNuxtPlugin({
           share,
           bookmark,
           like,
-          boost
+          boost,
+          update
         }
       }
     }

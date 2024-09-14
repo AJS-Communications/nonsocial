@@ -29,7 +29,7 @@
           </nav>
         </div>
       </div>
-      <div v-if="localItem.likes?.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
+      <div v-if="localItem.likes?.filter(i => i.authorId !== user?.id ).length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
         <IconHeart active size="sm" />
         <div class="flex gap-1">
           <span
@@ -39,7 +39,7 @@
           <span>liked</span>
         </div>
       </div>
-      <div v-if="localItem.children?.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
+      <div v-if="localItem.children?.filter(i => i.authorId !== user?.id ).length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
         <IconChatBubble active size="sm" />
         <div class="flex gap-1">
           <span
@@ -53,7 +53,7 @@
           <span>commented</span>
         </div>
       </div>
-      <div v-if="localItem.boosts?.length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
+      <div v-if="localItem.boosts?.filter(i => i.authorId !== user?.id ).length > 0" class="flex items-center gap-2 text-neutral-500 text-sm ml-10 font-medium">
         <IconArrowPath active size="sm" />
         <div class="flex gap-1">
           <span
@@ -195,6 +195,7 @@
 
 <script setup lang="ts">
 const {
+  $auth: { user },
   $post: {
     isBookmark,
     isLike,
@@ -203,7 +204,8 @@ const {
     share,
     bookmark,
     like,
-    boost
+    boost,
+    update
   }
 } = useNuxtApp()
 
@@ -230,18 +232,21 @@ onKeyStroke('Escape', () => showMoreDropdown.value = false)
 
 const handleBookmark = async () => {
   if (!props.item) return
-  localItem.value = await bookmark(props.item.id)
+  await bookmark(props.item.id)
+  localItem.value = await update(props.item)
   showMoreDropdown.value = false
 }
 
 const handleLike = async () => {
   if (!props.item) return
-  localItem.value = await like(props.item.id)
+  await like(props.item.id)
+  localItem.value = await update(props.item)
 }
 
 const handleBoost = async () => {
   if (!props.item) return
-  localItem.value = await boost(props.item.id)
+  await boost(props.item.id)
+  localItem.value = await update(props.item)
 }
 
 const handleShare = async () => {
