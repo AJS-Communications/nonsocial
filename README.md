@@ -33,9 +33,11 @@ This isn't a complete list of items but its a good start for focus. There is a t
   - [x] Get posts that the users you follow have commented on
 - [ ] Posting
   - [x] Text-based posting
-  - [ ] Hashtag parsing
-  - [ ] @username parsing
-  - [ ] URL parsing
+  - [x] Hashtag parsing
+  - [x] Hasttag autosuggest
+  - [x] @username parsing
+  - [ ] @username autosuggest
+  - [x] URL parsing
   - [ ] Media (Image/Image Galleries/Videos)
   - [ ] Memes/Gifs
   - [ ] Polls
