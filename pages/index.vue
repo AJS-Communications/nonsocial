@@ -23,10 +23,15 @@ if (!user.value) {
 const title = useTitle()
 title.value = 'Home'
 const cursor = ref()
-const { data: items } = await useApiFetch<[Post]>(`/api/users/${user.value.id}/posts`)
+const { data: items, error } = await useApiFetch<[Post]>(`/api/users/${user.value.id}/posts`)
 
-if (!items.value) {
-  throw createError({ statusCode: 404, message: 'Page Not Found', fatal: true })
+if (error.value) {
+  throw createError({
+    statusCode: error.value.statusCode,
+    statusMessage: error.value.statusMessage,
+    message: 'An error occurred while fetching data',
+    fatal: true
+  })
 }
 
 const text = ref('')

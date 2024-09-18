@@ -204,10 +204,15 @@ if (!user.value) {
 
 const route = useRoute()
 
-const { data: item, refresh } = await useApiFetch<Post>(`/api/posts/${route.params.id}`)
+const { data: item, error, refresh } = await useApiFetch<Post>(`/api/posts/${route.params.id}`)
 
-if (!item.value) {
-  throw createError({ statusCode: 404, message: 'Page Not Found', fatal: true })
+if (error.value) {
+  throw createError({
+    statusCode: error.value.statusCode,
+    statusMessage: error.value.statusMessage,
+    message: 'An error occurred while fetching data',
+    fatal: true
+  })
 }
 
 const title = useTitle()

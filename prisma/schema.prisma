@@ -59,10 +59,10 @@ enum UserVisibility {
 model Follow {
   id          String   @id @default(cuid())
   createdDate DateTime @default(now())
-  author      User     @relation("follower", fields: [authorId], references: [id])
+  author      User     @relation("following", fields: [authorId], references: [id])
   authorId    String
-  following   User     @relation("following", fields: [followingId], references: [id])
-  followingId String
+  follower   User     @relation("follower", fields: [followerId], references: [id])
+  followerId String
 
   @@index([id])
   @@index([authorId])

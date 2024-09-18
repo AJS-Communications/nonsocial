@@ -20,14 +20,14 @@ export default defineEventHandler(async (event) => {
     const following = await prisma.follow.findMany({
       where: { authorId: event.context.params.userId },
       select: {
-        followingId: true
+        followerId: true
       }
     }) || []
 
     const children = await prisma.post.findMany({
       where: {
         authorId: { 
-          in: [...following.map(i => i.followingId)]
+          in: [...following.map(i => i.followerId)]
         },
         parentId: {
           not: null
@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
     const likes = await prisma.like.findMany({
       where: { 
         authorId: { 
-          in: [...following.map(i => i.followingId)]
+          in: [...following.map(i => i.followerId)]
         }
       },
       select: {
@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
     const boosts = await prisma.boost.findMany({
       where: { 
         authorId: { 
-          in: [...following.map(i => i.followingId)]
+          in: [...following.map(i => i.followerId)]
         }
       },
       select: {
@@ -81,7 +81,7 @@ export default defineEventHandler(async (event) => {
             author: {
               id: {
                 in: [
-                  ...following.map(i => i.followingId),
+                  ...following.map(i => i.followerId),
                   event.context.params.userId
                 ]
               }

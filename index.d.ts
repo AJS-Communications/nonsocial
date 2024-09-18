@@ -16,8 +16,8 @@ interface Follow {
   id: string
   author: User
   authorId: User.id
-  following: User
-  followingId: User.id
+  follower: User
+  followerId: User.id
 }
 
 interface Post {

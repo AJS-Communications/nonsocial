@@ -2,7 +2,8 @@
   <div>
     <PageHeader />
     <div class="p-4">
-      <div class="pb-8 mb-8 border-b dark:border-neutral-900">
+      <div class="grid gap-4 pb-8 mb-8 border-b dark:border-neutral-900">
+        <h2 class="text-lg font-semibold">Logout of your account?</h2>
         <button
           class="border rounded px-4 py-2 w-full justify-center flex items-center gap-4 bg-neutral-100 hover:bg-neutral-50 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:border-neutral-800"
           @click="logout()"
@@ -11,17 +12,19 @@
         </button>
       </div>
       <form
-        class="grid gap-8"
+        class="grid gap-4"
         @submit.prevent="handleUpdate"
       >
-        <h2 class="text-xl font-semibold">Update your profile</h2>
+        <h2 class="text-lg font-semibold">Update your profile</h2>
         <div class="grid gap-2">
           <label for="username" class="font-semibold">Username</label>
           <input
             v-model="username"
+            id="username"
             name="username"
             type="text"
             placeholder="username"
+            autocomplete="off"
             required
             class="rounded dark:border-neutral-800 dark:bg-black"
           >
@@ -30,9 +33,11 @@
           <label for="email" class="font-semibold">Email</label>
           <input
             v-model="email"
+            id="email"
             name="email"
             type="email"
             placeholder="email"
+            autocomplete="off"
             required
             class="rounded dark:border-neutral-800 dark:bg-black"
           >
@@ -41,9 +46,11 @@
           <label for="name" class="font-semibold">Name</label>
           <input
             v-model="name"
+            id="name"
             name="name"
             type="text"
             placeholder="name"
+            autocomplete="off"
             class="rounded dark:border-neutral-800 dark:bg-black"
           >
         </div>
@@ -51,9 +58,11 @@
           <label for="photoUrl" class="font-semibold">Photo Url</label>
           <input
             v-model="photoUrl"
+            id="photoUrl"
             name="photoUrl"
             type="text"
             placeholder="photo url"
+            autocomplete="off"
             class="rounded dark:border-neutral-800 dark:bg-black"
           >
         </div>
@@ -61,14 +70,17 @@
           <label for="bio" class="font-semibold">About me</label>
           <textarea
             v-model="bio"
+            id="bio"
             name="bio"
             class="rounded dark:border-neutral-800 dark:bg-black"
           />
         </div>
-        <button
-          type="submit"
-          class="border rounded px-4 py-2 w-full justify-center flex items-center gap-4 bg-neutral-100 hover:bg-neutral-50 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:border-neutral-800"
-        >Save changes</button>
+        <div class="pt-4">
+          <button
+            type="submit"
+            class="border rounded px-4 py-2 w-full justify-center flex items-center gap-4 bg-neutral-100 hover:bg-neutral-50 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:border-neutral-800"
+          >Save changes</button>
+        </div>
       </form>
     </div>
   </div>

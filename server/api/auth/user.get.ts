@@ -21,8 +21,16 @@ export default defineEventHandler(async (event) => {
         bookmarks: true,
         likes: true,
         boosts: true,
-        following: true,
-        followers: true,
+        followers: {
+          include: {
+            follower: true
+          }
+        },
+        following: {
+          include: {
+            follower: true
+          }
+        },
         _count: {
           select: {
             bookmarks: true,

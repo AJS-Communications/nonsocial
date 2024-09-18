@@ -22,10 +22,15 @@ if (!user.value) {
 const title = useTitle()
 title.value = 'Bookmarks'
 const cursor = ref()
-const { data: bookmarks } = await useApiFetch<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
+const { data: bookmarks, error } = await useApiFetch<[Bookmark]>(`/api/users/${user.value.id}/bookmarks`)
 
-if (!bookmarks.value) {
-  throw createError({ statusCode: 404, message: 'Page Not Found', fatal: true })
+if (error.value) {
+  throw createError({
+    statusCode: error.value.statusCode,
+    statusMessage: error.value.statusMessage,
+    message: 'An error occurred while fetching data',
+    fatal: true
+  })
 }
 
 const el = ref()
