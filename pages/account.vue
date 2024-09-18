@@ -17,26 +17,34 @@
       >
         <h2 class="text-lg font-semibold">Update your profile</h2>
         <div class="grid gap-2">
-          <label for="username" class="font-semibold">Username</label>
+          <label for="username" class="font-semibold">
+            Username
+            <span
+              class="text-red-600 dark:text-red-400 text-xs align-super"
+            >* required</span>
+          </label>
           <input
             v-model="username"
             id="username"
             name="username"
             type="text"
-            placeholder="username"
             autocomplete="off"
             required
             class="rounded dark:border-neutral-800 dark:bg-black"
           >
         </div>
         <div class="grid gap-2">
-          <label for="email" class="font-semibold">Email</label>
+          <label for="email" class="font-semibold">
+            Email
+            <span
+              class="text-red-600 dark:text-red-400 text-xs align-super"
+            >* required</span>
+          </label>
           <input
             v-model="email"
             id="email"
             name="email"
             type="email"
-            placeholder="email"
             autocomplete="off"
             required
             class="rounded dark:border-neutral-800 dark:bg-black"
@@ -49,7 +57,6 @@
             id="name"
             name="name"
             type="text"
-            placeholder="name"
             autocomplete="off"
             class="rounded dark:border-neutral-800 dark:bg-black"
           >
@@ -61,7 +68,6 @@
             id="photoUrl"
             name="photoUrl"
             type="text"
-            placeholder="photo url"
             autocomplete="off"
             class="rounded dark:border-neutral-800 dark:bg-black"
           >
