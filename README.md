@@ -15,6 +15,7 @@ This isn't a complete list of items but its a good start for focus. There is a t
   - [X] Logout
   - [X] Register
   - [X] Passkeys
+  - [ ] Email Validation
   - [ ] Account Recovery
 - [ ] User Groups
 - [ ] User Notifications
