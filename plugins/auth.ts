@@ -44,7 +44,7 @@ export default defineNuxtPlugin({
         body: { action: 'authenticate' },
       })
   
-      const response = await startAuthentication(options)
+      const response = await startAuthentication({ optionsJSON: options })
   
       const verification = await $api<{ verified: boolean }>('/api/auth/passkey', {
         method: 'POST',
@@ -69,7 +69,7 @@ export default defineNuxtPlugin({
         body: { action: 'register', email }
       })
   
-      const response = await startRegistration(options)
+      const response = await startRegistration({ optionsJSON: options })
   
       const verification = await $api<{ verified: boolean }>('/api/auth/passkey', {
         method: 'POST',

@@ -7,13 +7,11 @@ export default defineNuxtPlugin({
       retry: 1,
       async onRequest({ options }) {
         if (token.value) {
-          const headers = options.headers ||= {}
+          const headers = options.headers ||= {} as Headers
           if (Array.isArray(headers)) {
             headers.push(['Authorization', `Bearer ${token.value}`])
-          } else if (headers instanceof Headers) {
-            headers.set('Authorization', `Bearer ${token.value}`)
           } else {
-            headers.Authorization = `Bearer ${token.value}`
+            headers.set('Authorization', `Bearer ${token.value}`)
           }
         }
       },

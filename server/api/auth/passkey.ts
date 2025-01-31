@@ -8,7 +8,6 @@ import {
 } from '@simplewebauthn/server'
 import jwt from 'jsonwebtoken'
 import { PrismaClient } from '@prisma/client'
-import { Buffer } from 'buffer'
 
 const prisma = new PrismaClient()
 
@@ -58,10 +57,10 @@ export default defineEventHandler(async (event) => {
       })
       await prisma.authenticator.create({
         data: {
-          credentialId: verification.registrationInfo.credentialID,
+          credentialId: verification.registrationInfo.credential.id,
           userId: user.id,
-          publicKey: Buffer.from(verification.registrationInfo.credentialPublicKey),
-          counter: verification.registrationInfo.counter
+          publicKey: Uint8Array.from(verification.registrationInfo.credential.publicKey),
+          counter: verification.registrationInfo.credential.counter
         }
       })
     }
@@ -81,9 +80,9 @@ export default defineEventHandler(async (event) => {
       expectedChallenge: body.challenge,
       expectedOrigin: runtimeConfig.WEBAUTHN_ORIGIN,
       expectedRPID: runtimeConfig.WEBAUTHN_RPID,
-      authenticator: {
-        credentialPublicKey: authenticator.publicKey,
-        credentialID: authenticator.credentialId,
+      credential: {
+        publicKey: authenticator.publicKey,
+        id: authenticator.credentialId,
         counter: authenticator.counter
       }
     })
